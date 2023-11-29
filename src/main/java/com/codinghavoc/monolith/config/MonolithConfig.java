@@ -16,6 +16,7 @@ public class MonolithConfig {
             public void addCorsMappings(CorsRegistry registry){
                 registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200")
+                .allowedOrigins("https://monolithbackend-74629fdb83e0.herokuapp.com")
                 .allowedMethods(HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
                 HttpMethod.DELETE.name())
