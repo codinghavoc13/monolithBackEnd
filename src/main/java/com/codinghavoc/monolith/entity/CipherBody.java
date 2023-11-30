@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CipherBody {
-    private String msg;
+    private String message;
     private Long keyOne;
     private Long keyTwo;
     private String action;    

@@ -22,7 +22,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
             case "D2K" -> decryptTwoKnownKeys(cb);
             default -> {
                 result = new CipherBody();
-                result.setMsg("Incorrect action selected");
+                result.setMessage("Incorrect action selected");
                 yield result;
             }
         };
@@ -32,10 +32,10 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
     @Override
     public CipherBody encryptOneKey(CipherBody cb) {
         //Encrypt the message with the single key
-        String encryptedMsg = encrypt(cb.getKeyOne(),cb.getMsg());
+        String encryptedMsg = encrypt(cb.getKeyOne(),cb.getMessage());
 
         //Store the encrypted message
-        cb.setMsg(encryptedMsg);
+        cb.setMessage(encryptedMsg);
 
         //Returning the encrypted message...
         return cb;
@@ -44,10 +44,10 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
     @Override
     public CipherBody decryptOneKnownKey(CipherBody cb){
         //Decrypt the message with the single key
-        String decryptedMsg = encrypt(26l - cb.getKeyOne(), cb.getMsg());
+        String decryptedMsg = encrypt(26l - cb.getKeyOne(), cb.getMessage());
 
         //Store the decrypted message
-        cb.setMsg(decryptedMsg);
+        cb.setMessage(decryptedMsg);
 
         //Returning the clear text message...
         return cb;
@@ -56,10 +56,10 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
     @Override
     public CipherBody decryptOneUnknownKey(CipherBody cb){
         //Decrypting the message...
-        String decryptedMsg = decryptUnkKey(cb.getMsg());
+        String decryptedMsg = decryptUnkKey(cb.getMessage());
 
         //Storing the decrypted message as the clear message
-        cb.setMsg(decryptedMsg);
+        cb.setMessage(decryptedMsg);
 
         //Returning the clear text message...
         return cb;
@@ -67,10 +67,10 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
 
     public CipherBody encryptTwoKeys(CipherBody cb){
         //Encrypt the message with the single key
-        String encryptedMsg = encrypt2key(26l - cb.getKeyOne(), 26l - cb.getKeyTwo(), cb.getMsg());
+        String encryptedMsg = encrypt2key(26l - cb.getKeyOne(), 26l - cb.getKeyTwo(), cb.getMessage());
 
         //Store the encrypted message
-        cb.setMsg(encryptedMsg);
+        cb.setMessage(encryptedMsg);
 
         //Returning the encrypted message...
         return cb;
@@ -78,10 +78,10 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
 
     public CipherBody decryptTwoKnownKeys(CipherBody cb){
         //Decrypt the message with the single key
-        String decryptedMsg = encrypt2key(cb.getKeyOne(), cb.getKeyTwo(), cb.getMsg());
+        String decryptedMsg = encrypt2key(cb.getKeyOne(), cb.getKeyTwo(), cb.getMessage());
 
         //Store the decrypted message
-        cb.setMsg(decryptedMsg);
+        cb.setMessage(decryptedMsg);
 
         //Returning the clear text message...
         return cb;
