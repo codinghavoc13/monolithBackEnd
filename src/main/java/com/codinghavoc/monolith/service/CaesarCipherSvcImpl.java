@@ -13,6 +13,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
     private static String UPPER_ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static String NUMBERS = "0123456789";
     private static String TOTAL_ALPHABET = LOWER_ALPHA + UPPER_ALPHA + NUMBERS;
+    private static long LIST_LENGTH = TOTAL_ALPHABET.length();
 
     public CipherBody process(CipherBody cb){
         CipherBody result = switch(cb.getAction()){
@@ -67,7 +68,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
 
     public CipherBody encryptTwoKeys(CipherBody cb){
         //Encrypt the message with the single key
-        String encryptedMsg = encrypt2key(26l - cb.getKeyOne(), 26l - cb.getKeyTwo(), cb.getMessage());
+        String encryptedMsg = encrypt2key(LIST_LENGTH - cb.getKeyOne(), LIST_LENGTH - cb.getKeyTwo(), cb.getMessage());
 
         //Store the encrypted message
         cb.setMessage(encryptedMsg);
