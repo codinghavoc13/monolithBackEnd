@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 public class PassPhraseCipherSvcImpl implements PassphraseCipherSvc {
 
     @Override
-    public String encrypt(PassPhraseBody body) {
+    public PassPhraseBody encrypt(PassPhraseBody body) {
         String message = body.getMessage();
         String passphrase = body.getPassphrase();
         int j = 0; //used to get the corresponding char from passphrase
@@ -34,11 +34,11 @@ public class PassPhraseCipherSvcImpl implements PassphraseCipherSvc {
             c = Constants.TOTAL_ALPHABET.charAt(z);
             sb.append(c);
         }
-        return sb.toString();
+        return new PassPhraseBody(sb.toString(),"");
     }
 
     @Override
-    public String decrypt(PassPhraseBody body) {
+    public PassPhraseBody decrypt(PassPhraseBody body) {
         String message = body.getMessage();
         String passphrase = body.getPassphrase();
         int j = 0; //used to get the corresponding char from passphrase
@@ -60,7 +60,7 @@ public class PassPhraseCipherSvcImpl implements PassphraseCipherSvc {
             c = Constants.TOTAL_ALPHABET.charAt(z);
             sb.append(c);
         }
-        return sb.toString();
+        return new PassPhraseBody(sb.toString(),"");
     }
     
 }

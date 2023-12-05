@@ -19,12 +19,12 @@ public class PassPhraseCipherController {
     PassphraseCipherSvc ppsvc;
     
     @PostMapping("/encrypt")
-    public ResponseEntity<String> encrypt(@RequestBody PassPhraseBody ppb){
+    public ResponseEntity<PassPhraseBody> encrypt(@RequestBody PassPhraseBody ppb){
         return new ResponseEntity<>(ppsvc.encrypt(ppb), HttpStatus.OK);
     }
     
     @PostMapping("/decrypt")
-    public ResponseEntity<String> decrypt(@RequestBody PassPhraseBody ppb){
+    public ResponseEntity<PassPhraseBody> decrypt(@RequestBody PassPhraseBody ppb){
         return new ResponseEntity<>(ppsvc.decrypt(ppb), HttpStatus.OK);
     }
 }
