@@ -2,6 +2,7 @@ package com.codinghavoc.monolith.service;
 
 import org.springframework.stereotype.Service;
 
+import com.codinghavoc.monolith.Constants;
 import com.codinghavoc.monolith.entity.CipherBody;
 
 import lombok.AllArgsConstructor;
@@ -9,11 +10,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class CaesarCipherSvcImpl implements CaesarCipherSvc{
-    private static String LOWER_ALPHA = "abcdefghijklmnopqrstuvwxyz";
-    private static String UPPER_ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static String NUMBERS = "0123456789";
-    private static String TOTAL_ALPHABET = LOWER_ALPHA + UPPER_ALPHA + NUMBERS;
-    private static long LIST_LENGTH = TOTAL_ALPHABET.length();
 
     public CipherBody process(CipherBody cb){
         CipherBody result = switch(cb.getAction()){
@@ -68,7 +64,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
 
     public CipherBody encryptTwoKeys(CipherBody cb){
         //Encrypt the message with the single key
-        String encryptedMsg = encrypt2key(LIST_LENGTH - cb.getKeyOne(), LIST_LENGTH - cb.getKeyTwo(), cb.getMessage());
+        String encryptedMsg = encrypt2key(Constants.LIST_LENGTH - cb.getKeyOne(), Constants.LIST_LENGTH - cb.getKeyTwo(), cb.getMessage());
 
         //Store the encrypted message
         cb.setMessage(encryptedMsg);
@@ -90,7 +86,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
 	
 	private String shiftedAlpha(Long key){
         int i = key.intValue();
-        String shifted = TOTAL_ALPHABET.substring(i)+TOTAL_ALPHABET.substring(0,i);
+        String shifted = Constants.TOTAL_ALPHABET.substring(i)+Constants.TOTAL_ALPHABET.substring(0,i);
         return shifted;
 	}
 	
@@ -100,7 +96,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
         String shiftedAlphabet = shiftedAlpha(key);
         for(int ctr = 0; ctr < lowerMsg.length();ctr++){
             char currChar = lowerMsg.charAt(ctr);
-            int idx = TOTAL_ALPHABET.indexOf(currChar);
+            int idx = Constants.TOTAL_ALPHABET.indexOf(currChar);
             if(idx==-1){
             	encr+=currChar;
             }
@@ -146,10 +142,10 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
         String[] bigrams = {"bk","fq","jc","jt","mj","qh","qx","vj","wz","zh","bq","fv","jd","jv","mq","qj","qy","vk","xb","zj","bx","fx","jf","jw","mx","qk","qz","vm","xg","zn","cb","fz","jg","jx","mz","ql","sx","vn","xj","zq","cf","gq","jh","jy","pq","qm","sz","vp","xk","zr","cg","gv","jk","jz","pv","qn","tq","vq","xv","zs","cj","gx","jl","kq","px","qo","tx","vt","xz","zx","cp","hk","jm","kv","qb","qp","vb","vw","yq","cv","hv","jn","kx","qc","qr","vc","vx","yv","cw","hx","jp","kz","qd","qs","vd","vz","yz","cx","hz","jq","lq","qe","qt","vf","wq","zb","dx","iy","jr","lx","qf","qv","vg","wv","zc","fk","jb","js","mg","qg","qw","vh","wx","zg"};
         for (int key1 = 0; key1<26;key1++){
         	String decr = "";
-            String shiftedAlphabet = TOTAL_ALPHABET.substring(key1)+TOTAL_ALPHABET.substring(0,key1);
+            String shiftedAlphabet = Constants.TOTAL_ALPHABET.substring(key1)+Constants.TOTAL_ALPHABET.substring(0,key1);
             for (int ctr = 0; ctr<input.length();ctr++){
                 char currChar = input.charAt(ctr);
-                int idx = TOTAL_ALPHABET.indexOf(currChar);
+                int idx = Constants.TOTAL_ALPHABET.indexOf(currChar);
                 if(idx==-1){
                 	decr+=currChar;
                 }
