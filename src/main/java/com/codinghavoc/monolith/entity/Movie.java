@@ -54,7 +54,7 @@ public class Movie {
     )
     private Set<Actor>actors;
 
-    @JsonIgnore
+    // @JsonIgnore
     @ManyToMany
     @JoinTable(
         name="movie_genre",

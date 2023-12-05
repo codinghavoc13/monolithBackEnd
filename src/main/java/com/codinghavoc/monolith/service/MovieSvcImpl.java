@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.codinghavoc.monolith.entity.Actor;
+// import com.codinghavoc.monolith.entity.Genre;
 import com.codinghavoc.monolith.entity.Movie;
 import com.codinghavoc.monolith.exception.MovieNotFoundException;
 import com.codinghavoc.monolith.repo.ActorRepo;
@@ -43,6 +44,13 @@ public class MovieSvcImpl implements MovieSvc {
     public List<Movie> getMoviesByActorId(Long actorId){
         return (List<Movie>)movieRepo.findMoviesByActorId(actorId);
     }
+
+    // @Override
+    // public List<Genre> getGenresByMovieId(Long movieId){
+    //     List<Genre> temp = movieRepo.findGenresByMovieId(movieId);
+    //     System.out.println(temp);
+    //     return (List<Genre>)movieRepo.findGenresByMovieId(movieId);
+    // }
     
     static Movie unwrapMovie(Optional<Movie> entity, Long id) {
         if (entity.isPresent()) return entity.get();

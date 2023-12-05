@@ -7,5 +7,5 @@ import com.codinghavoc.monolith.entity.Actor;
 public interface ActorSvc {
     Actor getActor(Long id);
     List<Actor> getAllActors();
-    List<Actor> getActorsByMovieId(Long movieId);    
+    List<Actor> getActorsByMovieId(Long movieId);
 }
