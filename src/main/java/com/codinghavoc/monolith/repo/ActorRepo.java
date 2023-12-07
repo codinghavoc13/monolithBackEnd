@@ -12,7 +12,7 @@ public interface ActorRepo extends CrudRepository<Actor,Long>{
         "	a.last_name, " +
         "	a.actor_id " +
         "from monolithdb.actors as a " +
-        "join monolithdb.actor_movie as am " +
+        "join monolithdb.movie_actor as am " +
         "	on a.actor_id=am.actor_id " +
         "where am.movie_id=?1 "+
         "order by a.last_name asc";
