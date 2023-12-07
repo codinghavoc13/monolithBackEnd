@@ -13,7 +13,6 @@ public interface MovieRepo extends CrudRepository<Movie,Long>{
         select m.movie_title, 
             m.release_date, 
             m.plot_summary, 
-            m.imdb_link, 
             m.movie_id 
         from monolithdb.movies as m 
         join monolithdb.actor_movie as am 

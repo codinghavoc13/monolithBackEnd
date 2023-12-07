@@ -42,8 +42,8 @@ public class Movie {
     @Column(name = "plot_summary")
     private String plotSummary;
 
-    @Column(name = "imdb_link")
-    private String imdbLink;
+    // @Column(name = "imdb_link")
+    // private String imdbLink;
 
     @JsonIgnore
     @ManyToMany

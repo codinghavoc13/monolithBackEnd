@@ -11,7 +11,6 @@ public interface ActorRepo extends CrudRepository<Actor,Long>{
     static String selectAllActorByMovieId = "select a.first_name, " +
         "	a.last_name, " +
         "	a.actor_id, " +
-        "	a.imdb_link " +
         "from monolithdb.actors as a " +
         "join monolithdb.actor_movie as am " +
         "	on a.actor_id=am.actor_id " +

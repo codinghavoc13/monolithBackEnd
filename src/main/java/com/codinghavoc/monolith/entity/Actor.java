@@ -38,8 +38,8 @@ public class Actor {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "imdb_link")
-    private String imdbLink;
+    // @Column(name = "imdb_link")
+    // private String imdbLink;
 
     @JsonIgnore
     @ManyToMany
