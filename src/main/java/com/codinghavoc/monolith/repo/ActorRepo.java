@@ -10,7 +10,7 @@ import com.codinghavoc.monolith.entity.Actor;
 public interface ActorRepo extends CrudRepository<Actor,Long>{
     static String selectAllActorByMovieId = "select a.first_name, " +
         "	a.last_name, " +
-        "	a.actor_id, " +
+        "	a.actor_id " +
         "from monolithdb.actors as a " +
         "join monolithdb.actor_movie as am " +
         "	on a.actor_id=am.actor_id " +
