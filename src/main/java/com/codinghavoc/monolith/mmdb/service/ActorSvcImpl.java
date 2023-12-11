@@ -1,13 +1,13 @@
-package com.codinghavoc.monolith.service;
+package com.codinghavoc.monolith.mmdb.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.codinghavoc.monolith.entity.Actor;
-import com.codinghavoc.monolith.exception.ActorNotFoundException;
-import com.codinghavoc.monolith.repo.ActorRepo;
+import com.codinghavoc.monolith.mmdb.entity.Actor;
+import com.codinghavoc.monolith.mmdb.exception.ActorNotFoundException;
+import com.codinghavoc.monolith.mmdb.repo.ActorRepo;
 
 import lombok.AllArgsConstructor;
 

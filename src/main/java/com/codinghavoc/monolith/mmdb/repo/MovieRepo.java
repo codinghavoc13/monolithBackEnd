@@ -1,12 +1,11 @@
-package com.codinghavoc.monolith.repo;
+package com.codinghavoc.monolith.mmdb.repo;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-// import com.codinghavoc.monolith.entity.Genre;
-import com.codinghavoc.monolith.entity.Movie;
+import com.codinghavoc.monolith.mmdb.entity.Movie;
 
 public interface MovieRepo extends CrudRepository<Movie,Long>{
     static String selectAllMoviesByActorId = """

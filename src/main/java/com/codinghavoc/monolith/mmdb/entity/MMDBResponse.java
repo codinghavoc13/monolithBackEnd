@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.entity;
+package com.codinghavoc.monolith.mmdb.entity;
 
 import java.util.List;
 

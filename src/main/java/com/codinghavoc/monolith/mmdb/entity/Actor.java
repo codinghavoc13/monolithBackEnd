@@ -1,6 +1,5 @@
-package com.codinghavoc.monolith.entity;
+package com.codinghavoc.monolith.mmdb.entity;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,22 +24,19 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="movies")
-public class Movie {
+@Table(name="actors")
+public class Actor {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long movie_id;
+    private Long actor_id;
 
     @NonNull
-    @Column(name = "movie_title")
-    private String movieTitle;
+    @Column(name = "first_name")
+    private String firstName;
 
     @NonNull
-    @Column(name = "release_date")
-    private LocalDate releaseDate;
-
-    @Column(name = "plot_summary")
-    private String plotSummary;
+    @Column(name = "last_name")
+    private String lastName;
 
     // @Column(name = "imdb_link")
     // private String imdbLink;
@@ -49,18 +45,8 @@ public class Movie {
     @ManyToMany
     @JoinTable(
         name="actor_movie",
-        joinColumns = @JoinColumn(name="movie_id",referencedColumnName = "movie_id"),
-        inverseJoinColumns = @JoinColumn(name="actor_id", referencedColumnName = "actor_id")
+        joinColumns = @JoinColumn(name="actor_id",referencedColumnName = "actor_id"),
+        inverseJoinColumns = @JoinColumn(name="movie_id", referencedColumnName = "movie_id")
     )
-    private Set<Actor>actors;
-
-    // @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-        name="movie_genre",
-        joinColumns = @JoinColumn(name="movie_id",referencedColumnName = "movie_id"),
-        inverseJoinColumns = @JoinColumn(name="genre_id", referencedColumnName = "genre_id")
-    )
-    private Set<Genre>genre;
-    
+    private Set<Movie>movies;
 }

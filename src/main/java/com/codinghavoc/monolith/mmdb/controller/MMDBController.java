@@ -1,11 +1,11 @@
-package com.codinghavoc.monolith.controller;
+package com.codinghavoc.monolith.mmdb.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.entity.MMDBResponse;
-import com.codinghavoc.monolith.service.ActorSvc;
-import com.codinghavoc.monolith.service.MovieSvc;
+import com.codinghavoc.monolith.mmdb.entity.MMDBResponse;
+import com.codinghavoc.monolith.mmdb.service.ActorSvc;
+import com.codinghavoc.monolith.mmdb.service.MovieSvc;
 
 import lombok.AllArgsConstructor;
 

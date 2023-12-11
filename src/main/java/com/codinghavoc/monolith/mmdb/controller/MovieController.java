@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.controller;
+package com.codinghavoc.monolith.mmdb.controller;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.entity.Movie;
-import com.codinghavoc.monolith.service.MovieSvc;
+import com.codinghavoc.monolith.mmdb.entity.Movie;
+import com.codinghavoc.monolith.mmdb.service.MovieSvc;
 
 import lombok.AllArgsConstructor;
 

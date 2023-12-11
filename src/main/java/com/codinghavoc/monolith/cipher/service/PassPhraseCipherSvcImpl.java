@@ -1,9 +1,9 @@
-package com.codinghavoc.monolith.service;
+package com.codinghavoc.monolith.cipher.service;
 
 import org.springframework.stereotype.Service;
 
 import com.codinghavoc.monolith.Constants;
-import com.codinghavoc.monolith.entity.PassPhraseBody;
+import com.codinghavoc.monolith.cipher.entity.PassPhraseBody;
 
 import lombok.AllArgsConstructor;
 

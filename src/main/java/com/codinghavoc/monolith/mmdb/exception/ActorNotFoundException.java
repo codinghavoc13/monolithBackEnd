@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.exception;
+package com.codinghavoc.monolith.mmdb.exception;
 
 public class ActorNotFoundException extends RuntimeException{
     public ActorNotFoundException(Long id){

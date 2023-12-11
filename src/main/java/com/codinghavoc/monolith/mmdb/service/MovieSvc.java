@@ -1,9 +1,8 @@
-package com.codinghavoc.monolith.service;
+package com.codinghavoc.monolith.mmdb.service;
 
 import java.util.List;
 
-// import com.codinghavoc.monolith.entity.Genre;
-import com.codinghavoc.monolith.entity.Movie;
+import com.codinghavoc.monolith.mmdb.entity.Movie;
 
 public interface MovieSvc {
     Movie getMovie(Long id);

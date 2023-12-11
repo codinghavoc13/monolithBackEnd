@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.controller;
+package com.codinghavoc.monolith.cipher.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.entity.PassPhraseBody;
-import com.codinghavoc.monolith.service.PassphraseCipherSvc;
+import com.codinghavoc.monolith.cipher.entity.PassPhraseBody;
+import com.codinghavoc.monolith.cipher.service.PassphraseCipherSvc;
 
 import lombok.AllArgsConstructor;
 

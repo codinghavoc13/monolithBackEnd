@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.entity;
+package com.codinghavoc.monolith.cipher.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PassPhraseBody {
+public class CipherBody {
     private String message;
-    private String passphrase;
-    
+    private Long keyOne;
+    private Long keyTwo;
+    private String action;    
 }

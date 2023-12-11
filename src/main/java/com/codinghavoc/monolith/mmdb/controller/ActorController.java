@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.controller;
+package com.codinghavoc.monolith.mmdb.controller;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.entity.Actor;
-import com.codinghavoc.monolith.service.ActorSvc;
+import com.codinghavoc.monolith.mmdb.entity.Actor;
+import com.codinghavoc.monolith.mmdb.service.ActorSvc;
 
 import lombok.AllArgsConstructor;
 

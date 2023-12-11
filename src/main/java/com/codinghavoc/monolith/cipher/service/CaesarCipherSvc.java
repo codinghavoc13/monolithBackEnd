@@ -1,6 +1,6 @@
-package com.codinghavoc.monolith.service;
+package com.codinghavoc.monolith.cipher.service;
 
-import com.codinghavoc.monolith.entity.CipherBody;
+import com.codinghavoc.monolith.cipher.entity.CipherBody;
 
 public interface CaesarCipherSvc {
     /**

@@ -1,16 +1,15 @@
-package com.codinghavoc.monolith.service;
+package com.codinghavoc.monolith.mmdb.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.codinghavoc.monolith.entity.Actor;
-// import com.codinghavoc.monolith.entity.Genre;
-import com.codinghavoc.monolith.entity.Movie;
-import com.codinghavoc.monolith.exception.MovieNotFoundException;
-import com.codinghavoc.monolith.repo.ActorRepo;
-import com.codinghavoc.monolith.repo.MovieRepo;
+import com.codinghavoc.monolith.mmdb.entity.Actor;
+import com.codinghavoc.monolith.mmdb.entity.Movie;
+import com.codinghavoc.monolith.mmdb.exception.MovieNotFoundException;
+import com.codinghavoc.monolith.mmdb.repo.ActorRepo;
+import com.codinghavoc.monolith.mmdb.repo.MovieRepo;
 
 import lombok.AllArgsConstructor;
 

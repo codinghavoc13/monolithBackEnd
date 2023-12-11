@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.exception;
+package com.codinghavoc.monolith.mmdb.exception;
 
 public class MovieNotFoundException extends RuntimeException{
     public MovieNotFoundException(Long id){
