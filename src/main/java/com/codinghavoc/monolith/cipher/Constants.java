@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith;
+package com.codinghavoc.monolith.cipher;
 
 public class Constants {
     public static String LOWER_ALPHA = "abcdefghijklmnopqrstuvwxyz";

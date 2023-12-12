@@ -2,7 +2,7 @@ package com.codinghavoc.monolith.cipher.service;
 
 import org.springframework.stereotype.Service;
 
-import com.codinghavoc.monolith.Constants;
+import com.codinghavoc.monolith.cipher.Constants;
 import com.codinghavoc.monolith.cipher.entity.CipherBody;
 
 import lombok.AllArgsConstructor;
