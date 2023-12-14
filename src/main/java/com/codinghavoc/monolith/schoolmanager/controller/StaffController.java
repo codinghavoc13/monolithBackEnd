@@ -43,7 +43,7 @@ public class StaffController {
 
     @GetMapping("/login")
     public ResponseEntity<SMRespDTO>login(@RequestBody SMLoginDTO dto){
-        return new ResponseEntity<>(staffSvc.login(dto), HttpStatus.CONTINUE);
+        return new ResponseEntity<>(staffSvc.login(dto), HttpStatus.OK);
     }
 
     @PostMapping("/saveGrade")

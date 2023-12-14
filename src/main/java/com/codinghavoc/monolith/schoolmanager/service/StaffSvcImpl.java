@@ -1,6 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,18 +79,13 @@ public class StaffSvcImpl implements StaffSvc {
     @Override
     public SMRespDTO login(SMLoginDTO dto){
         Staff check = staffRepo.getStaffByUsername(dto.username);
-        System.out.println(check);
-        if(check==null) return new SMRespDTO("no user with that username", null);
-        try {
-            boolean valid = PasswordHashUtil.validateLogin(dto.password, check.getPasswordSalt(), check.getPasswordHash());
-            System.out.println("valid: " + valid);
-            if(valid) {
-                return new SMRespDTO("success", check);
-            } else {
-                return new SMRespDTO("invalid login credentials", null);
-            }
-        } catch (NoSuchAlgorithmException e) {
-            return new SMRespDTO("Error with hash algorithm", null);
+        System.out.println("check: " + check.getPasswordSalt());
+        boolean valid = PasswordHashUtil.validateWithPBKDF(dto.password, check.getPasswordSalt(), check.getPasswordHash());
+        System.out.println("valid: " + valid);
+        if(valid) {
+            return new SMRespDTO("success", check);
+        } else {
+            return new SMRespDTO("invalid login credentials", null);
         }
     }
 
@@ -97,10 +93,11 @@ public class StaffSvcImpl implements StaffSvc {
     public SMRespDTO saveAssignment(SMReqDTO dto){
         List<Assignment> result = new ArrayList<>();
         List<SMReqDTO> assignmentDtos = dto.assignments;
+        Staff staff = (Staff)getStaffMember(dto.staff_id).body;
         Assignment temp;
         for(SMReqDTO d : assignmentDtos){
             temp = d.assignment;
-            temp.setTeacher((Staff)(getStaffMember(d.staff_id).body));
+            temp.setTeacher(staff);
             result.add(assignmentRepo.save(temp));
         }
         return new SMRespDTO("success", result);
@@ -121,23 +118,19 @@ public class StaffSvcImpl implements StaffSvc {
         System.out.println(dtos);
         ArrayList<Staff> result = new ArrayList<>();
         for(SMRegisterDTO dto : dtos){
-            try {
-                Staff staff = new Staff();
-                staff.setFirstName(dto.firstName);
-                staff.setLastName(dto.lastName);
-                staff.setEmailString(dto.email);
-                staff.setPhoneString(dto.phoneString);
-                String[] pass;
-                pass = PasswordHashUtil.hashPW(dto.password);
-                staff.setPasswordSalt(pass[0]);
-                staff.setPasswordHash(pass[1]);
-                //build out the password salt and hash
-                staff.setRole(dto.role);
-                staff.setUsername(dto.username);
-                result.add(staffRepo.save(staff));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            Staff staff = new Staff();
+            staff.setFirstName(dto.firstName);
+            staff.setLastName(dto.lastName);
+            staff.setEmailString(dto.email);
+            staff.setPhoneString(dto.phoneString);
+            String[] pass;
+            pass = PasswordHashUtil.hashPWWPBKDF(dto.password);
+            staff.setPasswordSalt(pass[0]);
+            staff.setPasswordHash(pass[1]);
+            //build out the password salt and hash
+            staff.setRole(dto.role);
+            staff.setUsername(dto.username);
+            result.add(staffRepo.save(staff));
         }
         return new SMRespDTO("response",result);
     }
