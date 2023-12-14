@@ -7,7 +7,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 
 public interface GradeEntryRepo extends CrudRepository<GradeEntry,Long>{
     static String qryFindByStudentAndAssignmentId = """
-        select * from monolithdb.grade_entry
+        select * from school_manager.grade_entry
         where student_id=?1 and assignment_id=?2
         """;
     @Query(value = qryFindByStudentAndAssignmentId, nativeQuery = true)

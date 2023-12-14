@@ -48,7 +48,7 @@ public class Movie {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-        name="actor_movie",
+        name="movie_actor",
         joinColumns = @JoinColumn(name="movie_id",referencedColumnName = "movie_id"),
         inverseJoinColumns = @JoinColumn(name="actor_id", referencedColumnName = "actor_id")
     )

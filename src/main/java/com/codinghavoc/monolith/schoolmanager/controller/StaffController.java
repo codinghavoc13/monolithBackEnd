@@ -1,6 +1,6 @@
 package com.codinghavoc.monolith.schoolmanager.controller;
 
-// import java.util.List;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
-import com.codinghavoc.monolith.schoolmanager.entity.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.SMRespDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMRespDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Staff;
-// import com.codinghavoc.monolith.schoolmanager.entity.Student;
 import com.codinghavoc.monolith.schoolmanager.service.StaffSvc;
 
 import lombok.AllArgsConstructor;
@@ -41,6 +41,11 @@ public class StaffController {
         return new ResponseEntity<>(staffSvc.getStudentsAssignedToTeacher(teacher_id),HttpStatus.OK);
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<SMRespDTO>login(@RequestBody SMLoginDTO dto){
+        return new ResponseEntity<>(staffSvc.login(dto), HttpStatus.CONTINUE);
+    }
+
     @PostMapping("/saveGrade")
     public ResponseEntity<SMRespDTO> saveGrade(@RequestBody SMReqDTO dto){
         return new ResponseEntity<>(staffSvc.saveGradeEntry(dto), HttpStatus.OK);
@@ -52,8 +57,8 @@ public class StaffController {
     }
 
     @PostMapping("/saveNewStaff")
-    public ResponseEntity<SMRespDTO> saveNewStaff(@RequestBody Staff staff){
-        return new ResponseEntity<>(staffSvc.saveStaff(staff), HttpStatus.CREATED);
+    public ResponseEntity<SMRespDTO> saveNewStaff(@RequestBody List<SMRegisterDTO> dtos){
+        return new ResponseEntity<>(staffSvc.saveStaff(dtos), HttpStatus.CREATED);
     }
 
     @PostMapping("/saveNewStudent")

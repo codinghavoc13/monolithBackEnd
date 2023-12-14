@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "grade_entry", uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","assignment_id"})})
+@Table(name = "grade_entry", schema = "school_manager", uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","assignment_id"})})
 public class GradeEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

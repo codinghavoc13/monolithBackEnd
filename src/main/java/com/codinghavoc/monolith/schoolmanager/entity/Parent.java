@@ -21,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "parents")
+@Table(name = "parents", schema = "school_manager")
 public class Parent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

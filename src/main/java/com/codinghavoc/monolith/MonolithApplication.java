@@ -16,14 +16,6 @@ public class MonolithApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		//Saving staff can now be done with the controller
-		// Staff staff1 = new Staff("Ray","Mayer",Role.ADMIN);
-		// staffSvc.saveStaff(staff1);
-
-		// Staff[] teachers = new Staff[]{
-		// 	new Staff("Delores","Lang",Role.TEACHER),
-		// 	new Staff("Gary","Bernard",Role.TEACHER)
-		// };
 	}
 
 }

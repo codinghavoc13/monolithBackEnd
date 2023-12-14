@@ -28,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "students")
+@Table(name = "students", schema = "school_manager")
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,10 +56,31 @@ public class Student {
     @Column(name = "grade_level")
     private String gradeLevel;
 
+    @NonNull
+    @Column(name = "username")
+    private String username;
+
+    @NonNull
+    @Column(name = "pwHash")
+    private String passwordHash;
+
+    @NonNull
+    @Column(name = "pwSalt")
+    private String passwordSalt;
+
+    @NonNull
+    @Column(name = "email")
+    private String emailString;
+
+    @NonNull
+    @Column(name = "phone")
+    private String phoneString;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(
         name="student_teacher",
+        schema = "school_manager",
         joinColumns = @JoinColumn(name="student_id",referencedColumnName = "student_id"),
         inverseJoinColumns = @JoinColumn(name="staff_id", referencedColumnName = "staff_id")
     )

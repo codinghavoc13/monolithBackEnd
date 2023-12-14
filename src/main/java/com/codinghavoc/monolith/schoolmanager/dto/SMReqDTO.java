@@ -1,6 +1,10 @@
-package com.codinghavoc.monolith.schoolmanager.entity;
+package com.codinghavoc.monolith.schoolmanager.dto;
 
 import java.util.List;
+
+import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.Staff;
+import com.codinghavoc.monolith.schoolmanager.entity.Student;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,5 +18,6 @@ public class SMReqDTO {
     public double grade;
     public Assignment assignment;
     public List<SMReqDTO> assignments;
+    public List<Staff> staffList;
     public List<Student> students;
 }

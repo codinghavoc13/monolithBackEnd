@@ -2,9 +2,10 @@ package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.util.List;
 
-// import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
-import com.codinghavoc.monolith.schoolmanager.entity.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.SMRespDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMRespDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Staff;
 import com.codinghavoc.monolith.schoolmanager.entity.Student;
 
@@ -14,11 +15,13 @@ public interface StaffSvc {
     // List<Student> getAllStudents();
     SMRespDTO getAssignmentsByTeacherId(Long id);
     SMRespDTO getStaffMember(Long id);
+    SMRespDTO getStaffUsernames();
     SMRespDTO getStudentsAssignedToTeacher(Long id);
     // Student getStudent(Long id);
+    SMRespDTO login(SMLoginDTO dto);
     SMRespDTO saveAssignment(SMReqDTO dto);
     SMRespDTO saveGradeEntry(SMReqDTO dto);
-    SMRespDTO saveStaff(Staff staff);
+    SMRespDTO saveStaff(List<SMRegisterDTO> dtos);
     SMRespDTO saveStudent(List<Student> student);
     
     //List<Staff> getStaffByRole(String role);

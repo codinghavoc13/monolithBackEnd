@@ -1,4 +1,4 @@
-package com.codinghavoc.monolith.schoolmanager.entity;
+package com.codinghavoc.monolith.schoolmanager.dto;
 
 public class SMRespDTO {
     public String message;
