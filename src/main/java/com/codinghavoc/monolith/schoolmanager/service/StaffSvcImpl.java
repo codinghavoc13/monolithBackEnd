@@ -79,9 +79,7 @@ public class StaffSvcImpl implements StaffSvc {
     @Override
     public SMRespDTO login(SMLoginDTO dto){
         Staff check = staffRepo.getStaffByUsername(dto.username);
-        System.out.println("check: " + check.getPasswordSalt());
         boolean valid = PasswordHashUtil.validateWithPBKDF(dto.password, check.getPasswordSalt(), check.getPasswordHash());
-        System.out.println("valid: " + valid);
         if(valid) {
             return new SMRespDTO("success", check);
         } else {
