@@ -5,9 +5,18 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.codinghavoc.monolith.schoolmanager.entity.Staff;
+import com.codinghavoc.monolith.schoolmanager.entity.User;
 
-public interface StaffRepo extends CrudRepository<Staff,Long>{
+public interface UserRepo extends CrudRepository<User, Long>{
+    static String getStudentsByTeacherIdQry = """
+            select s.* from school_manager.users as s 
+            join school_manager.student_teacher as st 
+            on s.student_id=st.student_id 
+            where st.staff_id=?1
+            """;
+    @Query(value=getStudentsByTeacherIdQry, nativeQuery=true)
+    List<User> getStudentsByTeacherId(Long teacher_id);
+    
     static String checkStudentTeacherEntry = """
             select count(*)
             from school_manager.student_teacher
@@ -16,15 +25,15 @@ public interface StaffRepo extends CrudRepository<Staff,Long>{
     @Query(value=checkStudentTeacherEntry, nativeQuery = true)
     Long checkForStudentTeacherEntry(Long staff_id, Long student_id);
 
-    static String qryGetStaffUsernames = "select s.username from school_manager.staff";
+    static String qryGetStaffUsernames = "select s.username from school_manager.users";
     @Query(value = qryGetStaffUsernames, nativeQuery = true)
     List<String> getUserNames();
 
     static String qryGetStaffByUsername = """
             select * 
-            from school_manager.staff as s
+            from school_manager.users as s
             where s.username=?1
             """;
     @Query(value = qryGetStaffByUsername, nativeQuery = true)
-    Staff getStaffByUsername(String username);
+    User getStaffByUsername(String username);
 }

@@ -5,24 +5,24 @@ import java.util.List;
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMRespDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.Staff;
-import com.codinghavoc.monolith.schoolmanager.entity.Student;
+import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
+import com.codinghavoc.monolith.schoolmanager.entity.User;
 
-public interface StaffSvc {
-    SMRespDTO addStudentToTeacherRoster(Long teacher_id, Long student_id);
-    SMRespDTO getAllStaff();
-    // List<Student> getAllStudents();
-    SMRespDTO getAssignmentsByTeacherId(Long id);
-    SMRespDTO getStaffMember(Long id);
-    SMRespDTO getStaffUsernames();
-    SMRespDTO getStudentsAssignedToTeacher(Long id);
-    // Student getStudent(Long id);
-    SMRespDTO login(SMLoginDTO dto);
-    SMRespDTO saveAssignment(SMReqDTO dto);
-    SMRespDTO saveGradeEntry(SMReqDTO dto);
-    SMRespDTO saveStaff(List<SMRegisterDTO> dtos);
-    SMRespDTO saveStudent(List<Student> student);
+public interface UserSvc {
+    User addStudentToTeacherRoster(Long teacher_id, Long student_id);
+    List<User> getAllStaff();
+    // List<User> getAllStudents();
+    List<Assignment> getAssignmentsByTeacherId(Long id);
+    User getStaffMember(Long id);
+    List<String> getStaffUsernames();
+    List<User> getStudentsAssignedToTeacher(Long id);
+    // User getStudent(Long id);
+    User login(SMLoginDTO dto);
+    List<Assignment> saveAssignment(SMReqDTO dto);
+    GradeEntry saveGradeEntry(SMReqDTO dto);
+    User saveUser(SMRegisterDTO user);
+    List<User> saveUsers(List<SMRegisterDTO> users);
     
     //List<Staff> getStaffByRole(String role);
     /*

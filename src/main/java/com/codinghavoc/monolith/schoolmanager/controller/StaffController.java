@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMRespDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.Staff;
-import com.codinghavoc.monolith.schoolmanager.service.StaffSvc;
+import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
+import com.codinghavoc.monolith.schoolmanager.entity.User;
+import com.codinghavoc.monolith.schoolmanager.service.UserSvc;
 
 import lombok.AllArgsConstructor;
 
@@ -24,45 +25,47 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping("/staff")
 public class StaffController {
-    private StaffSvc staffSvc;
+    private UserSvc userSvc;
     
-    @GetMapping("/all")
-    public ResponseEntity<SMRespDTO> getAllStaff(){
-        return new ResponseEntity<>(staffSvc.getAllStaff(),HttpStatus.OK);
+    @GetMapping("/all")//tested, works, All Users
+    public ResponseEntity<List<User>> getAllStaff(){
+        return new ResponseEntity<>(userSvc.getAllStaff(),HttpStatus.OK);
     }
 
+    //will likely need a series of new GET all mappings to get only students, admin, teachers, parents
+
     @GetMapping("/getAssignments/{teacher_id}")
-    public ResponseEntity<SMRespDTO> getAssignmentsByTeacher(@PathVariable Long teacher_id){
-        return new ResponseEntity<>(staffSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
+    public ResponseEntity<List<Assignment>> getAssignmentsByTeacher(@PathVariable Long teacher_id){
+        return new ResponseEntity<>(userSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
     }
 
     @GetMapping("/getStudents/{teacher_id}")
-    public ResponseEntity<SMRespDTO>getStudentsAssignedToTeacher(@PathVariable Long teacher_id){
-        return new ResponseEntity<>(staffSvc.getStudentsAssignedToTeacher(teacher_id),HttpStatus.OK);
+    public ResponseEntity<List<User>>getStudentsAssignedToTeacher(@PathVariable Long teacher_id){
+        return new ResponseEntity<>(userSvc.getStudentsAssignedToTeacher(teacher_id),HttpStatus.OK);
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<SMRespDTO>login(@RequestBody SMLoginDTO dto){
-        return new ResponseEntity<>(staffSvc.login(dto), HttpStatus.OK);
+    @PostMapping("/login")//tested, works, Staff Login Pass and Staff Login Pass
+    public ResponseEntity<User> login(@RequestBody SMLoginDTO dto){
+        return new ResponseEntity<>(userSvc.login(dto), HttpStatus.OK);
     }
 
     @PostMapping("/saveGrade")
-    public ResponseEntity<SMRespDTO> saveGrade(@RequestBody SMReqDTO dto){
-        return new ResponseEntity<>(staffSvc.saveGradeEntry(dto), HttpStatus.OK);
+    public ResponseEntity<GradeEntry> saveGrade(@RequestBody SMReqDTO dto){
+        return new ResponseEntity<>(userSvc.saveGradeEntry(dto), HttpStatus.OK);
     }
 
-    @PostMapping("/saveNewAssignment")
-    public ResponseEntity<SMRespDTO> saveNewAssignment(@RequestBody SMReqDTO dto){
-        return new ResponseEntity<>(staffSvc.saveAssignment(dto), HttpStatus.CREATED);
+    @PostMapping("/saveNewAssignment")//tested, works, Save New Assignment
+    public ResponseEntity<List<Assignment>> saveNewAssignment(@RequestBody SMReqDTO dto){
+        return new ResponseEntity<>(userSvc.saveAssignment(dto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/saveNewStaff")
-    public ResponseEntity<SMRespDTO> saveNewStaff(@RequestBody List<SMRegisterDTO> dtos){
-        return new ResponseEntity<>(staffSvc.saveStaff(dtos), HttpStatus.CREATED);
+    @PostMapping("/saveNewUsers") //tested, works, Save New Staff
+    public ResponseEntity<List<User>> saveNewUsers(@RequestBody List<SMRegisterDTO> dtos){
+        return new ResponseEntity<>(userSvc.saveUsers(dtos), HttpStatus.CREATED);
     }
 
-    @PostMapping("/saveNewStudent")
-    public ResponseEntity<SMRespDTO> saveNewStudent(@RequestBody SMReqDTO dto){
-        return new ResponseEntity<>(staffSvc.saveStudent(dto.students), HttpStatus.CREATED);
+    @PostMapping("/saveNewUser") //tested, works, Save New Students
+    public ResponseEntity<User> saveNewUser(@RequestBody SMRegisterDTO dto){
+        return new ResponseEntity<>(userSvc.saveUser(dto), HttpStatus.CREATED);
     }
 }

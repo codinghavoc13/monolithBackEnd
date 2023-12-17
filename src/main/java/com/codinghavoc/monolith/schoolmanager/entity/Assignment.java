@@ -39,14 +39,7 @@ public class Assignment {
     @Enumerated(EnumType.STRING)
     private AssignmentType type;
 
-    // @NonNull
-    // @JsonIgnore
-    // @ManyToOne
-    // @Column(name = "staff_id")
-    // private Long staffId;
-
     @ManyToOne()
-    @JoinColumn(name = "staff_id", nullable = false)
-    private Staff teacher;
-
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private User teacher; //will need to update this to User
 }

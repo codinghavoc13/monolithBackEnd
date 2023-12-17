@@ -2,7 +2,9 @@ package com.codinghavoc.monolith.schoolmanager.entity;
 
 import java.util.Set;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
+import com.codinghavoc.monolith.schoolmanager.util.PasswordHashUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -28,12 +30,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "staff", schema = "school_manager")
-public class Staff {
+@Table(name = "users", schema = "school_manager")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "staff_id")
-    private Long staff_id;
+    @Column(name = "user_id")
+    private Long userId;
 
     @NonNull
     @Column(name = "first_name")
@@ -67,23 +69,54 @@ public class Staff {
     @NonNull
     @Column(name = "phone")
     private String phoneString;
+
+    @Column(name = "school_student_id")
+    private String school_student_id;
+
+    @Column(name = "grade_level")
+    private String gradeLevel;
     
     @JsonIgnore
     @ManyToMany
     @JoinTable(
         name="student_teacher",
         schema = "school_manager",
-        joinColumns = @JoinColumn(name="staff_id",referencedColumnName = "staff_id"),
-        inverseJoinColumns = @JoinColumn(name="student_id", referencedColumnName = "student_id")
+        joinColumns = @JoinColumn(name="teacher_id",referencedColumnName = "user_id"),
+        inverseJoinColumns = @JoinColumn(name="student_id", referencedColumnName = "user_id")
     )
-    private Set<Student>students;
+    private Set<User>students;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+        name="student_teacher",
+        schema = "school_manager",
+        joinColumns = @JoinColumn(name="student_id",referencedColumnName = "user_id"),
+        inverseJoinColumns = @JoinColumn(name="teacher_id", referencedColumnName = "user_id")
+    )
+    private Set<User>teachers;
 
     @JsonIgnore
     @OneToMany(mappedBy = "teacher")
     private Set<Assignment> assignments;
-}
+    
+    public User(SMRegisterDTO dto){
+        firstName = dto.firstName;
+        lastName = dto.lastName;
+        emailString = dto.email;
+        phoneString = dto.phoneString;
+        if(dto.password != null){
+            String[] pass;
+            pass = PasswordHashUtil.hashPWWPBKDF(dto.password);
+            passwordSalt = pass[0];
+            passwordHash = pass[1];
+        }
+        role = dto.role;
+        username = dto.username;
+        if(role.equals(Role.STUDENT)){
+            school_student_id = dto.school_student_id;
+            gradeLevel = dto.gradeLevel;
+        }
 
-/*
-Will need to refer back to this to double check when saving data to db
- * https://www.baeldung.com/jpa-persisting-enums-in-jpa
- */
+    }
+}
