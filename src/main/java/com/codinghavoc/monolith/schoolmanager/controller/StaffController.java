@@ -34,6 +34,7 @@ public class StaffController {
 
     //will likely need a series of new GET all mappings to get only students, admin, teachers, parents
 
+    //will need another getAssignments EP with teacher and student id
     @GetMapping("/getAssignments/{teacher_id}")
     public ResponseEntity<List<Assignment>> getAssignmentsByTeacher(@PathVariable Long teacher_id){
         return new ResponseEntity<>(userSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
@@ -44,6 +45,7 @@ public class StaffController {
         return new ResponseEntity<>(userSvc.getStudentsAssignedToTeacher(teacher_id),HttpStatus.OK);
     }
 
+    //Login will need to be pulled out into it's own controller
     @PostMapping("/login")//tested, works, Staff Login Pass and Staff Login Pass
     public ResponseEntity<User> login(@RequestBody SMLoginDTO dto){
         return new ResponseEntity<>(userSvc.login(dto), HttpStatus.OK);

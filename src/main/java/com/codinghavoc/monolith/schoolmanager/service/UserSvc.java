@@ -10,6 +10,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface UserSvc {
+    //Some of these will be moved to Staff, student, parent specific services
     User addStudentToTeacherRoster(Long teacher_id, Long student_id);
     List<User> getAllStaff();
     // List<User> getAllStudents();
