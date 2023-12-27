@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.UserSvc;
 
@@ -24,5 +25,9 @@ public class UserController {
     public ResponseEntity<User> login(@RequestBody SMLoginDTO dto){
         return new ResponseEntity<>(userSvc.login(dto), HttpStatus.OK);
     }
-    
+
+    @PostMapping("/saveNewUser") //tested, works, Save New Students
+    public ResponseEntity<User> saveNewUser(@RequestBody SMRegisterDTO dto){
+        return new ResponseEntity<>(userSvc.saveUser(dto), HttpStatus.CREATED);
+    }    
 }

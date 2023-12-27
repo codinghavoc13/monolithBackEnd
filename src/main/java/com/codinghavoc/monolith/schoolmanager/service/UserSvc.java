@@ -4,25 +4,19 @@ import java.util.List;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
-import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface UserSvc {
     //Some of these will be moved to Staff, student, parent specific services
-    User addStudentToTeacherRoster(Long teacher_id, Long student_id);
-    List<User> getAllStaff();
-    // List<User> getAllStudents();
-    List<Assignment> getAssignmentsByTeacherId(Long id);
-    User getStaffMember(Long id);
-    List<String> getStaffUsernames();
-    List<User> getStudentsAssignedToTeacher(Long id);
-    // User getStudent(Long id);
+    //retain as a general user
+    List<User> getAllUsers();
+    User getUser(Long id);
+    List<String> getUserNames();
     User login(SMLoginDTO dto);
-    List<Assignment> saveAssignment(SMReqDTO dto);
-    GradeEntry saveGradeEntry(SMReqDTO dto);
     User saveUser(SMRegisterDTO user);
+
+    //move to a superadmin
+    //saving single user would be a registration change; saving multiple would be a super admin update
     List<User> saveUsers(List<SMRegisterDTO> users);
     
     //List<Staff> getStaffByRole(String role);
