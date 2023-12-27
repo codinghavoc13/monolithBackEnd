@@ -14,4 +14,10 @@ public interface AssignmentRepo extends CrudRepository<Assignment,Long>{
     @Query(value=qryFindAllAssignmentsByStaffId, nativeQuery=true)
     List<Assignment> findAllAssignmentByStaffId(Long staff_id);
     
+    // static String qryFindAllAssignmentsByStaffIdAndStudentId = """
+    //         select * from school_manager.assignment where staff_id=?1
+    //         """;
+    // @Query(value=qryFindAllAssignmentsByStaffId, nativeQuery=true)
+    // List<Assignment> findAllAssignmentByStaffId(Long staff_id);
+    
 }
