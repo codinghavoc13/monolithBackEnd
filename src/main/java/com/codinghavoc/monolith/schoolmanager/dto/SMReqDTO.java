@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SMReqDTO {
-    public Long staff_id;
+    public Long teacher_id;
     public Long student_id;
     public Long assignment_id;
     public double grade;
     public Assignment assignment;
     public User user;
-    public List<SMReqDTO> assignments;
+    public List<Assignment> assignments;
     public List<User> users;
 }

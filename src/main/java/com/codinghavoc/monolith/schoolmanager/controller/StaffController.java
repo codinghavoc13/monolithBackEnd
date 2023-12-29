@@ -5,17 +5,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
-import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.UserSvc;
 
@@ -31,8 +26,6 @@ public class StaffController {
     public ResponseEntity<List<User>> getAllUsers(){
         return new ResponseEntity<>(userSvc.getAllUsers(),HttpStatus.OK);
     }
-
-    //will likely need a series of new GET all mappings to get only students, admin, teachers, parents
 
     @PostMapping("/saveNewUsers") //tested, works, Save New Staff
     public ResponseEntity<List<User>> saveNewUsers(@RequestBody List<SMRegisterDTO> dtos){

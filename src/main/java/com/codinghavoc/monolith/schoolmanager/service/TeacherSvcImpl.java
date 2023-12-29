@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMAssignmentDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
@@ -13,6 +14,7 @@ import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -24,7 +26,10 @@ public class TeacherSvcImpl implements TeacherSvc {
 
     @Override
     public List<Assignment> getAssignmentsByTeacherId(Long teacher_Id){
-        return (List<Assignment>) assignmentRepo.findAllAssignmentByStaffId(teacher_Id);
+        SMReqDTO response = new SMReqDTO();
+        response.teacher_id = teacher_Id;
+        response.assignments = (List<Assignment>) assignmentRepo.findAllAssignmentByTeacherId(teacher_Id);
+        return (List<Assignment>) assignmentRepo.findAllAssignmentByTeacherId(teacher_Id);
     }
 
     // @Override
@@ -38,16 +43,24 @@ public class TeacherSvcImpl implements TeacherSvc {
     }
     
 
+    @Transactional
     @Override
     public List<Assignment> saveAssignment(SMReqDTO dto){
         List<Assignment> result = new ArrayList<>();
-        List<SMReqDTO> assignmentDtos = dto.assignments;
-        User staff = getStaffMember(dto.staff_id);
-        Assignment temp;
-        for(SMReqDTO d : assignmentDtos){
-            temp = d.assignment;
-            temp.setTeacher(staff);
-            result.add(assignmentRepo.save(temp));
+        List<Assignment> assignmentDtos = dto.assignments;
+        System.out.println("assignmentDtos size: " + assignmentDtos.size());
+        for(Assignment a : assignmentDtos){
+            System.out.println(a.toString());
+        }
+        System.out.println("dto user_id:" + dto.teacher_id);
+        User staff = getStaffMember(dto.teacher_id);
+        System.out.println("user: " + staff.getUsername());
+        // Assignment temp;
+        for(Assignment a : assignmentDtos){
+            // temp = d.assignment;
+            System.out.println(a.toString());
+            a.setTeacher(staff);
+            result.add(assignmentRepo.save(a));
         }
         return result;
     }
@@ -58,7 +71,7 @@ public class TeacherSvcImpl implements TeacherSvc {
         if(check!=null){
             return check;
         }
-        GradeEntry ge = new GradeEntry(dto.staff_id,dto.student_id,dto.assignment_id, dto.grade);
+        GradeEntry ge = new GradeEntry(dto.teacher_id,dto.student_id,dto.assignment_id, dto.grade);
         return geRepo.save(ge);
     }
 

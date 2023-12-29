@@ -1,6 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.entity;
 
 import com.codinghavoc.monolith.schoolmanager.enums.AssignmentType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,11 +36,17 @@ public class Assignment {
     private String assignmentTitle;
 
     @NonNull
-    @Column(name = "type")
+    @Column(name = "assignment_type")
     @Enumerated(EnumType.STRING)
-    private AssignmentType type;
+    private AssignmentType assignmentType;
 
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "teacher_id", nullable = false)
     private User teacher; //will need to update this to User
+
+    @Override
+    public String toString() {
+        return "Assignment [assignmentTitle=" + assignmentTitle + ", assignmentType=" + assignmentType + "]";
+    }
 }
