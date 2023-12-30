@@ -50,6 +50,6 @@ public class TeacherController {
     @PostMapping("/saveNewAssignment")//tested, works, Save New Assignment
     public ResponseEntity<List<Assignment>> saveNewAssignment(@RequestBody SMReqDTO dto){
         System.out.println("TC-sna-1");
-        return new ResponseEntity<>(teacherSvc.saveAssignment(dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(teacherSvc.saveAssignment(dto), HttpStatus.OK);
     }
 }

@@ -48,17 +48,16 @@ public class TeacherSvcImpl implements TeacherSvc {
     public List<Assignment> saveAssignment(SMReqDTO dto){
         List<Assignment> result = new ArrayList<>();
         List<Assignment> assignmentDtos = dto.assignments;
-        System.out.println("assignmentDtos size: " + assignmentDtos.size());
-        for(Assignment a : assignmentDtos){
-            System.out.println(a.toString());
-        }
-        System.out.println("dto user_id:" + dto.teacher_id);
+        // System.out.println("assignmentDtos size: " + assignmentDtos.size());
+        // for(Assignment a : assignmentDtos){
+        //     System.out.println(a.toString());
+        // }
+        // System.out.println("dto user_id:" + dto.teacher_id);
         User staff = getStaffMember(dto.teacher_id);
-        System.out.println("user: " + staff.getUsername());
+        // System.out.println("user: " + staff.getUsername());
         // Assignment temp;
         for(Assignment a : assignmentDtos){
-            // temp = d.assignment;
-            System.out.println(a.toString());
+            // System.out.println(a.toString());
             a.setTeacher(staff);
             result.add(assignmentRepo.save(a));
         }
