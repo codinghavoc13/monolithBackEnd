@@ -71,7 +71,7 @@ public class User {
     private String phoneString;
 
     @Column(name = "school_student_id")
-    private String school_student_id;
+    private String schoolStudentId;
 
     @Column(name = "grade_level")
     private String gradeLevel;
@@ -114,7 +114,7 @@ public class User {
         role = dto.role;
         username = dto.username;
         if(role.equals(Role.STUDENT)){
-            school_student_id = dto.school_student_id;
+            schoolStudentId = dto.schoolStudentId;
             gradeLevel = dto.gradeLevel;
         }
 

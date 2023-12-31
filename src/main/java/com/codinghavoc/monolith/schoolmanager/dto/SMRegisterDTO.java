@@ -9,7 +9,7 @@ public class SMRegisterDTO {
     public String username;
     public String password;
     public String phoneString;
-    public String school_student_id;
+    public String schoolStudentId;
     public String gradeLevel;
     public Role role;
 }

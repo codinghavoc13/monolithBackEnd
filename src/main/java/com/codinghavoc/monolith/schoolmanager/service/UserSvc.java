@@ -9,6 +9,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.User;
 public interface UserSvc {
     //Some of these will be moved to Staff, student, parent specific services
     //retain as a general user
+    Boolean checkUsername(SMRegisterDTO check);
     List<User> getAllUsers();
     User getUser(Long id);
     List<String> getUserNames();

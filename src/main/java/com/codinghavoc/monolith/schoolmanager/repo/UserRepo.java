@@ -25,8 +25,8 @@ public interface UserRepo extends CrudRepository<User, Long>{
     @Query(value=checkStudentTeacherEntry, nativeQuery = true)
     Long checkForStudentTeacherEntry(Long staff_id, Long student_id);
 
-    static String qryGetStaffUsernames = "select s.username from school_manager.users";
-    @Query(value = qryGetStaffUsernames, nativeQuery = true)
+    static String qryUsernames = "select username from school_manager.users";
+    @Query(value = qryUsernames, nativeQuery = true)
     List<String> getUserNames();
 
     static String qryGetStaffByUsername = """

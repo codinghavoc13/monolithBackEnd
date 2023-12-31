@@ -23,6 +23,21 @@ public class UserSvcImpl implements UserSvc{
     UserRepo userRepo;
 
     @Override
+    public Boolean checkUsername(SMRegisterDTO check){
+        // System.out.println("Looking for: " + check.username);
+        // for(String s : getUserNames()){
+        //     System.out.println(s);
+        // }
+        // if(getUserNames().contains(check.username)){
+        //     System.out.println("u-svc-1");
+        //     check.username = null;
+        // } else {
+        //     System.out.println("u-svc-2");
+        // }
+        return getUserNames().contains(check.username);
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return (List<User>)userRepo.findAll();
     }
@@ -37,15 +52,23 @@ public class UserSvcImpl implements UserSvc{
         return (List<String>)userRepo.getUserNames();
     }
 
+    /*
+     * Possibly rework this to return a response entity
+     */
     @Override
     public User login(SMLoginDTO dto){
         User check = userRepo.getStaffByUsername(dto.username);
-        boolean valid = PasswordHashUtil.validateWithPBKDF(dto.password, check.getPasswordSalt(), check.getPasswordHash());
-        if(valid) {
-            return check;
-        } else {
-            return null;
-        }
+        System.out.println(check);
+        if(check != null){
+            boolean valid = PasswordHashUtil.validateWithPBKDF(dto.password, check.getPasswordSalt(), check.getPasswordHash());
+            if(valid) {
+                System.out.println("us-1");
+                return check;
+            } else {
+                System.out.println("us-2");
+                return null;
+            }
+        } else return null;
     }
 
     @Override
