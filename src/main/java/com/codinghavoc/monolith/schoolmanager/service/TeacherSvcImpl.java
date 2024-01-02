@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.codinghavoc.monolith.schoolmanager.dto.SMAssignmentDTO;
+// import com.codinghavoc.monolith.schoolmanager.dto.SMAssignmentDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
@@ -13,6 +13,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
+import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -26,9 +27,11 @@ public class TeacherSvcImpl implements TeacherSvc {
 
     @Override
     public List<Assignment> getAssignmentsByTeacherId(Long teacher_Id){
-        SMReqDTO response = new SMReqDTO();
-        response.teacher_id = teacher_Id;
-        response.assignments = (List<Assignment>) assignmentRepo.findAllAssignmentByTeacherId(teacher_Id);
+    // public SMReqDTO getAssignmentsByTeacherId(Long teacher_Id){
+    //     SMReqDTO response = new SMReqDTO();
+    //     response.teacher_id = teacher_Id;
+    //     response.assignments = (List<Assignment>) assignmentRepo.findAllAssignmentByTeacherId(teacher_Id);
+    //     return response;
         return (List<Assignment>) assignmentRepo.findAllAssignmentByTeacherId(teacher_Id);
     }
 

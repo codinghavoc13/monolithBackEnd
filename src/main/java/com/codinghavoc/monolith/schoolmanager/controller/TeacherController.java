@@ -29,6 +29,10 @@ public class TeacherController {
     public ResponseEntity<List<Assignment>> getAssignmentsByTeacher(@PathVariable Long teacher_id){
         return new ResponseEntity<>(teacherSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
     }
+    // @GetMapping("/getAssignments/teacher_id/{teacher_id}")
+    // public ResponseEntity<SMReqDTO> getAssignmentsByTeacher(@PathVariable Long teacher_id){
+    //     return new ResponseEntity<>(teacherSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
+    // }
 
     //will need another getAssignments EP with teacher and student id
     //TODO something along the lines of get grades by student and teacher ids

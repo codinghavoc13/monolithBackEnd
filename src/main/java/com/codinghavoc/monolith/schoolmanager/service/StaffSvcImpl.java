@@ -1,11 +1,14 @@
 package com.codinghavoc.monolith.schoolmanager.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
+import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
 
 public class StaffSvcImpl implements StaffSvc{
     UserRepo userRepo;
@@ -23,6 +26,16 @@ public class StaffSvcImpl implements StaffSvc{
             staff.getStudents().add(unwrappedStudent);
             return staff;
         }
+    }
+
+    @Override
+    public List<User> getStudentsNotAssignedToTeacher(){
+        return SvcUtil.clearPWFromResults((List<User>)userRepo.getStudentsNotAssignedToTeacher());
+    }
+
+    @Override
+    public User saveUser(SMRegisterDTO dto){
+        return userRepo.save(new User(dto));
     }
 
     public User getStaffMember(Long id) {

@@ -36,4 +36,28 @@ public interface UserRepo extends CrudRepository<User, Long>{
             """;
     @Query(value = qryGetStaffByUsername, nativeQuery = true)
     User getStaffByUsername(String username);
+
+    static String qryGetUsersByLastNameAsc = """
+        select * from school_manager.users as s order by s.last_name asc
+        """;
+    @Query(value = qryGetUsersByLastNameAsc, nativeQuery = true)
+    List<User> getUsersByLastNameAsc();
+
+    static String qryGetUsersByRoleLastNameAsc = """
+                    select * from school_manager.users as s where s.role=?1 order by s.last_name asc
+                    """;
+    @Query(value = qryGetUsersByRoleLastNameAsc, nativeQuery = true)
+    List<User> getUsersByRoleLastNameAsc(String role);
+
+    static String qryGetStudentsNotAssignedToTeacher = """
+        select u.*
+        from school_manager.users as u
+        where u.user_id not in 
+        (select u.user_id 
+         from school_manager.users as u 
+         inner join school_manager.student_teacher as st on u.user_id=st.student_id)
+        and u.role='STUDENT'
+                    """;
+    @Query(value = qryGetStudentsNotAssignedToTeacher, nativeQuery = true)
+    List<User> getStudentsNotAssignedToTeacher();
 }

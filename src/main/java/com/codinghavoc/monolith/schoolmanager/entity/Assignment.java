@@ -1,5 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.entity;
 
+import java.time.LocalDate;
+
 import com.codinghavoc.monolith.schoolmanager.enums.AssignmentType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +41,10 @@ public class Assignment {
     @Column(name = "assignment_type")
     @Enumerated(EnumType.STRING)
     private AssignmentType assignmentType;
+
+    @NonNull
+    @Column(name = "assignment_due_date")
+    private LocalDate assignmentDueDate;
 
     @JsonIgnore
     @ManyToOne()

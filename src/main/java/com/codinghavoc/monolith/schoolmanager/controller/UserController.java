@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,19 +35,24 @@ public class UserController {
         }
     }
 
-    @PostMapping("/saveNewUser") //tested, works, Save New Students
-    public ResponseEntity<User> saveNewUser(@RequestBody SMRegisterDTO dto){
-        return new ResponseEntity<>(userSvc.saveUser(dto), HttpStatus.CREATED);
-    }
-
     @PostMapping("/checkUsername")
     public ResponseEntity<Boolean> checkUsername(@RequestBody SMRegisterDTO dto){
         // System.out.println("uc-cu-1");
         return new ResponseEntity<Boolean>(userSvc.checkUsername(dto),HttpStatus.OK);
     }
 
-    // @GetMapping("/getUserNames")
-    // public ResponseEntity<List<String>> getUserNames(){
-    //     return new ResponseEntity<List<String>>(userSvc.getUserNames(),HttpStatus.OK);
-    // }
+    @GetMapping("/getAllUsers")
+    public ResponseEntity<List<User>> getAllUsers(){
+        return new ResponseEntity<List<User>>(userSvc.getAllUsers(), HttpStatus.OK);
+    }
+    
+    @GetMapping("/getAllUsersNoPW")
+    public ResponseEntity<List<User>> getAllUsersNoPW(){
+        return new ResponseEntity<List<User>>(userSvc.getAllUsersNoPW(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getUsersByRole/{role}")
+    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role){
+        return new ResponseEntity<List<User>>(userSvc.getUsersByRole(role), HttpStatus.OK);
+    }
 }

@@ -11,10 +11,11 @@ public interface UserSvc {
     //retain as a general user
     Boolean checkUsername(SMRegisterDTO check);
     List<User> getAllUsers();
+    List<User> getAllUsersNoPW();
     User getUser(Long id);
+    List<User> getUsersByRole(String role);
     List<String> getUserNames();
     User login(SMLoginDTO dto);
-    User saveUser(SMRegisterDTO user);
 
     //move to a superadmin
     //saving single user would be a registration change; saving multiple would be a super admin update
