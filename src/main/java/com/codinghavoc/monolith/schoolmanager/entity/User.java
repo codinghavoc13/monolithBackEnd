@@ -75,6 +75,9 @@ public class User {
 
     @Column(name = "grade_level")
     private String gradeLevel;
+
+    @Column(name="verified")
+    private boolean verified;
     
     @JsonIgnore
     @ManyToMany
@@ -99,6 +102,14 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "teacher")
     private Set<Assignment> assignments;
+
+    /*
+     * TODO: set up a new list for family
+     * - allow for relationships to multiple users
+     * - primary user would need to have a full account (username, password), all other relationships need 
+     * minimum first and last name, phone, relationship (relationship would need to be added)
+     * - this would likely be a many-to-many junction table (student_id, relationship_id, relation_type)
+     */
     
     public User(SMRegisterDTO dto){
         firstName = dto.firstName;

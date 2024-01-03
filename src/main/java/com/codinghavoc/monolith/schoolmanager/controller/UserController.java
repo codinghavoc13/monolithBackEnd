@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.Relationship;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.UserSvc;
 
@@ -54,5 +56,10 @@ public class UserController {
     @GetMapping("/getUsersByRole/{role}")
     public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role){
         return new ResponseEntity<List<User>>(userSvc.getUsersByRole(role), HttpStatus.OK);
+    }
+
+    @PostMapping("/addNewRelation")
+    public ResponseEntity<Relationship> addNewRelation(@RequestBody SMReqDTO dto){
+        return new ResponseEntity<Relationship>(userSvc.addRelationship(dto), HttpStatus.OK);
     }
 }

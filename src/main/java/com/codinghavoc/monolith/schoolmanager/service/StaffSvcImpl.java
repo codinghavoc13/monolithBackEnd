@@ -3,6 +3,7 @@ package com.codinghavoc.monolith.schoolmanager.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
@@ -10,6 +11,10 @@ import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
 import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+@Service
 public class StaffSvcImpl implements StaffSvc{
     UserRepo userRepo;
 

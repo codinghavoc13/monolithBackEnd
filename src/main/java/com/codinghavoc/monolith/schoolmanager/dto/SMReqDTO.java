@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
+import com.codinghavoc.monolith.schoolmanager.enums.RelationshipType;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,4 +20,6 @@ public class SMReqDTO {
     public User user;
     public List<Assignment> assignments;
     public List<User> users;
+    public Long relative_id;
+    public RelationshipType relationshipType;
 }
