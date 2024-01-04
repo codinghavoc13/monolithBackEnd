@@ -93,4 +93,11 @@ public class UserSvcImpl implements UserSvc{
             }
         } else return null;
     }
+
+    @Override
+    public User saveUser(SMRegisterDTO dto){
+        // System.out.println("test-USI");
+        // System.out.println(dto);
+        return userRepo.save(new User(dto));
+    }
 }

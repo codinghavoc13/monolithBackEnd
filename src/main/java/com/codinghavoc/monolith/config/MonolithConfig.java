@@ -19,7 +19,8 @@ public class MonolithConfig {
                 // .allowedOrigins("https://monolithfrontend-795a0b654edf.herokuapp.com/","http://monolithfrontend-795a0b654edf.herokuapp.com/")
                 .allowedMethods(HttpMethod.GET.name(),
                 HttpMethod.POST.name(),
-                HttpMethod.DELETE.name())
+                HttpMethod.DELETE.name(),
+                HttpMethod.PUT.name())
                 .allowedHeaders(HttpHeaders.CONTENT_TYPE,
                 HttpHeaders.AUTHORIZATION);
 

@@ -1,6 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.enums;
 
 public enum Role {
+    PRIMARY("primary"),
     STUDENT("student"),
     PARENT("parent"),
     TEACHER("teacher"),

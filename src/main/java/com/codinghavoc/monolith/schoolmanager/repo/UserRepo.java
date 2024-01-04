@@ -9,19 +9,19 @@ import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface UserRepo extends CrudRepository<User, Long>{
     static String getStudentsByTeacherIdQry = """
-            select s.* from school_manager.users as s 
-            join school_manager.student_teacher as st 
-            on s.student_id=st.student_id 
-            where st.staff_id=?1
-            """;
+        select s.* from school_manager.users as s 
+        join school_manager.student_teacher as st 
+        on s.student_id=st.student_id 
+        where st.staff_id=?1
+        """;
     @Query(value=getStudentsByTeacherIdQry, nativeQuery=true)
     List<User> getStudentsByTeacherId(Long teacher_id);
     
     static String checkStudentTeacherEntry = """
-            select count(*)
-            from school_manager.student_teacher
-            where staff_id=?1 and student_id=?2
-            """;
+        select count(*)
+        from school_manager.student_teacher
+        where staff_id=?1 and student_id=?2
+        """;
     @Query(value=checkStudentTeacherEntry, nativeQuery = true)
     Long checkForStudentTeacherEntry(Long staff_id, Long student_id);
 
@@ -30,10 +30,10 @@ public interface UserRepo extends CrudRepository<User, Long>{
     List<String> getUserNames();
 
     static String qryGetStaffByUsername = """
-            select * 
-            from school_manager.users as s
-            where s.username=?1
-            """;
+        select * 
+        from school_manager.users as s
+        where s.username=?1
+        """;
     @Query(value = qryGetStaffByUsername, nativeQuery = true)
     User getStaffByUsername(String username);
 
@@ -44,8 +44,8 @@ public interface UserRepo extends CrudRepository<User, Long>{
     List<User> getUsersByLastNameAsc();
 
     static String qryGetUsersByRoleLastNameAsc = """
-                    select * from school_manager.users as s where s.role=?1 order by s.last_name asc
-                    """;
+        select * from school_manager.users as s where s.role=?1 order by s.last_name asc
+        """;
     @Query(value = qryGetUsersByRoleLastNameAsc, nativeQuery = true)
     List<User> getUsersByRoleLastNameAsc(String role);
 
@@ -60,4 +60,17 @@ public interface UserRepo extends CrudRepository<User, Long>{
                     """;
     @Query(value = qryGetStudentsNotAssignedToTeacher, nativeQuery = true)
     List<User> getStudentsNotAssignedToTeacher();
+
+    static String qryGetUnverifiedUsers = """
+        select * from school_manager.users as u
+        where u.verified=false
+        """;;
+    @Query(value = qryGetUnverifiedUsers, nativeQuery = true)
+    List<User>getUnverifiedUsers();
+
+    static String qryUpdateUserVerified = """
+        update school_manager.users set verified=true where user_id=?1
+        """;
+    @Query(value = qryUpdateUserVerified, nativeQuery = true)
+    void verifyUser(Long user_id);
 }

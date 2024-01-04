@@ -20,6 +20,7 @@ public interface UserSvc {
     List<User> getUsersByRole(String role);
     List<String> getUserNames();
     User login(SMLoginDTO dto);
+    User saveUser(SMRegisterDTO user);
 
     //TODO will need to implement the following at some point
     //updateRelationship

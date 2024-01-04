@@ -14,12 +14,14 @@ import lombok.NoArgsConstructor;
 public class SMReqDTO {
     public Long teacher_id;
     public Long student_id;
+    public Long parent_id;
     public Long assignment_id;
     public double grade;
     public Assignment assignment;
     public User user;
     public List<Assignment> assignments;
     public List<User> users;
+    public List<User> students;
     public Long relative_id;
     public RelationshipType relationshipType;
 }

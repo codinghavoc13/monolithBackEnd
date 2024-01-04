@@ -62,4 +62,11 @@ public class UserController {
     public ResponseEntity<Relationship> addNewRelation(@RequestBody SMReqDTO dto){
         return new ResponseEntity<Relationship>(userSvc.addRelationship(dto), HttpStatus.OK);
     }
+
+    @PostMapping("/saveNewUser") //tested, works, Save New Students
+    public ResponseEntity<User> saveNewUser(@RequestBody SMRegisterDTO dto){
+        // System.out.println("test-UC");
+        // System.out.println(dto);
+        return new ResponseEntity<>(userSvc.saveUser(dto), HttpStatus.CREATED);
+    }
 }

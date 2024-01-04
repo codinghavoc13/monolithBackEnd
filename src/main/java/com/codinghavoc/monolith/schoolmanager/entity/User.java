@@ -63,7 +63,7 @@ public class User {
     private String passwordSalt;
 
     @NonNull
-    @Column(name = "email")
+    @Column(name = "email_string")
     private String emailString;
 
     @NonNull
@@ -114,7 +114,7 @@ public class User {
     public User(SMRegisterDTO dto){
         firstName = dto.firstName;
         lastName = dto.lastName;
-        emailString = dto.email;
+        emailString = dto.emailString;
         phoneString = dto.phoneString;
         if(dto.password != null){
             String[] pass;
