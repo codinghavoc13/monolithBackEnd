@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -13,20 +14,22 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
-@Table(name="config", schema="school_manager")
-public class ConfigEntry {
+@Entity
+@Table(name = "course_student", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","course_id"})})
+public class CourseStudent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="config_id")
-    public Long id;
+    @Column(name="st_id")
+    private Long st_id;
 
     @NonNull
-    @Column(name="key")
-    public String key;
+    @Column(name = "student_id")
+    private Long student_id;
 
     @NonNull
-    @Column(name="value")
-    public String value;
+    @Column(name = "course_id")
+    private Long course_id;
+    
 }

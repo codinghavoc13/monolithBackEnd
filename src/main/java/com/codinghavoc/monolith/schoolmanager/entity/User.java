@@ -78,26 +78,6 @@ public class User {
 
     @Column(name="verified")
     private boolean verified;
-    
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-        name="student_teacher",
-        schema = "school_manager",
-        joinColumns = @JoinColumn(name="teacher_id",referencedColumnName = "user_id"),
-        inverseJoinColumns = @JoinColumn(name="student_id", referencedColumnName = "user_id")
-    )
-    private Set<User>students;
-
-    @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-        name="student_teacher",
-        schema = "school_manager",
-        joinColumns = @JoinColumn(name="student_id",referencedColumnName = "user_id"),
-        inverseJoinColumns = @JoinColumn(name="teacher_id", referencedColumnName = "user_id")
-    )
-    private Set<User>teachers;
 
     @JsonIgnore
     @OneToMany(mappedBy = "teacher")

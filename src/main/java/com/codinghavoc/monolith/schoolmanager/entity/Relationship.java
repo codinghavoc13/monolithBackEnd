@@ -6,7 +6,6 @@ import lombok.NonNull;
 import lombok.Setter;
 
 import com.codinghavoc.monolith.schoolmanager.enums.RelationshipType;
-import com.codinghavoc.monolith.schoolmanager.enums.Role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

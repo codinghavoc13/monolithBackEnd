@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.StaffSvc;
 import lombok.AllArgsConstructor;
@@ -37,4 +39,16 @@ public class StaffController {
     public ResponseEntity<User> verifyUser(@PathVariable Long user_id){
         return new ResponseEntity<User>(staffSvc.updateUserVerification(user_id),HttpStatus.OK);
     }
+
+    @PostMapping("/assignTeacherToCourse")
+    public ResponseEntity<CourseTeacher> assignTeacherToCourse(@RequestBody SMCourseDTO dto){
+        return staffSvc.assignTeacherToCourse(dto);
+    }
+
+    // @PostMapping("/assignStudentToCourse")
+
+
+    // ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto);
+    // ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto);
+    // ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto);
 }

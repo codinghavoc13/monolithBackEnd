@@ -2,14 +2,25 @@ package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.util.List;
 
-// import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import org.springframework.http.ResponseEntity;
+
+import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.Course;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface StaffSvc {
-    User addStudentToTeacherRoster(Long teacher_id, Long student_id);
-    // get
+    Course addNewCourse(Course course);
+    ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto);
+    ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto);
+    ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto);
+    ResponseEntity<CourseTeacher> assignTeacherToCourse(SMCourseDTO dto);
     List<User> getStudentsNotAssignedToTeacher();
     List<User> getUnverifiedUsers();
+
+    // ResponseEntity<CourseTeacher> revisedAssignTeacherToCourse(SMCourseDTO dto);
+
     User updateUserVerification(Long id);
     // User saveUser(SMRegisterDTO user);
     //enroll new student

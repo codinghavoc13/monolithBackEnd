@@ -1,7 +1,11 @@
 package com.codinghavoc.monolith.schoolmanager.entity;
 
+import com.codinghavoc.monolith.schoolmanager.enums.CourseLength;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,20 +17,23 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
-@Table(name="config", schema="school_manager")
-public class ConfigEntry {
+@Entity
+@Table(name = "course", schema = "school_manager")
+public class Course {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="config_id")
-    public Long id;
+    @Column(name="course_id")
+    private Long course_id;
 
     @NonNull
-    @Column(name="key")
-    public String key;
+    @Column(name = "course_name")
+    private String courseName;
 
     @NonNull
-    @Column(name="value")
-    public String value;
+    @Column(name = "course_length")
+    @Enumerated(EnumType.STRING)
+    private CourseLength courseLength;
+    
 }
