@@ -49,6 +49,14 @@ public interface UserRepo extends CrudRepository<User, Long>{
     @Query(value = qryGetUsersByRoleLastNameAsc, nativeQuery = true)
     List<User> getUsersByRoleLastNameAsc(String role);
 
+    static String qryGetStudentsByGradeLevel = """
+            select * 
+            from school_manager.users as u
+            where u.grade_level=?1
+            """;
+    @Query(value = qryGetStudentsByGradeLevel, nativeQuery = true)
+    List<User>getUsersByGradeLevel(String grade_level);
+
     static String qryGetStudentsNotAssignedToTeacher = """
         select u.*
         from school_manager.users as u
@@ -57,6 +65,7 @@ public interface UserRepo extends CrudRepository<User, Long>{
          from school_manager.users as u 
          inner join school_manager.student_teacher as st on u.user_id=st.student_id)
         and u.role='STUDENT'
+        order by u.last_name
                     """;
     @Query(value = qryGetStudentsNotAssignedToTeacher, nativeQuery = true)
     List<User> getStudentsNotAssignedToTeacher();

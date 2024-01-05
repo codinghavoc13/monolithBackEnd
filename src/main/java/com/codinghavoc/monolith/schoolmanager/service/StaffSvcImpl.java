@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
+import com.codinghavoc.monolith.schoolmanager.enums.Role;
+import com.codinghavoc.monolith.schoolmanager.repo.ConfigRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
 import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
 
@@ -17,7 +20,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class StaffSvcImpl implements StaffSvc{
     UserRepo userRepo;
-
+    ConfigRepo configRepo;
 
     @Transactional
     @Override
@@ -56,8 +59,18 @@ public class StaffSvcImpl implements StaffSvc{
     @Override
     public User updateUserVerification(Long id){
         User temp = SvcUtil.unwrapUser(userRepo.findById(id), id);
+        if(temp.getRole().equals(Role.STUDENT) && temp.getSchoolStudentId() == null){
+            ConfigEntry cePrefix = configRepo.getSchoolIdPrefix();
+            ConfigEntry ceCounter = configRepo.getSchoolIdCounter();
+            String newSchoolId = cePrefix.value + SvcUtil.padString(ceCounter.value);
+            temp.setSchoolStudentId(newSchoolId);
+            System.out.println(temp.getSchoolStudentId());
+            int i = Integer.valueOf(ceCounter.value);
+            i++;
+            ceCounter.value = String.valueOf(i);
+            configRepo.save(ceCounter);
+        }
         temp.setVerified(true);
-        //need to add everything to setup the school student id
         return userRepo.save(temp);
     }
 }

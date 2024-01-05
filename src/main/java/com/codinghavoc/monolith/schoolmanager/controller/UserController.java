@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.Relationship;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.UserSvc;
 
@@ -58,10 +57,10 @@ public class UserController {
         return new ResponseEntity<List<User>>(userSvc.getUsersByRole(role), HttpStatus.OK);
     }
 
-    @PostMapping("/addNewRelation")
-    public ResponseEntity<Relationship> addNewRelation(@RequestBody SMReqDTO dto){
-        return new ResponseEntity<Relationship>(userSvc.addRelationship(dto), HttpStatus.OK);
-    }
+    // @PostMapping("/addNewRelation")
+    // public ResponseEntity<Relationship> addNewRelation(@RequestBody SMReqDTO dto){
+    //     return new ResponseEntity<Relationship>(userSvc.addRelationship(dto), HttpStatus.OK);
+    // }
 
     @PostMapping("/saveNewUser") //tested, works, Save New Students
     public ResponseEntity<User> saveNewUser(@RequestBody SMRegisterDTO dto){
@@ -69,4 +68,15 @@ public class UserController {
         // System.out.println(dto);
         return new ResponseEntity<>(userSvc.saveUser(dto), HttpStatus.CREATED);
     }
+
+    @PostMapping("/enrollStudent")
+    public ResponseEntity<User> enrollStudent(@RequestBody SMReqDTO dto){
+        return new ResponseEntity<User>(userSvc.enrollStudent(dto), HttpStatus.OK);
+    }
+
+    @GetMapping("/getStudentsByParentId/{parent_id}")
+    public ResponseEntity<List<User>> getStudentsByParentId(@PathVariable Long parent_id){
+        return new ResponseEntity<List<User>>(userSvc.getStudentsByParentId(parent_id), HttpStatus.OK);
+    }
+
 }

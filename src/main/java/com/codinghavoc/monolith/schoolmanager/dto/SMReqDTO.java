@@ -19,9 +19,10 @@ public class SMReqDTO {
     public double grade;
     public Assignment assignment;
     public User user;
+    public SMRegisterDTO student;
     public List<Assignment> assignments;
     public List<User> users;
-    public List<User> students;
+    // public List<User> students;
     public Long relative_id;
     public RelationshipType relationshipType;
 }

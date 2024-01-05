@@ -13,9 +13,11 @@ public interface UserSvc {
     //retain as a general user
     Relationship addRelationship(SMReqDTO dto);
     Boolean checkUsername(SMRegisterDTO check);
+    User enrollStudent(SMReqDTO dto);
     List<User> getAllUsers();
     List<User> getAllUsersNoPW();
     List<User> getRelatives(Long student_id);
+    List<User> getStudentsByParentId(Long parent_id);
     User getUser(Long id);
     List<User> getUsersByRole(String role);
     List<String> getUserNames();

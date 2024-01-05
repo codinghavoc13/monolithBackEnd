@@ -30,5 +30,17 @@ public class SvcUtil {
         }
         return result;
     }
+    public static String padString(String input){
+        int length = 9;
+        if(input.length() >= length){
+            return input;
+        }
+        StringBuilder sb = new StringBuilder();
+        while(sb.length() < (length - input.length())){
+            sb.append('0');
+        }
+        sb.append(input);
+        return sb.toString();
+    }
     
 }

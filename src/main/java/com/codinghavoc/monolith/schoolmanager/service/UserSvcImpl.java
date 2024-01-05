@@ -10,6 +10,7 @@ import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Relationship;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
+import com.codinghavoc.monolith.schoolmanager.enums.RelationshipType;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.RelationshipRepo;
@@ -43,6 +44,22 @@ public class UserSvcImpl implements UserSvc{
     }
 
     @Override
+    public User enrollStudent(SMReqDTO dto){
+        //save the student with the user repo
+        //get the new student as a user
+        User newStudent = userRepo.save(new User(dto.student));
+        //build a new relationship object with the parent_id, the new student_id, and set role to PARENT
+        Relationship rel = new Relationship();
+        rel.setStudent_id(newStudent.getUserId());
+        rel.setRelative_id(dto.parent_id);
+        rel.setRelationship(RelationshipType.PARENT);
+        //save the new relationship object with the relationship repo
+        relRepo.save(rel);
+        //return the student object
+        return newStudent;
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return (List<User>)userRepo.findAll();
     }
@@ -58,6 +75,16 @@ public class UserSvcImpl implements UserSvc{
         List<Relationship> temp = relRepo.getRelativesByStudentId(student_id);
         for(Relationship r : temp){
             result.add(SvcUtil.unwrapUser(userRepo.findById(r.getRelative_id()), r.getRelative_id()));
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> getStudentsByParentId(Long parent_id){
+        List<User> result = new ArrayList<>();
+        List<Relationship> temp = relRepo.getStudentsByParentId(parent_id);
+        for(Relationship r : temp){
+            result.add(SvcUtil.unwrapUser(userRepo.findById(r.getStudent_id()), r.getStudent_id()));
         }
         return result;
     }

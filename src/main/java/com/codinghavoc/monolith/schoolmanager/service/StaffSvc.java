@@ -7,6 +7,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface StaffSvc {
     User addStudentToTeacherRoster(Long teacher_id, Long student_id);
+    // get
     List<User> getStudentsNotAssignedToTeacher();
     List<User> getUnverifiedUsers();
     User updateUserVerification(Long id);
