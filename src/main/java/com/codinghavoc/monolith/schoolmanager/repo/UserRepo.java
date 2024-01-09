@@ -55,7 +55,7 @@ public interface UserRepo extends CrudRepository<User, Long>{
         where u.user_id not in 
         (select u.user_id 
          from school_manager.users as u 
-         inner join school_manager.student_teacher as st on u.user_id=st.student_id)
+         inner join school_manager.course_student as cs on u.user_id=cs.student_id)
         and u.role='STUDENT'
         order by u.last_name
                     """;
