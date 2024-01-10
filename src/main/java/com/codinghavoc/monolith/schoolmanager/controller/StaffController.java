@@ -2,6 +2,7 @@ package com.codinghavoc.monolith.schoolmanager.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMCourseRespDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseDetail;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
@@ -45,7 +48,15 @@ public class StaffController {
         return staffSvc.assignTeacherToCourse(dto);
     }
 
-    // @PostMapping("/assignStudentToCourse")
+    @GetMapping("/getCourseDetails")
+    public ResponseEntity<List<CourseDetail>> getCourseDetails(){
+        return new ResponseEntity<>(staffSvc.getCourseDetails(),HttpStatus.OK);
+    }
+
+    @PostMapping("/assignStudentsToCourse")
+    public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
+        return staffSvc.assignStudentsToCourse(dto);
+    }
 
 
     // ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto);

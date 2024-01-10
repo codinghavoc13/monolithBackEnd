@@ -11,13 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMCourseRespDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseDetail;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
 import com.codinghavoc.monolith.schoolmanager.repo.ConfigRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.CourseDetailRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseStudentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseTeacherRepo;
@@ -31,6 +34,7 @@ import lombok.AllArgsConstructor;
 public class StaffSvcImpl implements StaffSvc{
     ConfigRepo configRepo;
     CourseRepo courseRepo;
+    CourseDetailRepo cdRepo;
     CourseStudentRepo csRepo;
     CourseTeacherRepo ctRepo;
     UserRepo userRepo;
@@ -77,19 +81,24 @@ public class StaffSvcImpl implements StaffSvc{
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
+    @Transactional
     @Override
     public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto){
+        System.out.println(dto.toString());
         List<CourseStudent> result = new ArrayList<>();
-        CourseStudent cs = new CourseStudent();
-        cs.setCourse_id(dto.course_id);
+        List<CourseStudent> temp = new ArrayList<>();
+        CourseStudent cs;
         for(Long student_id : dto.student_ids){
+            cs = new CourseStudent();
+            cs.setCourse_id(dto.course_id);
             cs.setStudent_id(student_id);
+            System.out.println(cs.toString());
+            temp.add(cs);
             try{
                 result.add(csRepo.save(cs));
             } catch (DataIntegrityViolationException e){
                 result.add(csRepo.findByCourseStudent(cs.getCourse_id(), cs.getStudent_id()));
             }
-            cs.setCourse_id(null);
         }
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
@@ -106,6 +115,10 @@ public class StaffSvcImpl implements StaffSvc{
             result = ctRepo.findByCourseTeacher(ct.getCourse_id(), ct.getTeacher_id());
         }
         return new ResponseEntity<CourseTeacher>(result,HttpStatus.OK);
+    }
+
+    public List<CourseDetail> getCourseDetails(){
+        return cdRepo.getCourseDetails();
     }
 
     @Override

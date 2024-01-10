@@ -24,6 +24,11 @@ public class CourseStudent {
     @Column(name="st_id")
     private Long st_id;
 
+    @Override
+    public String toString() {
+        return "CourseStudent [st_id=" + st_id + ", student_id=" + student_id + ", course_id=" + course_id + "]";
+    }
+
     @NonNull
     @Column(name = "student_id")
     private Long student_id;

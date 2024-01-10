@@ -12,5 +12,8 @@ public class SMCourseDTO {
     public Long teacher_id;
     public List<Long> course_ids;
     public List<Long> student_ids;
-    
+    @Override
+    public String toString() {
+        return "SMCourseDTO [course_id=" + course_id + ", student_ids=" + student_ids + "]";
+    }
 }
