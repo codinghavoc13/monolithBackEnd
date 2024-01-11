@@ -5,13 +5,17 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.Relationship;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.enums.RelationshipType;
+import com.codinghavoc.monolith.schoolmanager.enums.Role;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.RelationshipRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
@@ -24,6 +28,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class UserSvcImpl implements UserSvc{
     AssignmentRepo assignmentRepo;
+    CourseRepo courseRepo;
     GradeEntryRepo geRepo;
     UserRepo userRepo;
     RelationshipRepo relRepo;
@@ -75,6 +80,59 @@ public class UserSvcImpl implements UserSvc{
         List<Relationship> temp = relRepo.getRelativesByStudentId(student_id);
         for(Relationship r : temp){
             result.add(SvcUtil.unwrapUser(userRepo.findById(r.getRelative_id()), r.getRelative_id()));
+        }
+        return result;
+    }
+
+    @Override
+    public List<SMDTO> getStudentDetails(){
+        List<SMDTO> result = new ArrayList<>();
+        SMDTO dto;
+        SMDTO courseDto;
+        User teacher;
+        List<Course> courses;
+        List<User> students = SvcUtil.clearPWFromResults(userRepo.getUsersByRoleLastNameAsc(Role.STUDENT.toString()));
+        for(User student : students){
+            dto = new SMDTO();
+            dto.student = student;
+            courses = courseRepo.getCoursesAssignedToStudent(student.getUserId());
+            for(Course course : courses){
+                teacher = SvcUtil.clearPWFromResult(userRepo.getTeacherByCourseId(course.getCourse_id()));
+                courseDto = new SMDTO();
+                courseDto.course = course;
+                courseDto.teacher = teacher;
+                dto.enrolledCourses = new ArrayList<>();
+                dto.enrolledCourses.add(courseDto);
+                dto.parents = SvcUtil.clearPWFromResults(userRepo.getParentsByStudentId(student.getUserId()));
+            }
+            result.add(dto);
+        }
+        return result;
+    }
+
+    @Override
+    public SMDTO getStudentDetails(Long student_id){
+        SMDTO result = new SMDTO();
+        User student = SvcUtil.clearPWFromResult(SvcUtil.unwrapUser(userRepo.findById(student_id), student_id));
+        result = builSmdto(student_id);
+        result.student = student;
+        return result;
+    }
+
+    private SMDTO builSmdto(Long student_id){
+        SMDTO result = new SMDTO();
+        List<Course> courses;
+        SMDTO courseDto;
+        User teacher;
+        courses = courseRepo.getCoursesAssignedToStudent(student_id);
+        for(Course course : courses){
+            teacher = SvcUtil.clearPWFromResult(userRepo.getTeacherByCourseId(course.getCourse_id()));
+            courseDto = new SMDTO();
+            courseDto.course = course;
+            courseDto.teacher = teacher;
+            result.enrolledCourses = new ArrayList<>();
+            result.enrolledCourses.add(courseDto);
+            result.parents = SvcUtil.clearPWFromResults(userRepo.getParentsByStudentId(student_id));
         }
         return result;
     }

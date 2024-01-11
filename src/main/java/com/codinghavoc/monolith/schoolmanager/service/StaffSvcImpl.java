@@ -2,7 +2,6 @@ package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -11,16 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMCourseRespDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
-import com.codinghavoc.monolith.schoolmanager.entity.CourseDetail;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
 import com.codinghavoc.monolith.schoolmanager.repo.ConfigRepo;
-import com.codinghavoc.monolith.schoolmanager.repo.CourseDetailRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseStudentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseTeacherRepo;
@@ -34,7 +31,6 @@ import lombok.AllArgsConstructor;
 public class StaffSvcImpl implements StaffSvc{
     ConfigRepo configRepo;
     CourseRepo courseRepo;
-    CourseDetailRepo cdRepo;
     CourseStudentRepo csRepo;
     CourseTeacherRepo ctRepo;
     UserRepo userRepo;
@@ -117,8 +113,23 @@ public class StaffSvcImpl implements StaffSvc{
         return new ResponseEntity<CourseTeacher>(result,HttpStatus.OK);
     }
 
-    public List<CourseDetail> getCourseDetails(){
-        return cdRepo.getCourseDetails();
+    public List<SMDTO> getCourseDetails(){
+        List<SMDTO> result = new ArrayList<>();
+        List<Course> courses = (List<Course>)courseRepo.findAll();
+        SMDTO dto;
+        User teacher;
+        for(Course course : courses){
+            dto = new SMDTO();
+            dto.course = course;
+            //need to add a check to only get details from courses that have a teacher
+            teacher = userRepo.getTeacherByCourseId(course.getCourse_id());
+            if(teacher!=null){
+                dto.teacher = SvcUtil.clearPWFromResult(userRepo.getTeacherByCourseId(course.getCourse_id()));
+                result.add(dto);
+            }
+            //not adding courses that do not have a teacher
+        }
+        return result;
     }
 
     @Override

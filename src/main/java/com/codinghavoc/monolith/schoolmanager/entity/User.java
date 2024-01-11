@@ -1,11 +1,8 @@
 package com.codinghavoc.monolith.schoolmanager.entity;
 
-import java.util.Set;
-
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
 import com.codinghavoc.monolith.schoolmanager.util.PasswordHashUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,10 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,16 +38,16 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
     
-    @NonNull
+    // @NonNull
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @NonNull
+    // @NonNull
     @Column(name = "username")
     private String username;
 
-    @NonNull
+    // @NonNull
     @Column(name = "pwHash")
     private String passwordHash;
 
@@ -62,11 +55,11 @@ public class User {
     @Column(name = "pwSalt")
     private String passwordSalt;
 
-    @NonNull
+    // @NonNull
     @Column(name = "email_string")
     private String emailString;
 
-    @NonNull
+    // @NonNull
     @Column(name = "phone")
     private String phoneString;
 
@@ -78,10 +71,6 @@ public class User {
 
     @Column(name="verified")
     private boolean verified;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "teacher")
-    private Set<Assignment> assignments;
 
     /*
      * TODO: set up a new list for family
@@ -108,6 +97,13 @@ public class User {
             schoolStudentId = dto.schoolStudentId;
             gradeLevel = dto.gradeLevel;
         }
+    }
 
+    @Override
+    public String toString() {
+        return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", role=" + role
+                + ", username=" + username + ", emailString=" + emailString + ", phoneString=" + phoneString
+                + ", schoolStudentId=" + schoolStudentId + ", gradeLevel=" + gradeLevel + ", verified=" + verified
+                + "]";
     }
 }

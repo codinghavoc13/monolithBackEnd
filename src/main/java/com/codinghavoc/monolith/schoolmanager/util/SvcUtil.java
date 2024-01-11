@@ -24,12 +24,17 @@ public class SvcUtil {
     public static List<User> clearPWFromResults(List<User> in){
         List<User> result = new ArrayList<>();
         for(User u : in){
-            u.setPasswordHash("");
-            u.setPasswordSalt("");
-            result.add(u);
+            result.add(clearPWFromResult(u));
         }
         return result;
     }
+
+    public static User clearPWFromResult(User in){
+        in.setPasswordHash("");
+        in.setPasswordSalt("");
+        return in;
+    }
+
     public static String padString(String input){
         int length = 9;
         if(input.length() >= length){

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
+/* This will stay */
 @Getter
 @Setter
 @NoArgsConstructor

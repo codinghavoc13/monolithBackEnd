@@ -8,6 +8,26 @@ import org.springframework.data.repository.CrudRepository;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface UserRepo extends CrudRepository<User, Long>{
+    static String qryGetParentsByStudentId = """
+        select u.*
+        from school_manager.users as u
+        inner join school_manager.relationships as r on u.user_id=r.relative_id
+        inner join school_manager.users as s on s.user_id=r.student_id
+        where (r.relationship='PARENT' or r.relationship='PRIMARY') and s.user_id=?1
+        """;
+    @Query(value = qryGetParentsByStudentId, nativeQuery = true)
+    List<User> getParentsByStudentId(Long student_id);
+
+    static String qryGetRelativessByStudentId = """
+        select u.*
+        from school_manager.users as u
+        inner join school_manager.relationships as r on u.user_id=r.relative_id
+        inner join school_manager.users as s on s.user_id=r.student_id
+        where s.user_id=?1
+        """;
+    @Query(value = qryGetRelativessByStudentId, nativeQuery = true)
+    List<User> getRelativesByStudentId(Long student_id);
+
     static String getStudentsByTeacherIdQry = """
         select s.* from school_manager.users as s 
         join school_manager.student_teacher as st 
@@ -28,6 +48,16 @@ public interface UserRepo extends CrudRepository<User, Long>{
         """;
     @Query(value = qryGetStaffByUsername, nativeQuery = true)
     User getStaffByUsername(String username);
+
+    static String qryGetTeacherByCourseId = """
+        select u.*
+        from school_manager.users as u
+        inner join school_manager.course_teacher as ct on u.user_id=ct.teacher_id
+        inner join school_manager.course as c on ct.course_id=c.course_id
+        where c.course_id=?1
+        """;
+    @Query(value = qryGetTeacherByCourseId, nativeQuery = true)
+    User getTeacherByCourseId(Long course_id);
 
     static String qryGetUsersByLastNameAsc = """
         select * from school_manager.users as s order by s.last_name asc

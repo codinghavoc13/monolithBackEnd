@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMLoginDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
@@ -79,4 +80,13 @@ public class UserController {
         return new ResponseEntity<List<User>>(userSvc.getStudentsByParentId(parent_id), HttpStatus.OK);
     }
 
+    @GetMapping("/getStudentDetails")
+    public ResponseEntity<List<SMDTO>> getStudentDetails(){
+        return new ResponseEntity<List<SMDTO>>(userSvc.getStudentDetails(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getStudentDetails/{student_id}")
+    public ResponseEntity<SMDTO> getStudentDetails(@PathVariable Long student_id){
+        return new ResponseEntity<SMDTO>(userSvc.getStudentDetails(student_id), HttpStatus.OK);
+    }
 }

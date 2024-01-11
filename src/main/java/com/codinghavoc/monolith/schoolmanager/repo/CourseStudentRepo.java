@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
-import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 
 public interface CourseStudentRepo extends CrudRepository<CourseStudent, Long>{
     static String qryFindByCourseStudent = """

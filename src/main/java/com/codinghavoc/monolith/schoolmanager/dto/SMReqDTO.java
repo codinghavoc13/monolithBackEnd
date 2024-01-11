@@ -22,7 +22,6 @@ public class SMReqDTO {
     public SMRegisterDTO student;
     public List<Assignment> assignments;
     public List<User> users;
-    // public List<User> students;
     public Long relative_id;
     public RelationshipType relationshipType;
 }
