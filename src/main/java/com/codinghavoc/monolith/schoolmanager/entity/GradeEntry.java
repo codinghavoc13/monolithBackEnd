@@ -24,8 +24,8 @@ public class GradeEntry {
     private Long grade_id;
 
     @NonNull
-    @Column(name = "staff_id")
-    private Long staff_id;
+    @Column(name = "teacher_id")
+    private Long teacher_id;
 
     @NonNull
     @Column(name = "student_id")
@@ -39,14 +39,14 @@ public class GradeEntry {
     @Column(name = "grade")
     private double grade;
 
-    public GradeEntry(Long staff, Long student, Long assignment){
-        this.staff_id = staff;
+    public GradeEntry(Long teacher, Long student, Long assignment){
+        this.teacher_id = teacher;
         this.student_id = student;
         this.assignment_id = assignment;
     }
 
-    public GradeEntry(Long staff, Long student, Long assignment, double grade){
-        this.staff_id = staff;
+    public GradeEntry(Long teacher, Long student, Long assignment, double grade){
+        this.teacher_id = teacher;
         this.student_id = student;
         this.assignment_id = assignment;
         this.grade = grade;

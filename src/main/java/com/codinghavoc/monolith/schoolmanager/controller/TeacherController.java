@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
-import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.TeacherSvc;
 
 import lombok.AllArgsConstructor;
@@ -38,8 +38,8 @@ public class TeacherController {
     // }
 
     @GetMapping("/getStudents/{teacher_id}")
-    public ResponseEntity<List<User>>getStudentsAssignedToTeacher(@PathVariable Long teacher_id){
-        return new ResponseEntity<>(teacherSvc.getStudentsAssignedToTeacher(teacher_id),HttpStatus.OK);
+    public ResponseEntity<List<SMUserDTO>>getStudentsAssignedToTeacher(@PathVariable Long teacher_id){
+        return new ResponseEntity<List<SMUserDTO>>(teacherSvc.getStudentsAssignedToTeacher(teacher_id),HttpStatus.OK);
     }
 
     @PostMapping("/saveGrade")

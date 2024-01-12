@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
-import com.codinghavoc.monolith.schoolmanager.entity.User;
 
 public interface StaffSvc {
     Course addNewCourse(Course course);
@@ -17,13 +17,13 @@ public interface StaffSvc {
     ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto);
     ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto);
     ResponseEntity<CourseTeacher> assignTeacherToCourse(SMCourseDTO dto);
-    List<SMDTO> getCourseDetails();
-    List<User> getStudentsNotAssignedToTeacher();
-    List<User> getUnverifiedUsers();
+    List<SMCourseDetailDTO> getCourseDetails();
+    List<SMUserDTO> getStudentsNotAssignedToTeacher();
+    List<SMUserDTO> getUnverifiedUsers();
 
     // ResponseEntity<CourseTeacher> revisedAssignTeacherToCourse(SMCourseDTO dto);
 
-    User updateUserVerification(Long id);
+    SMUserDTO updateUserVerification(Long id);
     // User saveUser(SMRegisterDTO user);
     //enroll new student
     //remove student from active roster

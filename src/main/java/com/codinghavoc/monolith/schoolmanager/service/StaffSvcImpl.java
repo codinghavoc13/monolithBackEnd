@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
@@ -113,18 +114,21 @@ public class StaffSvcImpl implements StaffSvc{
         return new ResponseEntity<CourseTeacher>(result,HttpStatus.OK);
     }
 
-    public List<SMDTO> getCourseDetails(){
-        List<SMDTO> result = new ArrayList<>();
+    public List<SMCourseDetailDTO> getCourseDetails(){
+        List<SMCourseDetailDTO> result = new ArrayList<>();
         List<Course> courses = (List<Course>)courseRepo.findAll();
-        SMDTO dto;
+        SMCourseDetailDTO dto;
         User teacher;
         for(Course course : courses){
-            dto = new SMDTO();
-            dto.course = course;
+            dto = new SMCourseDetailDTO();
+            dto.course_id = course.getCourse_id();
+            dto.courseName = course.getCourseName();
+            dto.courseLength = course.getCourseLength();
             //need to add a check to only get details from courses that have a teacher
             teacher = userRepo.getTeacherByCourseId(course.getCourse_id());
             if(teacher!=null){
-                dto.teacher = SvcUtil.clearPWFromResult(userRepo.getTeacherByCourseId(course.getCourse_id()));
+                dto.teacherFirstName = teacher.getFirstName();
+                dto.teacherLastName = teacher.getLastName();
                 result.add(dto);
             }
             //not adding courses that do not have a teacher
@@ -133,8 +137,8 @@ public class StaffSvcImpl implements StaffSvc{
     }
 
     @Override
-    public List<User> getStudentsNotAssignedToTeacher(){
-        return SvcUtil.clearPWFromResults((List<User>)userRepo.getStudentsNotAssignedToTeacher());
+    public List<SMUserDTO> getStudentsNotAssignedToTeacher(){
+        return SvcUtil.convertListUsers((List<User>)userRepo.getStudentsNotAssignedToTeacher());
     }
 
     public User getStaffMember(Long id) {
@@ -142,12 +146,12 @@ public class StaffSvcImpl implements StaffSvc{
     }
 
     @Override
-    public List<User> getUnverifiedUsers(){
-        return SvcUtil.clearPWFromResults((List<User>)userRepo.getUnverifiedUsers());
+    public List<SMUserDTO> getUnverifiedUsers(){
+        return SvcUtil.convertListUsers((List<User>)userRepo.getUnverifiedUsers());
     }
 
     @Override
-    public User updateUserVerification(Long id){
+    public SMUserDTO updateUserVerification(Long id){
         User temp = SvcUtil.unwrapUser(userRepo.findById(id), id);
         if(temp.getRole().equals(Role.STUDENT) && temp.getSchoolStudentId() == null){
             ConfigEntry cePrefix = configRepo.getSchoolIdPrefix();
@@ -161,6 +165,6 @@ public class StaffSvcImpl implements StaffSvc{
             configRepo.save(ceCounter);
         }
         temp.setVerified(true);
-        return userRepo.save(temp);
+        return new SMUserDTO(userRepo.save(temp));
     }
 }

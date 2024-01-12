@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-// import com.codinghavoc.monolith.schoolmanager.dto.SMAssignmentDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
@@ -41,8 +41,8 @@ public class TeacherSvcImpl implements TeacherSvc {
     // }
 
     @Override
-    public List<User> getStudentsAssignedToTeacher(Long teacher_id){
-        return (List<User>)userRepo.getStudentsByTeacherId(teacher_id);
+    public List<SMUserDTO> getStudentsAssignedToTeacher(Long teacher_id){
+        return SvcUtil.convertListUsers((List<User>)userRepo.getStudentsByTeacherId(teacher_id));
     }
     
 
