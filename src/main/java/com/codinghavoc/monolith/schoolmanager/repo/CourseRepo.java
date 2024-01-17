@@ -18,4 +18,13 @@ public interface CourseRepo extends CrudRepository<Course,Long>{
         """;
     @Query(value = qryGetCoursesByStudentId, nativeQuery = true)
     public List<Course> getCoursesAssignedToStudent(Long student_id);
+
+    static String qryGetCoursesByTeacherId = """
+        select c.* from school_manager.course as c
+        inner join school_manager.course_teacher as ct on c.course_id=ct.course_id
+        inner join school_manager.users as u on ct.teacher_id=u.user_id
+        where u.user_id=?1
+        """;
+    @Query(value = qryGetCoursesByTeacherId, nativeQuery = true)
+    public List<Course> getCoursesByTeacherId(Long teacher_id);
 }

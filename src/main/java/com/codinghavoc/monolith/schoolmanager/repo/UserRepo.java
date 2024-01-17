@@ -57,7 +57,7 @@ public interface UserRepo extends CrudRepository<User, Long>{
         where c.course_id=?1
         """;
     @Query(value = qryGetTeacherByCourseId, nativeQuery = true)
-    User getTeacherByCourseId(Long course_id);
+    List<User> getTeacherByCourseId(Long course_id);
 
     static String qryGetUsersByLastNameAsc = """
         select * from school_manager.users as s order by s.last_name asc
@@ -104,4 +104,15 @@ public interface UserRepo extends CrudRepository<User, Long>{
         """;
     @Query(value = qryUpdateUserVerified, nativeQuery = true)
     void verifyUser(Long user_id);
+
+    static String qryGetStudentsByCourseTeacherId = """
+        select s.*
+        from school_manager.users as s
+        inner join school_manager.course_student_teacher as cst on s.user_id=cst.student_id
+        inner join school_manager.course as c on cst.course_id=c.course_id
+        where c.course_id=?1 and cst.teacher_id=?2
+        order by s.last_name asc
+        """;
+    @Query(value = qryGetStudentsByCourseTeacherId, nativeQuery = true)
+    List<User> getStudentsByCourseTeacherId(Long courseId, Long teacherId);
 }

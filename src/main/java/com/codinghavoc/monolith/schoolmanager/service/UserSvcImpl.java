@@ -100,7 +100,7 @@ public class UserSvcImpl implements UserSvc{
         List<SMStudentDetailDTO> result = new ArrayList<>();
         SMStudentDetailDTO dto;
         SMCourseDetailDTO courseDto;
-        User teacher;
+        List<User> teachers;
         List<Course> courses;
         List<SMUserDTO> students = SvcUtil.convertListUsers(userRepo.getUsersByRoleLastNameAsc(Role.STUDENT.toString()));
         for(SMUserDTO student : students){
@@ -109,9 +109,14 @@ public class UserSvcImpl implements UserSvc{
             dto.student = student;
             courses = courseRepo.getCoursesAssignedToStudent(student.userId);
             for(Course course : courses){
-                teacher = userRepo.getTeacherByCourseId(course.getCourse_id());
-                courseDto = buildCourseDetailDTO(course, teacher);
-                dto.enrolledCourses.add(courseDto);
+                teachers = userRepo.getTeacherByCourseId(course.getCourse_id());
+                if(teachers != null && teachers.size()>0){
+                    for(User teacher : teachers){
+                        courseDto = buildCourseDetailDTO(course, teacher);
+                        dto.enrolledCourses.add(courseDto);
+                    }
+                }
+                
                 dto.parents = SvcUtil.convertListUsers(userRepo.getParentsByStudentId(student.userId));
             }
             result.add(dto);
@@ -184,7 +189,7 @@ public class UserSvcImpl implements UserSvc{
 
     private SMCourseDetailDTO buildCourseDetailDTO(Course course, User teacher){
         SMCourseDetailDTO result = new SMCourseDetailDTO();
-        result.course_id = course.getCourse_id();
+        result.courseId = course.getCourse_id();
         result.courseName = course.getCourseName();
         result.courseLength = course.getCourseLength();
         result.teacherFirstName = teacher.getFirstName();
@@ -196,13 +201,17 @@ public class UserSvcImpl implements UserSvc{
         SMStudentDetailDTO result = new SMStudentDetailDTO();
         List<Course> courses;
         SMCourseDetailDTO courseDto;
-        User teacher;
+        List<User> teachers;
         courses = courseRepo.getCoursesAssignedToStudent(student_id);
         for(Course course : courses){
-            teacher = userRepo.getTeacherByCourseId(course.getCourse_id());
-            courseDto = buildCourseDetailDTO(course, teacher);
-            result.enrolledCourses = new ArrayList<>();
-            result.enrolledCourses.add(courseDto);
+            teachers = userRepo.getTeacherByCourseId(course.getCourse_id());
+            if(teachers != null && teachers.size()>0){
+                result.enrolledCourses = new ArrayList<>();
+                for(User teacher : teachers){
+                    courseDto = buildCourseDetailDTO(course, teacher);
+                    result.enrolledCourses.add(courseDto);
+                }
+            }
             result.parents = SvcUtil.convertListUsers(userRepo.getParentsByStudentId(student_id));
         }
         return result;

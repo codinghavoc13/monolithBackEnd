@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMRegisterDTO;
+import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.service.SUSvc;
 
@@ -24,5 +26,10 @@ public class SUController {
     @PostMapping("/saveNewUsers") //tested, works, Save New Staff
     public ResponseEntity<List<User>> saveNewUsers(@RequestBody List<SMRegisterDTO> dtos){
         return new ResponseEntity<>(suSvc.saveUsers(dtos), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAllCourses")
+    public ResponseEntity<List<Course>>getAllCourses(){
+        return new ResponseEntity<>(suSvc.getAllCourses(), HttpStatus.OK);
     }
 }

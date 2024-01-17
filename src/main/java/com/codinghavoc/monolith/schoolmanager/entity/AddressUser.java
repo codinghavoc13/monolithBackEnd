@@ -1,15 +1,12 @@
 package com.codinghavoc.monolith.schoolmanager.entity;
 
-import com.codinghavoc.monolith.schoolmanager.enums.CourseLength;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -19,24 +16,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "course", schema = "school_manager")
-public class Course {
-
+@Table(name = "address_user", schema = "school_manager", uniqueConstraints = {@UniqueConstraint(columnNames = {"address_id","user_id"})})
+public class AddressUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="course_id")
-    private Long course_id;
-
-    @NonNull
-    @Column(name = "course_name")
-    private String courseName;
-
-    @NonNull
-    @Column(name = "course_length")
-    @Enumerated(EnumType.STRING)
-    private CourseLength courseLength;
-
-    @Column(name = "period")
-    private int period;
+    @Column(name="au_id")
+    private Long au_id;
     
+    @NonNull
+    @Column(name = "address_id")
+    private Long address_id;
+
+    @NonNull
+    @Column(name = "user_id")
+    private Long user_id;
 }

@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
 import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
@@ -22,6 +25,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class TeacherSvcImpl implements TeacherSvc {
     AssignmentRepo assignmentRepo;
+    CourseRepo courseRepo;
     GradeEntryRepo geRepo;
     UserRepo userRepo;
 
@@ -41,8 +45,20 @@ public class TeacherSvcImpl implements TeacherSvc {
     // }
 
     @Override
-    public List<SMUserDTO> getStudentsAssignedToTeacher(Long teacher_id){
-        return SvcUtil.convertListUsers((List<User>)userRepo.getStudentsByTeacherId(teacher_id));
+    public List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId){
+        ArrayList<SMStudentListDTO> result = new ArrayList<>();
+        SMStudentListDTO working;
+        List<Course> courses = courseRepo.getCoursesByTeacherId(teacherId);
+        if(courses != null && courses.size()>0){
+            for(Course course : courses){
+                working = new SMStudentListDTO();
+                working.course = course;
+                working.students = SvcUtil.convertListUsers(userRepo.getStudentsByCourseTeacherId(course.getCourse_id(), teacherId));
+                result.add(working);
+            }
+        }
+        return result;
+        // return SvcUtil.convertListUsers((List<User>)userRepo.getStudentsByTeacherId(teacher_id));
     }
     
 

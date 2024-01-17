@@ -14,7 +14,7 @@ import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
-import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseStudentTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
@@ -48,9 +48,9 @@ public class StaffSvcImpl implements StaffSvc{
      * exists first
      */
     @Override
-    public ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto){
-        List<CourseStudent> result = new ArrayList<>();
-        CourseStudent cs = new CourseStudent();
+    public ResponseEntity<List<CourseStudentTeacher>> assignCoursesToStudent(SMCourseDTO dto){
+        List<CourseStudentTeacher> result = new ArrayList<>();
+        CourseStudentTeacher cs = new CourseStudentTeacher();
         cs.setStudent_id(dto.student_id);
         for(Long course_id : dto.course_ids){
             cs.setCourse_id(course_id);
@@ -65,9 +65,9 @@ public class StaffSvcImpl implements StaffSvc{
     }
 
     @Override
-    public ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto){
-        CourseStudent cs = new CourseStudent();
-        CourseStudent result = new CourseStudent();
+    public ResponseEntity<CourseStudentTeacher> assignStudentToCourse(SMCourseDTO dto){
+        CourseStudentTeacher cs = new CourseStudentTeacher();
+        CourseStudentTeacher result = new CourseStudentTeacher();
         cs.setCourse_id(dto.course_id);
         cs.setStudent_id(dto.student_id);
         try {
@@ -80,15 +80,16 @@ public class StaffSvcImpl implements StaffSvc{
 
     @Transactional
     @Override
-    public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto){
+    public ResponseEntity<List<CourseStudentTeacher>> assignStudentsToCourse(SMCourseDTO dto){
         System.out.println(dto.toString());
-        List<CourseStudent> result = new ArrayList<>();
-        List<CourseStudent> temp = new ArrayList<>();
-        CourseStudent cs;
+        List<CourseStudentTeacher> result = new ArrayList<>();
+        List<CourseStudentTeacher> temp = new ArrayList<>();
+        CourseStudentTeacher cs;
         for(Long student_id : dto.student_ids){
-            cs = new CourseStudent();
+            cs = new CourseStudentTeacher();
             cs.setCourse_id(dto.course_id);
             cs.setStudent_id(student_id);
+            cs.setTeacher_id(dto.teacher_id);
             System.out.println(cs.toString());
             temp.add(cs);
             try{
@@ -117,20 +118,33 @@ public class StaffSvcImpl implements StaffSvc{
     public List<SMCourseDetailDTO> getCourseDetails(){
         List<SMCourseDetailDTO> result = new ArrayList<>();
         List<Course> courses = (List<Course>)courseRepo.findAll();
+        // System.out.println("courses count: " + courses.size());
         SMCourseDetailDTO dto;
-        User teacher;
+        List<User> teachers;
         for(Course course : courses){
-            dto = new SMCourseDetailDTO();
-            dto.course_id = course.getCourse_id();
-            dto.courseName = course.getCourseName();
-            dto.courseLength = course.getCourseLength();
-            //need to add a check to only get details from courses that have a teacher
-            teacher = userRepo.getTeacherByCourseId(course.getCourse_id());
-            if(teacher!=null){
-                dto.teacherFirstName = teacher.getFirstName();
-                dto.teacherLastName = teacher.getLastName();
-                result.add(dto);
+            
+            teachers = userRepo.getTeacherByCourseId(course.getCourse_id());
+            if(teachers!= null && teachers.size()>0){
+                for(User teacher : teachers){
+                    dto = new SMCourseDetailDTO();
+                    dto.courseId = course.getCourse_id();
+                    // System.out.println(course.getCourse_id());
+                    dto.courseName = course.getCourseName();
+                    dto.courseLength = course.getCourseLength();
+                    dto.period = course.getPeriod();
+                    //need to add a check to only get details from courses that have a teacher
+                    //rework to have the repo send back a list of users
+                    dto.teacherFirstName = teacher.getFirstName();
+                    dto.teacherLastName = teacher.getLastName();
+                    dto.teacher_id = teacher.getUserId();
+                    result.add(dto);
+                }
             }
+            // if(teacher!=null){
+            //     dto.teacherFirstName = teacher.getFirstName();
+            //     dto.teacherLastName = teacher.getLastName();
+            //     result.add(dto);
+            // }
             //not adding courses that do not have a teacher
         }
         return result;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
-import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseStudentTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseTeacher;
 import com.codinghavoc.monolith.schoolmanager.service.StaffSvc;
 import lombok.AllArgsConstructor;
@@ -52,7 +52,7 @@ public class StaffController {
     }
 
     @PostMapping("/assignStudentsToCourse")
-    public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
+    public ResponseEntity<List<CourseStudentTeacher>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
         return staffSvc.assignStudentsToCourse(dto);
     }
 
