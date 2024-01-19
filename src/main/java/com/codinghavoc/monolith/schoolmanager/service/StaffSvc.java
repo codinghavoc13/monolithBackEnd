@@ -17,7 +17,8 @@ public interface StaffSvc {
     ResponseEntity<CourseStudentTeacher> assignStudentToCourse(SMCourseDTO dto);
     ResponseEntity<List<CourseStudentTeacher>> assignStudentsToCourse(SMCourseDTO dto);
     ResponseEntity<CourseTeacher> assignTeacherToCourse(SMCourseDTO dto);
-    List<SMCourseDetailDTO> getCourseDetails();
+    List<SMCourseDetailDTO> getCourseDetails(String term);
+    List<SMUserDTO> getStudentsByGrade(String gradeLevel);
     List<SMUserDTO> getStudentsNotAssignedToTeacher();
     List<SMUserDTO> getUnverifiedUsers();
 

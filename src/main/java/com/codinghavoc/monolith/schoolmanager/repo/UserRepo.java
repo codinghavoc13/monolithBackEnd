@@ -77,7 +77,7 @@ public interface UserRepo extends CrudRepository<User, Long>{
             where u.grade_level=?1
             """;
     @Query(value = qryGetStudentsByGradeLevel, nativeQuery = true)
-    List<User>getUsersByGradeLevel(String grade_level);
+    List<User>getStudentsByGradeLevel(String grade_level);
 
     static String qryGetStudentsNotAssignedToTeacher = """
         select u.*

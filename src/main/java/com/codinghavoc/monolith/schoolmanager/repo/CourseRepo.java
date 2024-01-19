@@ -27,4 +27,20 @@ public interface CourseRepo extends CrudRepository<Course,Long>{
         """;
     @Query(value = qryGetCoursesByTeacherId, nativeQuery = true)
     public List<Course> getCoursesByTeacherId(Long teacher_id);
+
+    static String qryGetElementaryCourses = """
+        select * from school_manager.course as c
+        where c.period=-1
+        order by course_name asc, period
+        """;
+    @Query(value = qryGetElementaryCourses, nativeQuery = true)
+    List<Course>getElementaryCourses();
+
+    static String qryGetMiddleHighCourses = """
+        select * from school_manager.course as c
+        where c.period>=0
+        order by course_name asc, period
+        """;
+    @Query(value = qryGetMiddleHighCourses, nativeQuery = true)
+    List<Course>getMiddleHighCourses();
 }

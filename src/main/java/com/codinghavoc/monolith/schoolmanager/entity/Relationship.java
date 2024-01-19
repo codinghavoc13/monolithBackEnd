@@ -27,15 +27,15 @@ public class Relationship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "relation_id")
-    private Long relation_id;
+    private Long relationId;
 
     @NonNull
     @Column(name="student_id")
-    private Long student_id;
+    private Long studentId;
 
     @NonNull
     @Column(name = "relative_id")
-    private Long relative_id;
+    private Long relativeId;
 
     @NonNull
     @Column(name="relationship")

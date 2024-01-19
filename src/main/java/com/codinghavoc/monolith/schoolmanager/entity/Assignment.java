@@ -46,10 +46,9 @@ public class Assignment {
     @Column(name = "assignment_due_date")
     private LocalDate assignmentDueDate;
 
-    @JsonIgnore
-    @ManyToOne()
-    @JoinColumn(name = "teacher_id", nullable = false)
-    private User teacher; //will need to update this to User
+    @NonNull
+    @JoinColumn(name = "teacher_id")
+    private Long teacherId;
 
     @Override
     public String toString() {

@@ -21,34 +21,38 @@ public class GradeEntry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grade_id")
-    private Long grade_id;
+    private Long gradeId;
 
     @NonNull
-    @Column(name = "teacher_id")
-    private Long teacher_id;
+    @Column(name = "course_id")
+    private Long courseId;
 
     @NonNull
     @Column(name = "student_id")
-    private Long student_id;
+    private Long studentId;
+
+    @NonNull
+    @Column(name = "teacher_id")
+    private Long teacherId;
 
     @NonNull
     @Column(name = "assignment_id")
-    private Long assignment_id;
+    private Long assignmentId;
 
     // @NonNull
     @Column(name = "grade")
     private double grade;
 
-    public GradeEntry(Long teacher, Long student, Long assignment){
-        this.teacher_id = teacher;
-        this.student_id = student;
-        this.assignment_id = assignment;
+    public GradeEntry(Long course, Long student, Long teacher, Long assignment){
+        this.courseId = course;
+        this.studentId = student;
+        this.assignmentId = assignment;
     }
 
-    public GradeEntry(Long teacher, Long student, Long assignment, double grade){
-        this.teacher_id = teacher;
-        this.student_id = student;
-        this.assignment_id = assignment;
+    public GradeEntry(Long course, Long student, Long teacher, Long assignment, double grade){
+        this.courseId = course;
+        this.studentId = student;
+        this.assignmentId = assignment;
         this.grade = grade;
     }
 }

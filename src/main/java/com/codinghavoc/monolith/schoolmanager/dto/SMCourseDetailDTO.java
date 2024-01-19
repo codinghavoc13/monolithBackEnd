@@ -8,6 +8,6 @@ public class SMCourseDetailDTO {
     public CourseLength courseLength;
     public String teacherFirstName;
     public String teacherLastName;
-    public Long teacher_id;
+    public Long teacherId;
     public int period;    
 }

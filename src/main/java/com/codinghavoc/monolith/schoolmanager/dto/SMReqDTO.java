@@ -12,16 +12,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SMReqDTO {
-    public Long teacher_id;
-    public Long student_id;
-    public Long parent_id;
-    public Long assignment_id;
+    public Long courseId;
+    public Long teacherId;
+    public Long studentId;
+    public Long parentId;
+    public Long assignmentId;
     public double grade;
     public Assignment assignment;
     public User user;
     public SMRegisterDTO student;
     public List<Assignment> assignments;
     public List<User> users;
-    public Long relative_id;
+    public Long relativeId;
     public RelationshipType relationshipType;
 }

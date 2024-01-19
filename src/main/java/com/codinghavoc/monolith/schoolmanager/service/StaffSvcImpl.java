@@ -115,10 +115,17 @@ public class StaffSvcImpl implements StaffSvc{
         return new ResponseEntity<CourseTeacher>(result,HttpStatus.OK);
     }
 
-    public List<SMCourseDetailDTO> getCourseDetails(){
+    @Override
+    public List<SMCourseDetailDTO> getCourseDetails(String term){
         List<SMCourseDetailDTO> result = new ArrayList<>();
-        List<Course> courses = (List<Course>)courseRepo.findAll();
-        // System.out.println("courses count: " + courses.size());
+        // List<Course> courses = (List<Course>)courseRepo.findAll();
+        ArrayList<Course> courses = new ArrayList<>();
+        if(term.equals("semester")){
+            courses = (ArrayList<Course>) courseRepo.getMiddleHighCourses();
+        }
+        if(term.equals("full_year")){
+            courses = (ArrayList<Course>) courseRepo.getElementaryCourses();
+        }
         SMCourseDetailDTO dto;
         List<User> teachers;
         for(Course course : courses){
@@ -136,7 +143,7 @@ public class StaffSvcImpl implements StaffSvc{
                     //rework to have the repo send back a list of users
                     dto.teacherFirstName = teacher.getFirstName();
                     dto.teacherLastName = teacher.getLastName();
-                    dto.teacher_id = teacher.getUserId();
+                    dto.teacherId = teacher.getUserId();
                     result.add(dto);
                 }
             }
@@ -147,6 +154,13 @@ public class StaffSvcImpl implements StaffSvc{
             // }
             //not adding courses that do not have a teacher
         }
+        return result;
+    }
+
+    @Override
+    public List<SMUserDTO> getStudentsByGrade(String gradeLevel){
+        List<SMUserDTO> result = new ArrayList<>();
+        result = SvcUtil.convertListUsers(userRepo.getStudentsByGradeLevel(gradeLevel));
         return result;
     }
 

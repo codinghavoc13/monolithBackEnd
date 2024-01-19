@@ -26,6 +26,26 @@ import lombok.AllArgsConstructor;
 public class StaffController {
     private StaffSvc staffSvc;
 
+    @PostMapping("/assignTeacherToCourse")
+    public ResponseEntity<CourseTeacher> assignTeacherToCourse(@RequestBody SMCourseDTO dto){
+        return staffSvc.assignTeacherToCourse(dto);
+    }
+
+    @PostMapping("/assignStudentsToCourse")
+    public ResponseEntity<List<CourseStudentTeacher>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
+        return staffSvc.assignStudentsToCourse(dto);
+    }
+
+    @GetMapping("/getCourseDetails/{term}")
+    public ResponseEntity<List<SMCourseDetailDTO>> getCourseDetails(@PathVariable String term){
+        return new ResponseEntity<>(staffSvc.getCourseDetails(term),HttpStatus.OK);
+    }
+
+    @GetMapping("/getStudentsByGradeLevel/{gradeLevel}")
+    public ResponseEntity<List<SMUserDTO>> getStudentsByGradeLevel(@PathVariable String gradeLevel){
+        return new ResponseEntity<>(staffSvc.getStudentsByGrade(gradeLevel), HttpStatus.OK);
+    }
+
     @GetMapping("/getStudentsNotAssignedToTeacher")
     public ResponseEntity<List<SMUserDTO>> getStudentsNotAssignedToTeacher(){
         return new ResponseEntity<List<SMUserDTO>>(staffSvc.getStudentsNotAssignedToTeacher(),HttpStatus.OK);
@@ -39,21 +59,6 @@ public class StaffController {
     @PutMapping("/verifyUser/{user_id}")
     public ResponseEntity<SMUserDTO> verifyUser(@PathVariable Long user_id){
         return new ResponseEntity<SMUserDTO>(staffSvc.updateUserVerification(user_id),HttpStatus.OK);
-    }
-
-    @PostMapping("/assignTeacherToCourse")
-    public ResponseEntity<CourseTeacher> assignTeacherToCourse(@RequestBody SMCourseDTO dto){
-        return staffSvc.assignTeacherToCourse(dto);
-    }
-
-    @GetMapping("/getCourseDetails")
-    public ResponseEntity<List<SMCourseDetailDTO>> getCourseDetails(){
-        return new ResponseEntity<>(staffSvc.getCourseDetails(),HttpStatus.OK);
-    }
-
-    @PostMapping("/assignStudentsToCourse")
-    public ResponseEntity<List<CourseStudentTeacher>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
-        return staffSvc.assignStudentsToCourse(dto);
     }
 
 

@@ -39,8 +39,8 @@ public class UserSvcImpl implements UserSvc{
     public Relationship addRelationship(SMReqDTO dto){
         System.out.println(dto.relationshipType);
         Relationship rel = new Relationship();
-        rel.setStudent_id(dto.student_id);
-        rel.setRelative_id(dto.relative_id);
+        rel.setStudentId(dto.studentId);
+        rel.setRelativeId(dto.relativeId);
         rel.setRelationship(dto.relationshipType);
         return relRepo.save(rel);
     }
@@ -57,8 +57,8 @@ public class UserSvcImpl implements UserSvc{
         User newStudent = userRepo.save(new User(dto.student));
         //build a new relationship object with the parent_id, the new student_id, and set role to PARENT
         Relationship rel = new Relationship();
-        rel.setStudent_id(newStudent.getUserId());
-        rel.setRelative_id(dto.parent_id);
+        rel.setStudentId(newStudent.getUserId());
+        rel.setRelativeId(dto.parentId);
         rel.setRelationship(RelationshipType.PARENT);
         //save the new relationship object with the relationship repo
         relRepo.save(rel);
@@ -80,17 +80,12 @@ public class UserSvcImpl implements UserSvc{
         return result;
     }
 
-    // @Override
-    // public List<User> getAllUsersNoPW() {
-    //     return SvcUtil.clearPWFromResults((List<User>)userRepo.findAll());
-    // }
-
     @Override
     public List<SMUserDTO> getRelatives(Long student_id){
         List<User> result = new ArrayList<>();
         List<Relationship> temp = relRepo.getRelativesByStudentId(student_id);
         for(Relationship r : temp){
-            result.add(SvcUtil.unwrapUser(userRepo.findById(r.getRelative_id()), r.getRelative_id()));
+            result.add(SvcUtil.unwrapUser(userRepo.findById(r.getRelativeId()), r.getRelativeId()));
         }
         return SvcUtil.convertListUsers(result);
     }
@@ -138,7 +133,7 @@ public class UserSvcImpl implements UserSvc{
         List<User> result = new ArrayList<>();
         List<Relationship> temp = relRepo.getStudentsByParentId(parent_id);
         for(Relationship r : temp){
-            result.add(SvcUtil.unwrapUser(userRepo.findById(r.getStudent_id()), r.getStudent_id()));
+            result.add(SvcUtil.unwrapUser(userRepo.findById(r.getStudentId()), r.getStudentId()));
         }
         return SvcUtil.convertListUsers(result);
     }
