@@ -39,12 +39,16 @@ public class TeacherSvcImpl implements TeacherSvc {
     public List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId){
         ArrayList<SMStudentListDTO> result = new ArrayList<>();
         SMStudentListDTO working;
+        /*
+        TODO Here and everywhere else that courseRepo is called to get course information
+        is going to have to be reworked to use or include the ctpRepo
+        */
         List<Course> courses = courseRepo.getCoursesByTeacherId(teacherId);
         if(courses != null && courses.size()>0){
             for(Course course : courses){
                 working = new SMStudentListDTO();
                 working.course = course;
-                working.students = SvcUtil.convertListUsers(userRepo.getStudentsByCourseTeacherId(course.getCourse_id(), teacherId));
+                working.students = SvcUtil.convertListUsers(userRepo.getStudentsByCourseTeacherId(course.getCourseId(), teacherId));
                 result.add(working);
             }
         }

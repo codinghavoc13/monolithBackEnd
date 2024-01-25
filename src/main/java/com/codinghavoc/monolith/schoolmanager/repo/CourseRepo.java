@@ -30,16 +30,16 @@ public interface CourseRepo extends CrudRepository<Course,Long>{
 
     static String qryGetElementaryCourses = """
         select * from school_manager.course as c
-        where c.period=-1
-        order by course_name asc, period
+        where c.credit=-1
+        order by course_name asc
         """;
     @Query(value = qryGetElementaryCourses, nativeQuery = true)
     List<Course>getElementaryCourses();
 
     static String qryGetMiddleHighCourses = """
         select * from school_manager.course as c
-        where c.period>=0
-        order by course_name asc, period
+        where c.credit>=0
+        order by course_name asc
         """;
     @Query(value = qryGetMiddleHighCourses, nativeQuery = true)
     List<Course>getMiddleHighCourses();

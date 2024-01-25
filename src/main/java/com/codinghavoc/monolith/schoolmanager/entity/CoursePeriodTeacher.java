@@ -16,18 +16,27 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "address_user", schema = "school_manager", uniqueConstraints = {@UniqueConstraint(columnNames = {"address_id","user_id"})})
-public class AddressUser {
+@Table(name = "course_period_teacher", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "course_id","period"})})
+public class CoursePeriodTeacher {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="au_id")
-    private Long auId;
-    
-    @NonNull
-    @Column(name = "address_id")
-    private Long addressId;
+    @Column(name="cpt_id")
+    private Long cptId;
 
     @NonNull
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "teacher_id")
+    private Long teacherId;
+
+    @NonNull
+    @Column(name = "course_id")
+    private Long courseId;
+
+    @Column(name = "period")
+    private int period;
+    
+    /*
+     * Going to move the period value from course to this class, need to update the 
+     * unique constraint
+     */
 }

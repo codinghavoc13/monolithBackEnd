@@ -17,24 +17,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "course_student_teacher", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","course_id","teacher_id"})})
-public class CourseStudentTeacher {
+@Table(name = "course_student", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","course_id","teacher_id"})})
+public class CourseStudent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="st_id")
-    private Long st_id;
+    private Long stId;
 
     @NonNull
     @Column(name = "student_id")
-    private Long student_id;
+    private Long studentId;
 
     @NonNull
-    @Column(name = "course_id")
-    private Long course_id;
-
-    @NonNull
-    @Column(name = "teacher_id")
-    private Long teacher_id;
+    @Column(name = "cpt_id")
+    private Long cptId;
     
 }

@@ -52,7 +52,7 @@ public interface UserRepo extends CrudRepository<User, Long>{
     static String qryGetTeacherByCourseId = """
         select u.*
         from school_manager.users as u
-        inner join school_manager.course_teacher as ct on u.user_id=ct.teacher_id
+        inner join school_manager.course_period_teacher as ct on u.user_id=ct.teacher_id
         inner join school_manager.course as c on ct.course_id=c.course_id
         where c.course_id=?1
         """;

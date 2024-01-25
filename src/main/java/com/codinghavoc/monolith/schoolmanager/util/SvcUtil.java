@@ -6,35 +6,28 @@ import java.util.Optional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.exception.AssignmentNotFoundException;
+import com.codinghavoc.monolith.schoolmanager.exception.CourseNotFoundException;
 import com.codinghavoc.monolith.schoolmanager.exception.UserNotFoundException;
 
 public class SvcUtil {
-    public static User unwrapUser(Optional<User> entity, Long id) {
-        if (entity.isPresent()) return entity.get();
-        else throw new UserNotFoundException(id);
-    }
 
     public static Assignment unwrapAssignment(Optional<Assignment> entity, Long id){
         if(entity.isPresent()) return entity.get();
         else throw new AssignmentNotFoundException(id);
-    } 
+    }
 
-    //Using the SMUserDTO, won't need this
-    // public static List<User> clearPWFromResults(List<User> in){
-    //     List<User> result = new ArrayList<>();
-    //     for(User u : in){
-    //         result.add(clearPWFromResult(u));
-    //     }
-    //     return result;
-    // }
+    public static Course unwrapCourse(Optional<Course> entity, Long id){
+        if(entity.isPresent()) return entity.get();
+        else throw new CourseNotFoundException(id);
+    }
 
-    // public static User clearPWFromResult(User in){
-    //     in.setPasswordHash("");
-    //     in.setPasswordSalt("");
-    //     return in;
-    // }
+    public static User unwrapUser(Optional<User> entity, Long id) {
+        if (entity.isPresent()) return entity.get();
+        else throw new UserNotFoundException(id);
+    }
 
     public static String padString(String input){
         int length = 9;

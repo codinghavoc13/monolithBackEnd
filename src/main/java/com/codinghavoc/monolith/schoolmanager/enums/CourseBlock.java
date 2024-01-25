@@ -1,6 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.enums;
 
-public enum CourseLength {
+public enum CourseBlock {
     FULL_YEAR,
-    SEMESTER;
+    FALL_SEMESTER,
+    SPRING_SEMESTER;
 }

@@ -104,7 +104,7 @@ public class UserSvcImpl implements UserSvc{
             dto.student = student;
             courses = courseRepo.getCoursesAssignedToStudent(student.userId);
             for(Course course : courses){
-                teachers = userRepo.getTeacherByCourseId(course.getCourse_id());
+                teachers = userRepo.getTeacherByCourseId(course.getCourseId());
                 if(teachers != null && teachers.size()>0){
                     for(User teacher : teachers){
                         courseDto = buildCourseDetailDTO(course, teacher);
@@ -184,9 +184,10 @@ public class UserSvcImpl implements UserSvc{
 
     private SMCourseDetailDTO buildCourseDetailDTO(Course course, User teacher){
         SMCourseDetailDTO result = new SMCourseDetailDTO();
-        result.courseId = course.getCourse_id();
+        result.courseId = course.getCourseId();
         result.courseName = course.getCourseName();
-        result.courseLength = course.getCourseLength();
+        result.courseBlock = course.getCourseBlock();
+        result.credit = course.getCredit();
         result.teacherFirstName = teacher.getFirstName();
         result.teacherLastName = teacher.getLastName();
         return result;
@@ -199,7 +200,7 @@ public class UserSvcImpl implements UserSvc{
         List<User> teachers;
         courses = courseRepo.getCoursesAssignedToStudent(student_id);
         for(Course course : courses){
-            teachers = userRepo.getTeacherByCourseId(course.getCourse_id());
+            teachers = userRepo.getTeacherByCourseId(course.getCourseId());
             if(teachers != null && teachers.size()>0){
                 result.enrolledCourses = new ArrayList<>();
                 for(User teacher : teachers){

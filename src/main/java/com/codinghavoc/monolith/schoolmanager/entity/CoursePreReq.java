@@ -9,27 +9,24 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "course_teacher", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "course_id"})})
-public class CourseTeacher {
-
+@Table(name = "coursePreReq", schema = "school_manager",
+uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "course_id","period"})})
+public class CoursePreReq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="ct_id")
-    private Long ct_id;
+    @Column(name = "cpr_id")
+    private Long cprId;
 
-    @NonNull
-    @Column(name = "teacher_id")
-    private Long teacher_id;
-
-    @NonNull
     @Column(name = "course_id")
-    private Long course_id;
+    private Long courseId;
+
+    @Column(name = "prereqId")
+    private Long prereqId;
     
 }

@@ -7,13 +7,14 @@ import java.util.List;
  * - A student_id and a set of course_ids
  */
 public class SMCourseDTO {
-    public Long course_id;
-    public Long student_id;
-    public Long teacher_id;
-    public List<Long> course_ids;
-    public List<Long> student_ids;
-    @Override
-    public String toString() {
-        return "SMCourseDTO [course_id=" + course_id + ", student_ids=" + student_ids + "]";
-    }
+    public Long courseId;
+    public Long studentId;
+    public Long teacherId;
+    public int period;
+    public List<Long> courseIds;
+    public List<Long> studentIds;
+    // @Override
+    // public String toString() {
+    //     return "SMCourseDTO [course_id=" + course_id + ", student_ids=" + student_ids + "]";
+    // }
 }
