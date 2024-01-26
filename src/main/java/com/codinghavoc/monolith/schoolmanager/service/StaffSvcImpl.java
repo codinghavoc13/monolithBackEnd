@@ -22,7 +22,7 @@ import com.codinghavoc.monolith.schoolmanager.enums.Role;
 import com.codinghavoc.monolith.schoolmanager.repo.ConfigRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseStudentRepo;
-import com.codinghavoc.monolith.schoolmanager.repo.CTPRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.CPTRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
 import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
 
@@ -34,7 +34,7 @@ public class StaffSvcImpl implements StaffSvc{
     ConfigRepo configRepo;
     CourseRepo courseRepo;
     CourseStudentRepo csRepo;
-    CTPRepo cptRepo;
+    CPTRepo cptRepo;
     UserRepo userRepo;
 
     @Override
@@ -87,21 +87,20 @@ public class StaffSvcImpl implements StaffSvc{
     public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto){
         System.out.println(dto.toString());
         List<CourseStudent> result = new ArrayList<>();
-        // List<CourseStudent> temp = new ArrayList<>();
-        // CourseStudent cs;
-        // for(Long student_id : dto.studentIds){
-        //     cs = new CourseStudent();
-        //     cs.setCourseId(dto.courseId);
-        //     cs.setStudentId(student_id);
-        //     cs.setTeacherId(dto.teacherId);
-        //     System.out.println(cs.toString());
-        //     temp.add(cs);
-        //     try{
-        //         result.add(csRepo.save(cs));
-        //     } catch (DataIntegrityViolationException e){
-        //         result.add(csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId()));
-        //     }
-        // }
+        List<CourseStudent> temp = new ArrayList<>();
+        CourseStudent cs;
+        for(Long student_id : dto.studentIds){
+            cs = new CourseStudent();
+            cs.setStudentId(student_id);
+            cs.setCptId(dto.cptId);
+            System.out.println(cs.toString());
+            temp.add(cs);
+            try{
+                result.add(csRepo.save(cs));
+            } catch (DataIntegrityViolationException e){
+                result.add(csRepo.findByCourseStudent(cs.getStudentId(), cs.getCptId()));
+            }
+        }
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
 
@@ -135,18 +134,34 @@ public class StaffSvcImpl implements StaffSvc{
         Course course;
         User teacher;
         for(CoursePeriodTeacher cpt : cptList){
-            dto = new SMCourseDetailDTO();
+            // dto = new SMCourseDetailDTO();
             course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
             teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
-            dto.courseId = course.getCourseId();
-            dto.courseName = course.getCourseName();
-            dto.courseBlock = course.getCourseBlock();
-            dto.credit = course.getCredit();
-            dto.period = cpt.getPeriod();
-            dto.teacherFirstName = teacher.getFirstName();
-            dto.teacherLastName = teacher.getLastName();
-            dto.teacherId = teacher.getUserId();
+            // dto.courseId = course.getCourseId();
+            // dto.courseName = course.getCourseName();
+            // dto.courseBlock = course.getCourseBlock();
+            // dto.credit = course.getCredit();
+            // dto.period = cpt.getPeriod();
+            // dto.teacherFirstName = teacher.getFirstName();
+            // dto.teacherLastName = teacher.getLastName();
+            // dto.teacherId = teacher.getUserId();
+            dto = SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod());
             result.add(dto);
+        }
+        return result;
+    }
+
+    @Override
+    public List<SMCourseDetailDTO> getCoursesByStudent(Long studentId){
+        ArrayList<SMCourseDetailDTO> result = new ArrayList<>();
+        List<CoursePeriodTeacher> working = cptRepo.getCoursesByStudent(studentId);
+        SMCourseDetailDTO dto;
+        Course course;
+        User teacher;
+        for(CoursePeriodTeacher cpt : working){
+            course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
+            teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
+            result.add(SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod()));
         }
         return result;
     }

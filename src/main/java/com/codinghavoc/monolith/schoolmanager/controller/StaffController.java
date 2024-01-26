@@ -2,6 +2,7 @@ package com.codinghavoc.monolith.schoolmanager.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,11 @@ public class StaffController {
     @GetMapping("/getCourseDetails/{term}")
     public ResponseEntity<List<SMCourseDetailDTO>> getCourseDetails(@PathVariable String term){
         return new ResponseEntity<>(staffSvc.getCourseDetails(term),HttpStatus.OK);
+    }
+
+    @GetMapping("/getCoursesByStudent/{studentId}")
+    public ResponseEntity<List<SMCourseDetailDTO>> getCoursesByStudent(@PathVariable Long studentId){
+        return new ResponseEntity<>(staffSvc.getCoursesByStudent(studentId), HttpStatus.OK);
     }
 
     @GetMapping("/getStudentsByGradeLevel/{gradeLevel}")

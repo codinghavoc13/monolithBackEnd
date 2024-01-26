@@ -3,6 +3,7 @@ package com.codinghavoc.monolith.schoolmanager.dto;
 import com.codinghavoc.monolith.schoolmanager.enums.CourseBlock;
 
 public class SMCourseDetailDTO {
+    //add the cptId
     public Long courseId;
     public String courseName;
     public CourseBlock courseBlock;

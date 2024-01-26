@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
 
-public interface CTPRepo extends CrudRepository<CoursePeriodTeacher, Long>{
+public interface CPTRepo extends CrudRepository<CoursePeriodTeacher, Long>{
     //TODO this may now be broken
     static String qryFindByCourseTeacher = """
         select * 
@@ -34,4 +34,13 @@ public interface CTPRepo extends CrudRepository<CoursePeriodTeacher, Long>{
         """;
     @Query(value = qryGetMiddleHighCourses, nativeQuery = true)
     List<CoursePeriodTeacher>getMiddleHighCourses();
+
+    static String qryGetCoursesByStudent = """
+        select cpt.*
+        from school_manager.course_period_teacher as cpt
+        join school_manager.course_student as cs on cpt.cpt_id=cs.cpt_id
+        where cs.student_id=?1
+        """;
+    @Query(value = qryGetCoursesByStudent, nativeQuery = true)
+    List<CoursePeriodTeacher>getCoursesByStudent(Long studentId);
 }

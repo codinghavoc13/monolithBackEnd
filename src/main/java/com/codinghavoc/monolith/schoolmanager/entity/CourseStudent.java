@@ -17,9 +17,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "course_student", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","course_id","teacher_id"})})
+@Table(name = "course_student", schema = "school_manager",uniqueConstraints = {@UniqueConstraint(columnNames = {"student_id","cpt_id"})})
 public class CourseStudent {
 
+    //need to update this to csId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="st_id")
