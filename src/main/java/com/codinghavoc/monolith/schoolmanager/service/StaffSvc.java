@@ -13,8 +13,8 @@ import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
 
 public interface StaffSvc {
     Course addNewCourse(Course course);
-    ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto);
-    ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto);
+    // ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto);
+    // ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto);
     ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto);
     ResponseEntity<CoursePeriodTeacher> assignTeacherToCourse(SMCourseDTO dto);
     List<SMCourseDetailDTO> getCoursesByStudent(Long studentId);

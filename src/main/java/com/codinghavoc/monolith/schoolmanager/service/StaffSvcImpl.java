@@ -17,7 +17,6 @@ import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
-import com.codinghavoc.monolith.schoolmanager.enums.CourseBlock;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
 import com.codinghavoc.monolith.schoolmanager.repo.ConfigRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
@@ -49,56 +48,58 @@ public class StaffSvcImpl implements StaffSvc{
      * the ct_id or cs_id. Look at updating the code to check whether or not a matching entry 
      * exists first
      */
-    @Override
-    public ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto){
-        List<CourseStudent> result = new ArrayList<>();
-        // CourseStudent cs = new CourseStudent();
-        // cs.setStudentId(dto.studentId);
-        // for(Long course_id : dto.courseIds){
-        //     cs.setCourseId(course_id);
-        //     try{
-        //         result.add(csRepo.save(cs));
-        //     } catch (DataIntegrityViolationException e){
-        //         result.add(csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId()));
-        //     }
-        //     cs.setCourseId(null);
-        // }
-        return new ResponseEntity<>(result,HttpStatus.OK);
-    }
+    //TODO Update 202401291311 - likely to remove this method completely and drop down to one method
+    // @Override
+    // public ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto){
+    //     List<CourseStudent> result = new ArrayList<>();
+    //     // CourseStudent cs = new CourseStudent();
+    //     // cs.setStudentId(dto.studentId);
+    //     // for(Long course_id : dto.courseIds){
+    //     //     cs.setCourseId(course_id);
+    //     //     try{
+    //     //         result.add(csRepo.save(cs));
+    //     //     } catch (DataIntegrityViolationException e){
+    //     //         result.add(csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId()));
+    //     //     }
+    //     //     cs.setCourseId(null);
+    //     // }
+    //     return new ResponseEntity<>(result,HttpStatus.OK);
+    // }
 
     //TODO need to rework this in conjunction with changes to the front end to pass back the cptId
-    @Override
-    public ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto){
-        CourseStudent cs = new CourseStudent();
-        CourseStudent result = new CourseStudent();
-        // cs.setCourseId(dto.courseId);
-        // cs.setStudentId(dto.studentId);
-        // try {
-        //     result = csRepo.save(cs);
-        // } catch (DataIntegrityViolationException e) {
-        //     result = csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId());
-        // }
-        return new ResponseEntity<>(result,HttpStatus.OK);
-    }
+    //TODO Update 202401291311 - likely to remove this method completely and drop down to one method
+    // @Override
+    // public ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto){
+    //     CourseStudent cs = new CourseStudent();
+    //     CourseStudent result = new CourseStudent();
+    //     // cs.setCourseId(dto.courseId);
+    //     // cs.setStudentId(dto.studentId);
+    //     // try {
+    //     //     result = csRepo.save(cs);
+    //     // } catch (DataIntegrityViolationException e) {
+    //     //     result = csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId());
+    //     // }
+    //     return new ResponseEntity<>(result,HttpStatus.OK);
+    // }
 
     //TODO need to rework this in conjunction with changes to the front end to pass back the cptId
     @Transactional
     @Override
     public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto){
-        System.out.println(dto.toString());
         List<CourseStudent> result = new ArrayList<>();
-        List<CourseStudent> temp = new ArrayList<>();
         CourseStudent cs;
-        for(Long student_id : dto.studentIds){
-            cs = new CourseStudent();
-            cs.setStudentId(student_id);
-            cs.setCptId(dto.cptId);
-            System.out.println(cs.toString());
-            temp.add(cs);
-            try{
-                result.add(csRepo.save(cs));
-            } catch (DataIntegrityViolationException e){
-                result.add(csRepo.findByCourseStudent(cs.getStudentId(), cs.getCptId()));
+        for(Long studentId : dto.studentIds){
+            for(Long cptId : dto.cptIds){
+                if(cptId != -1){
+                    cs = new CourseStudent();
+                    cs.setStudentId(studentId);
+                    cs.setCptId(cptId);
+                    try{
+                        result.add(csRepo.save(cs));
+                    } catch (DataIntegrityViolationException e){
+                        result.add(csRepo.findByCourseStudent(cs.getStudentId(), cs.getCptId()));
+                    }
+                }
             }
         }
         return new ResponseEntity<>(result,HttpStatus.OK);
@@ -145,7 +146,7 @@ public class StaffSvcImpl implements StaffSvc{
             // dto.teacherFirstName = teacher.getFirstName();
             // dto.teacherLastName = teacher.getLastName();
             // dto.teacherId = teacher.getUserId();
-            dto = SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod());
+            dto = SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod(), cpt.getCptId());
             result.add(dto);
         }
         return result;
@@ -161,7 +162,7 @@ public class StaffSvcImpl implements StaffSvc{
         for(CoursePeriodTeacher cpt : working){
             course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
             teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
-            result.add(SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod()));
+            result.add(SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod(), cpt.getCptId()));
         }
         return result;
     }

@@ -14,11 +14,12 @@ import com.codinghavoc.monolith.schoolmanager.exception.CourseNotFoundException;
 import com.codinghavoc.monolith.schoolmanager.exception.UserNotFoundException;
 
 public class SvcUtil {
-    public static SMCourseDetailDTO buildSmCourseDetailDTO(Course course, User teacher, int period){
+    public static SMCourseDetailDTO buildSmCourseDetailDTO(Course course, User teacher, int period, Long cptId){
         SMCourseDetailDTO result = new SMCourseDetailDTO();
         result.courseId = course.getCourseId();
         result.courseName = course.getCourseName();
         result.courseBlock = course.getCourseBlock();
+        result.cptId = cptId;
         result.credit = course.getCredit();
         result.period = period;
         result.teacherFirstName = teacher.getFirstName();
