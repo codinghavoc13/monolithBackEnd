@@ -33,5 +33,36 @@ public class CourseStudent {
     @NonNull
     @Column(name = "cpt_id")
     private Long cptId;
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((studentId == null) ? 0 : studentId.hashCode());
+        result = prime * result + ((cptId == null) ? 0 : cptId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CourseStudent other = (CourseStudent) obj;
+        if (studentId == null) {
+            if (other.studentId != null)
+                return false;
+        } else if (!studentId.equals(other.studentId))
+            return false;
+        if (cptId == null) {
+            if (other.cptId != null)
+                return false;
+        } else if (!cptId.equals(other.cptId))
+            return false;
+        return true;
+    }
     
 }

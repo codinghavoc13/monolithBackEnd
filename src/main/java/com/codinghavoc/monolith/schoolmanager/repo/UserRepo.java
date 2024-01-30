@@ -115,4 +115,13 @@ public interface UserRepo extends CrudRepository<User, Long>{
         """;
     @Query(value = qryGetStudentsByCourseTeacherId, nativeQuery = true)
     List<User> getStudentsByCourseTeacherId(Long courseId, Long teacherId);
+
+    static String qryGetAllMiddleHighStudents = """
+        select u.*
+        from school_manager.users as u
+        where u.role='STUDENT'
+        order by u.last_name
+        """;
+    @Query(value = qryGetAllMiddleHighStudents, nativeQuery = true)
+    List<User>getAllMiddleHighStudents();
 }

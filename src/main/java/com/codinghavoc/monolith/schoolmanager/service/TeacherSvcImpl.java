@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;

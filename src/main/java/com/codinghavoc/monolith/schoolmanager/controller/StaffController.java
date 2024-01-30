@@ -2,7 +2,6 @@ package com.codinghavoc.monolith.schoolmanager.controller;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMStudentDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
@@ -35,6 +35,11 @@ public class StaffController {
     @PostMapping("/assignStudentsToCourse")
     public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
         return staffSvc.assignStudentsToCourse(dto);
+    }
+
+    @GetMapping("/getAllMiddleHighStudents")
+    public ResponseEntity<List<SMStudentDetailDTO>> getAllMiddleHighStudents(){
+        return new ResponseEntity<>(staffSvc.getAllMiddleHighStudents(), HttpStatus.OK);
     }
 
     @GetMapping("/getCourseDetails/{term}")
@@ -65,6 +70,11 @@ public class StaffController {
     @PutMapping("/verifyUser/{user_id}")
     public ResponseEntity<SMUserDTO> verifyUser(@PathVariable Long user_id){
         return new ResponseEntity<SMUserDTO>(staffSvc.updateUserVerification(user_id),HttpStatus.OK);
+    }
+
+    @GetMapping("testAssign")
+    public ResponseEntity<List<CourseStudent>> test(){
+        return staffSvc.testAssign();
     }
 
 

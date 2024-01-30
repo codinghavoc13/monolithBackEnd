@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
-import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.service.TeacherSvc;

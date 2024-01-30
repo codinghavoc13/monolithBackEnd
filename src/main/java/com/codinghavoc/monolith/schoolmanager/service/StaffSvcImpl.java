@@ -1,6 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMStudentDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
@@ -41,51 +43,13 @@ public class StaffSvcImpl implements StaffSvc{
         return courseRepo.save(course);
     }
 
-    //TODO take another look at all methods with DIVE exceptions
-    //TODO need to rework this in conjunction with changes to the front end to pass back the cptId
-    /*
-     * The code is preventing duplicate entries but when trying to save it will still increment
-     * the ct_id or cs_id. Look at updating the code to check whether or not a matching entry 
-     * exists first
-     */
-    //TODO Update 202401291311 - likely to remove this method completely and drop down to one method
-    // @Override
-    // public ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto){
-    //     List<CourseStudent> result = new ArrayList<>();
-    //     // CourseStudent cs = new CourseStudent();
-    //     // cs.setStudentId(dto.studentId);
-    //     // for(Long course_id : dto.courseIds){
-    //     //     cs.setCourseId(course_id);
-    //     //     try{
-    //     //         result.add(csRepo.save(cs));
-    //     //     } catch (DataIntegrityViolationException e){
-    //     //         result.add(csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId()));
-    //     //     }
-    //     //     cs.setCourseId(null);
-    //     // }
-    //     return new ResponseEntity<>(result,HttpStatus.OK);
-    // }
-
-    //TODO need to rework this in conjunction with changes to the front end to pass back the cptId
-    //TODO Update 202401291311 - likely to remove this method completely and drop down to one method
-    // @Override
-    // public ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto){
-    //     CourseStudent cs = new CourseStudent();
-    //     CourseStudent result = new CourseStudent();
-    //     // cs.setCourseId(dto.courseId);
-    //     // cs.setStudentId(dto.studentId);
-    //     // try {
-    //     //     result = csRepo.save(cs);
-    //     // } catch (DataIntegrityViolationException e) {
-    //     //     result = csRepo.findByCourseStudent(cs.getCourseId(), cs.getStudentId());
-    //     // }
-    //     return new ResponseEntity<>(result,HttpStatus.OK);
-    // }
-
-    //TODO need to rework this in conjunction with changes to the front end to pass back the cptId
     @Transactional
     @Override
     public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto){
+        /*
+         * Need to take a deep look at this method to handle removing courses and not double
+         * adding courses
+         */
         List<CourseStudent> result = new ArrayList<>();
         CourseStudent cs;
         for(Long studentId : dto.studentIds){
@@ -94,6 +58,13 @@ public class StaffSvcImpl implements StaffSvc{
                     cs = new CourseStudent();
                     cs.setStudentId(studentId);
                     cs.setCptId(cptId);
+                    /*
+                     * preventing duplicates is not a major problem since the table is setup with
+                     * a unique constraint to prevent duplicate studentId-cptId entries
+                     * 
+                     * Need to figure out how to handle removing classes
+                     * - Option 1: build two lists by studentId: 1 incoming cptIds, 2 existing cptIds
+                     */
                     try{
                         result.add(csRepo.save(cs));
                     } catch (DataIntegrityViolationException e){
@@ -120,7 +91,34 @@ public class StaffSvcImpl implements StaffSvc{
         return new ResponseEntity<CoursePeriodTeacher>(result,HttpStatus.OK);
     }
 
-    /*TODO this method is going to need to be reworked */
+    @Override
+    public List<SMStudentDetailDTO> getAllMiddleHighStudents(){
+        List<SMStudentDetailDTO> result = new ArrayList<>();
+        List<SMUserDTO> students = SvcUtil.convertListUsers(userRepo.getAllMiddleHighStudents());
+        SMStudentDetailDTO studentDto;
+        SMCourseDetailDTO courseDto;
+        Course course;
+        User teacher;
+        double creditCount = 0.0;
+        for(SMUserDTO student : students){
+            studentDto = new SMStudentDetailDTO();
+            creditCount = 0.0;
+            studentDto.enrolledCourses = new ArrayList<>();
+            studentDto.student = student;
+            List<CoursePeriodTeacher> cpts = cptRepo.getCoursesByStudent(student.userId);
+            for(CoursePeriodTeacher cpt : cpts){
+                course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
+                creditCount+=course.getCredit();
+                teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
+                courseDto = SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod(), cpt.getCptId());
+                studentDto.enrolledCourses.add(courseDto);
+            }
+            studentDto.creditCount = creditCount;
+            result.add(studentDto);
+        }
+        return result;
+    }
+
     @Override
     public List<SMCourseDetailDTO> getCourseDetails(String term){
         List<SMCourseDetailDTO> result = new ArrayList<>();
@@ -135,17 +133,8 @@ public class StaffSvcImpl implements StaffSvc{
         Course course;
         User teacher;
         for(CoursePeriodTeacher cpt : cptList){
-            // dto = new SMCourseDetailDTO();
             course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
             teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
-            // dto.courseId = course.getCourseId();
-            // dto.courseName = course.getCourseName();
-            // dto.courseBlock = course.getCourseBlock();
-            // dto.credit = course.getCredit();
-            // dto.period = cpt.getPeriod();
-            // dto.teacherFirstName = teacher.getFirstName();
-            // dto.teacherLastName = teacher.getLastName();
-            // dto.teacherId = teacher.getUserId();
             dto = SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod(), cpt.getCptId());
             result.add(dto);
         }
@@ -156,7 +145,6 @@ public class StaffSvcImpl implements StaffSvc{
     public List<SMCourseDetailDTO> getCoursesByStudent(Long studentId){
         ArrayList<SMCourseDetailDTO> result = new ArrayList<>();
         List<CoursePeriodTeacher> working = cptRepo.getCoursesByStudent(studentId);
-        SMCourseDetailDTO dto;
         Course course;
         User teacher;
         for(CoursePeriodTeacher cpt : working){
@@ -204,5 +192,128 @@ public class StaffSvcImpl implements StaffSvc{
         }
         temp.setVerified(true);
         return new SMUserDTO(userRepo.save(temp));
+    }
+
+    /*
+     * TEST METHODS ONLY
+     */
+    @Override
+    public ResponseEntity<List<CourseStudent>> testAssign(){
+        List<CourseStudent> result = new ArrayList<>();
+        /*
+         * Need to take a deep look at this method to handle removing courses and not double
+         * adding courses
+         */
+        //Need to mock out the incoming data
+        SMCourseDTO dto = new SMCourseDTO();
+        //single student, multiple courses
+        dto.studentIds = new ArrayList<>(Arrays.asList(1l));
+        dto.cptIds = new ArrayList<>(Arrays.asList(1l,2l,3l,4l));
+        
+        //multiple students, single course
+        // dto.studentIds = new ArrayList<>(Arrays.asList(1l,2l,3l,4l));
+        // dto.cptIds = new ArrayList<>(Arrays.asList(1l));
+
+
+        //Need to mock out data from the database
+        List<CourseStudent> mockCsData = buildMockCSData();
+
+        /*
+         * By studentId, need to compare the incoming studentId/cptId pairs against
+         * the mock data coming from the db; 
+         *      if an incoming cs exists in the db, do nothing
+         *      if an incoming cs does not exist in db, add to a new 'add' list
+         *      if a mock cs is not in the incoming list, add to a new 'delete' list
+         */
+
+        CourseStudent workingCs;
+        List<CourseStudent>working = new ArrayList<>();
+        List<CourseStudent> add = new ArrayList<>();
+        List<CourseStudent> delete = new ArrayList<>();
+        for(Long studentId : dto.studentIds){
+            add = new ArrayList<>();
+            delete = new ArrayList<>();
+            working = new ArrayList<>();
+            for(Long cptId : dto.cptIds){
+                workingCs = new CourseStudent();
+                workingCs.setStudentId(studentId);
+                workingCs.setCptId(cptId);
+                working.add(workingCs);
+                if(mockCsData.contains(workingCs)){
+                    //do nothing
+                    // add.add(workingCs);
+                } else {
+                    add.add(workingCs);
+                }
+            }
+            //check if entry exists in db
+            //actual call to db
+            // if(csRepo.findByCourseStudent(studentId, cptId)!=null){
+
+            // }
+            //mock call
+            
+        }
+        for(CourseStudent csCheck: mockCsData){
+            if(!working.contains(csCheck)){
+                delete.add(csCheck);
+            }
+        }
+        // return new ResponseEntity<>(add,HttpStatus.OK);
+        return new ResponseEntity<>(delete,HttpStatus.OK);
+    }
+
+    private List<CourseStudent> buildMockCSData(){
+        Long csId = 1L;
+        ArrayList<CourseStudent> result = new ArrayList<>();
+        CourseStudent cs = new CourseStudent();
+        cs.setStId(csId++);
+        cs.setStudentId(1L);
+        cs.setCptId(1l);
+        result.add(cs);
+        
+        // cs = new CourseStudent();
+        // cs.setStId(csId++);
+        // cs.setStudentId(1L);
+        // cs.setCptId(2l);
+        // result.add(cs);
+        
+        cs = new CourseStudent();
+        cs.setStId(csId++);
+        cs.setStudentId(1L);
+        cs.setCptId(3l);
+        result.add(cs);
+        
+        cs = new CourseStudent();
+        cs.setStId(csId++);
+        cs.setStudentId(1L);
+        cs.setCptId(4l);
+        result.add(cs);
+        
+        cs = new CourseStudent();
+        cs.setStId(csId++);
+        cs.setStudentId(1L);
+        cs.setCptId(5l);
+        result.add(cs);
+        
+        cs = new CourseStudent();
+        cs.setStId(csId++);
+        cs.setStudentId(1L);
+        cs.setCptId(6l);
+        result.add(cs);
+        
+        // cs = new CourseStudent();
+        // cs.setStId(csId++);
+        // cs.setStudentId(1L);
+        // cs.setCptId(7l);
+        // result.add(cs);
+        
+        // cs = new CourseStudent();
+        // cs.setStId(csId++);
+        // cs.setStudentId(1L);
+        // cs.setCptId(8l);
+        // result.add(cs);
+
+        return result;
     }
 }
