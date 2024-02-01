@@ -1,5 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,4 +15,10 @@ public interface CourseStudentRepo extends CrudRepository<CourseStudent, Long>{
         """;
     @Query(value = qryFindByCourseStudent, nativeQuery = true)
     public CourseStudent findByCourseStudent(Long studentId, Long cptId);
+
+    static String qryFindByStudentId = """
+        select * from school_manager.course_student as cs where cs.student_id=?1
+        """;
+    @Query(value = qryFindByStudentId, nativeQuery=true)
+    public List<CourseStudent> findByStudentId(Long studentId);
 }

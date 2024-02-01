@@ -51,27 +51,62 @@ public class StaffSvcImpl implements StaffSvc{
          * adding courses
          */
         List<CourseStudent> result = new ArrayList<>();
-        CourseStudent cs;
+        CourseStudent workingCs;
+        List<CourseStudent> working = new ArrayList<>();
+        List<CourseStudent> existing = new ArrayList<>();
+        List<CourseStudent> addList = new ArrayList<>();
+        List<CourseStudent> deleteList = new ArrayList<>();
+        // for(Long studentId : dto.studentIds){
+        //     for(Long cptId : dto.cptIds){
+        //         if(cptId != -1){
+        //             cs = new CourseStudent();
+        //             cs.setStudentId(studentId);
+        //             cs.setCptId(cptId);
+        //             /*
+        //              * preventing duplicates is not a major problem since the table is setup with
+        //              * a unique constraint to prevent duplicate studentId-cptId entries
+        //              * 
+        //              * Need to figure out how to handle removing classes
+        //              * - Option 1: build two lists by studentId: 1 incoming cptIds, 2 existing cptIds
+        //              */
+
+        //             try{
+        //                 result.add(csRepo.save(cs));
+        //             } catch (DataIntegrityViolationException e){
+        //                 result.add(csRepo.findByCourseStudent(cs.getStudentId(), cs.getCptId()));
+        //             }
+        //         }
+        //     }
+        // }
         for(Long studentId : dto.studentIds){
+            addList = new ArrayList<>();
+            deleteList = new ArrayList<>();
+            working = new ArrayList<>();
+            existing = csRepo.findByStudentId(studentId);
             for(Long cptId : dto.cptIds){
-                if(cptId != -1){
-                    cs = new CourseStudent();
-                    cs.setStudentId(studentId);
-                    cs.setCptId(cptId);
-                    /*
-                     * preventing duplicates is not a major problem since the table is setup with
-                     * a unique constraint to prevent duplicate studentId-cptId entries
-                     * 
-                     * Need to figure out how to handle removing classes
-                     * - Option 1: build two lists by studentId: 1 incoming cptIds, 2 existing cptIds
-                     */
-                    try{
-                        result.add(csRepo.save(cs));
-                    } catch (DataIntegrityViolationException e){
-                        result.add(csRepo.findByCourseStudent(cs.getStudentId(), cs.getCptId()));
-                    }
+                workingCs = new CourseStudent();
+                workingCs.setStudentId(studentId);
+                workingCs.setCptId(cptId);
+                working.add(workingCs);
+                if(!existing.contains(workingCs)){
+                    addList.add(workingCs);
                 }
             }
+            for(CourseStudent cs : existing){
+                if(!working.contains(cs)){
+                    deleteList.add(cs);
+                }
+            }
+            // loop through delete and delete those from the database
+            System.out.println("Delete: " + deleteList.size());
+            for(CourseStudent delCs : deleteList){
+                csRepo.delete(delCs);
+            }
+            System.out.println("Add: " + addList.size());
+            for(CourseStudent addCs : addList){
+                csRepo.save(addCs);
+            }
+            result.addAll(working);
         }
         return new ResponseEntity<>(result,HttpStatus.OK);
     }
@@ -200,23 +235,16 @@ public class StaffSvcImpl implements StaffSvc{
     @Override
     public ResponseEntity<List<CourseStudent>> testAssign(){
         List<CourseStudent> result = new ArrayList<>();
-        /*
-         * Need to take a deep look at this method to handle removing courses and not double
-         * adding courses
-         */
-        //Need to mock out the incoming data
         SMCourseDTO dto = new SMCourseDTO();
-        //single student, multiple courses
-        dto.studentIds = new ArrayList<>(Arrays.asList(1l));
-        dto.cptIds = new ArrayList<>(Arrays.asList(1l,2l,3l,4l));
-        
-        //multiple students, single course
-        // dto.studentIds = new ArrayList<>(Arrays.asList(1l,2l,3l,4l));
-        // dto.cptIds = new ArrayList<>(Arrays.asList(1l));
 
-
-        //Need to mock out data from the database
-        List<CourseStudent> mockCsData = buildMockCSData();
+        // dto.studentIds = new ArrayList<>(Arrays.asList(404l));
+        // dto.cptIds = new ArrayList<>(Arrays.asList(15l,33l,51l,76l,58l,97l,115l,134l,188l));
+        // dto.cptIds.remove(0);//remove the first entry to test delete
+        // dto.cptIds.add(999l);//add a nonexistent entry to test add
+        // dto.cptIds.add(1000l);//add a nonexistent entry to test add
+        // dto.cptIds.add(1001l);//add a nonexistent entry to test add
+        dto.studentIds = new ArrayList<>(Arrays.asList(354l,496l,103l,315l,311l,159l,320l,238l));
+        dto.cptIds = new ArrayList<>(Arrays.asList(6l));
 
         /*
          * By studentId, need to compare the incoming studentId/cptId pairs against
@@ -225,95 +253,48 @@ public class StaffSvcImpl implements StaffSvc{
          *      if an incoming cs does not exist in db, add to a new 'add' list
          *      if a mock cs is not in the incoming list, add to a new 'delete' list
          */
-
         CourseStudent workingCs;
-        List<CourseStudent>working = new ArrayList<>();
-        List<CourseStudent> add = new ArrayList<>();
-        List<CourseStudent> delete = new ArrayList<>();
+        List<CourseStudent> working = new ArrayList<>();
+        List<CourseStudent> existing = new ArrayList<>();
+        List<CourseStudent> addList = new ArrayList<>();
+        List<CourseStudent> deleteList = new ArrayList<>();
         for(Long studentId : dto.studentIds){
-            add = new ArrayList<>();
-            delete = new ArrayList<>();
+            addList = new ArrayList<>();
+            deleteList = new ArrayList<>();
             working = new ArrayList<>();
+            existing = csRepo.findByStudentId(studentId);
             for(Long cptId : dto.cptIds){
                 workingCs = new CourseStudent();
                 workingCs.setStudentId(studentId);
                 workingCs.setCptId(cptId);
                 working.add(workingCs);
-                if(mockCsData.contains(workingCs)){
-                    //do nothing
-                    // add.add(workingCs);
-                } else {
-                    add.add(workingCs);
+                if(!existing.contains(workingCs)){
+                    addList.add(workingCs);
                 }
             }
-            //check if entry exists in db
-            //actual call to db
-            // if(csRepo.findByCourseStudent(studentId, cptId)!=null){
-
-            // }
-            //mock call
-            
-        }
-        for(CourseStudent csCheck: mockCsData){
-            if(!working.contains(csCheck)){
-                delete.add(csCheck);
+            for(CourseStudent cs : existing){
+                if(!working.contains(cs)){
+                    deleteList.add(cs);
+                }
             }
+            System.out.println("Existing: " + existing.size());
+            // loop through working and add those to the database
+            System.out.println("Working: " + working.size());
+            // loop through add and add those to the database
+            // loop through delete and delete those from the database
+            System.out.println("Delete: " + deleteList.size());
+            for(CourseStudent delCs : deleteList){
+                csRepo.delete(delCs);
+            }
+            System.out.println("Add: " + addList.size());
+            for(CourseStudent addCs : addList){
+                csRepo.save(addCs);
+            }
+            
+            // result = csRepo.findByStudentId(studentId);
+            result.addAll(working);
         }
-        // return new ResponseEntity<>(add,HttpStatus.OK);
-        return new ResponseEntity<>(delete,HttpStatus.OK);
-    }
-
-    private List<CourseStudent> buildMockCSData(){
-        Long csId = 1L;
-        ArrayList<CourseStudent> result = new ArrayList<>();
-        CourseStudent cs = new CourseStudent();
-        cs.setStId(csId++);
-        cs.setStudentId(1L);
-        cs.setCptId(1l);
-        result.add(cs);
-        
-        // cs = new CourseStudent();
-        // cs.setStId(csId++);
-        // cs.setStudentId(1L);
-        // cs.setCptId(2l);
-        // result.add(cs);
-        
-        cs = new CourseStudent();
-        cs.setStId(csId++);
-        cs.setStudentId(1L);
-        cs.setCptId(3l);
-        result.add(cs);
-        
-        cs = new CourseStudent();
-        cs.setStId(csId++);
-        cs.setStudentId(1L);
-        cs.setCptId(4l);
-        result.add(cs);
-        
-        cs = new CourseStudent();
-        cs.setStId(csId++);
-        cs.setStudentId(1L);
-        cs.setCptId(5l);
-        result.add(cs);
-        
-        cs = new CourseStudent();
-        cs.setStId(csId++);
-        cs.setStudentId(1L);
-        cs.setCptId(6l);
-        result.add(cs);
-        
-        // cs = new CourseStudent();
-        // cs.setStId(csId++);
-        // cs.setStudentId(1L);
-        // cs.setCptId(7l);
-        // result.add(cs);
-        
-        // cs = new CourseStudent();
-        // cs.setStId(csId++);
-        // cs.setStudentId(1L);
-        // cs.setCptId(8l);
-        // result.add(cs);
-
-        return result;
+        return new ResponseEntity<>(result,HttpStatus.OK);
+        // return new ResponseEntity<>(delete,HttpStatus.OK);
     }
 }
