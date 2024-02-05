@@ -15,8 +15,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "coursePreReq", schema = "school_manager",
-uniqueConstraints = {@UniqueConstraint(columnNames = {"teacher_id", "course_id","period"})})
+@Table(name = "course_pre_req", schema = "school_manager",
+uniqueConstraints = {@UniqueConstraint(columnNames = {"course_id","prereq_id"})})
 public class CoursePreReq {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class CoursePreReq {
     @Column(name = "course_id")
     private Long courseId;
 
-    @Column(name = "prereqId")
+    @Column(name = "prereq_id")
     private Long prereqId;
     
 }
