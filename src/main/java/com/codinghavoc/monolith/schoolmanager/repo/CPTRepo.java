@@ -43,4 +43,10 @@ public interface CPTRepo extends CrudRepository<CoursePeriodTeacher, Long>{
         """;
     @Query(value = qryGetCoursesByStudent, nativeQuery = true)
     List<CoursePeriodTeacher>getCoursesByStudent(Long studentId);
+
+    static String qryFindByTeacher = """
+        select * from school_manager.course_period_teacher as cpt where cpt.teacher_id=?1
+        """;
+    @Query(value = qryFindByTeacher, nativeQuery = true)
+    List<CoursePeriodTeacher> findByTeacher(Long teacherId);
 }

@@ -7,13 +7,18 @@ import org.springframework.stereotype.Service;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
+import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
+import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.StudentCompletedCourse;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.CPTRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.CourseStudentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.UserRepo;
 import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
@@ -26,6 +31,8 @@ import lombok.AllArgsConstructor;
 public class TeacherSvcImpl implements TeacherSvc {
     AssignmentRepo assignmentRepo;
     CourseRepo courseRepo;
+    CourseStudentRepo csRepo;
+    CPTRepo cptRepo;
     GradeEntryRepo geRepo;
     UserRepo userRepo;
 
@@ -42,14 +49,29 @@ public class TeacherSvcImpl implements TeacherSvc {
         TODO Here and everywhere else that courseRepo is called to get course information
         is going to have to be reworked to use or include the ctpRepo
         */
-        List<Course> courses = courseRepo.getCoursesByTeacherId(teacherId);
-        if(courses != null && courses.size()>0){
-            for(Course course : courses){
-                working = new SMStudentListDTO();
-                working.course = course;
-                working.students = SvcUtil.convertListUsers(userRepo.getStudentsByCourseTeacherId(course.getCourseId(), teacherId));
-                result.add(working);
+        /*
+         * Need to get a list of CoursePeriodTeacher objects based on the teacherId
+         */
+        List<CoursePeriodTeacher> cpts = cptRepo.findByTeacher(teacherId);
+        /*
+         * Loop over the CPT objects, getting students from CourseStudent that have
+         * a matching cptId
+         */
+        List<CourseStudent> courseStudents;
+        User student;
+        for(CoursePeriodTeacher cpt : cpts){
+            working = new SMStudentListDTO();
+            working.period = cpt.getPeriod();
+            working.course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()),cpt.getCourseId());
+            working.students = new ArrayList<>();
+            courseStudents = csRepo.findStudentsByCPT(cpt.getCptId());
+            if(courseStudents.size()>0){
+                for(CourseStudent cs : courseStudents){
+                    student = SvcUtil.unwrapUser(userRepo.findById(cs.getStudentId()), cs.getStudentId());
+                    working.students.add(new SMUserDTO(student));
+                }
             }
+            result.add(working);
         }
         return result;
     }

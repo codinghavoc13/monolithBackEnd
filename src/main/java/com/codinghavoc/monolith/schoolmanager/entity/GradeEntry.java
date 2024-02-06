@@ -23,9 +23,13 @@ public class GradeEntry {
     @Column(name = "grade_id")
     private Long gradeId;
 
+    /*
+     * update this to use cptId instead of having courseId and teacherId
+     */
+
     @NonNull
     @Column(name = "course_id")
-    private Long courseId;
+    private Long courseId; //this will be replaced with cptId
 
     @NonNull
     @Column(name = "student_id")
@@ -33,7 +37,7 @@ public class GradeEntry {
 
     @NonNull
     @Column(name = "teacher_id")
-    private Long teacherId;
+    private Long teacherId; //this will be replaced with cptId
 
     @NonNull
     @Column(name = "assignment_id")
