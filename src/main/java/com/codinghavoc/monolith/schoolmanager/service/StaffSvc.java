@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMFullCourseDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
@@ -21,8 +22,9 @@ public interface StaffSvc {
     List<SMStudentDetailDTO> getAllMiddleHighStudents();
     List<SMCourseDetailDTO> getCoursesByStudent(Long studentId);
     List<SMCourseDetailDTO> getCourseDetails(String term);
-    List<SMUserDTO> getStudentsByGrade(String gradeLevel);
-    List<SMUserDTO> getStudentsNotAssignedToTeacher();
+    List<SMFullCourseDetailDTO> getFullCourseDetails();
+    List<SMStudentDetailDTO> getStudentsByGrade(String gradeLevel);
+    List<SMStudentDetailDTO> getStudentsNotAssignedToTeacher();
     List<SMUserDTO> getUnverifiedUsers();
 
     // ResponseEntity<CourseTeacher> revisedAssignTeacherToCourse(SMCourseDTO dto);

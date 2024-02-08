@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMFullCourseDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
@@ -52,14 +53,19 @@ public class StaffController {
         return new ResponseEntity<>(staffSvc.getCoursesByStudent(studentId), HttpStatus.OK);
     }
 
+    @GetMapping("getFullCourseDetails")
+    public ResponseEntity<List<SMFullCourseDetailDTO>> getFullCourseDetails(){
+        return new ResponseEntity<>(staffSvc.getFullCourseDetails(),HttpStatus.OK);
+    }
+
     @GetMapping("/getStudentsByGradeLevel/{gradeLevel}")
-    public ResponseEntity<List<SMUserDTO>> getStudentsByGradeLevel(@PathVariable String gradeLevel){
+    public ResponseEntity<List<SMStudentDetailDTO>> getStudentsByGradeLevel(@PathVariable String gradeLevel){
         return new ResponseEntity<>(staffSvc.getStudentsByGrade(gradeLevel), HttpStatus.OK);
     }
 
     @GetMapping("/getStudentsNotAssignedToTeacher")
-    public ResponseEntity<List<SMUserDTO>> getStudentsNotAssignedToTeacher(){
-        return new ResponseEntity<List<SMUserDTO>>(staffSvc.getStudentsNotAssignedToTeacher(),HttpStatus.OK);
+    public ResponseEntity<List<SMStudentDetailDTO>> getStudentsNotAssignedToTeacher(){
+        return new ResponseEntity<List<SMStudentDetailDTO>>(staffSvc.getStudentsNotAssignedToTeacher(),HttpStatus.OK);
     }
 
     @GetMapping("/getUnverifiedUsers")

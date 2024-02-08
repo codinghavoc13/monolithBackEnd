@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMFullCourseDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
@@ -56,28 +57,6 @@ public class StaffSvcImpl implements StaffSvc{
         List<CourseStudent> existing = new ArrayList<>();
         List<CourseStudent> addList = new ArrayList<>();
         List<CourseStudent> deleteList = new ArrayList<>();
-        // for(Long studentId : dto.studentIds){
-        //     for(Long cptId : dto.cptIds){
-        //         if(cptId != -1){
-        //             cs = new CourseStudent();
-        //             cs.setStudentId(studentId);
-        //             cs.setCptId(cptId);
-        //             /*
-        //              * preventing duplicates is not a major problem since the table is setup with
-        //              * a unique constraint to prevent duplicate studentId-cptId entries
-        //              * 
-        //              * Need to figure out how to handle removing classes
-        //              * - Option 1: build two lists by studentId: 1 incoming cptIds, 2 existing cptIds
-        //              */
-
-        //             try{
-        //                 result.add(csRepo.save(cs));
-        //             } catch (DataIntegrityViolationException e){
-        //                 result.add(csRepo.findByCourseStudent(cs.getStudentId(), cs.getCptId()));
-        //             }
-        //         }
-        //     }
-        // }
         for(Long studentId : dto.studentIds){
             addList = new ArrayList<>();
             deleteList = new ArrayList<>();
@@ -131,26 +110,30 @@ public class StaffSvcImpl implements StaffSvc{
         List<SMStudentDetailDTO> result = new ArrayList<>();
         List<SMUserDTO> students = SvcUtil.convertListUsers(userRepo.getAllMiddleHighStudents());
         SMStudentDetailDTO studentDto;
-        SMCourseDetailDTO courseDto;
-        Course course;
-        User teacher;
-        double creditCount = 0.0;
         for(SMUserDTO student : students){
-            studentDto = new SMStudentDetailDTO();
-            creditCount = 0.0;
-            studentDto.enrolledCourses = new ArrayList<>();
-            studentDto.student = student;
+            studentDto = buildStudentDetailDTO(student);
+            result.add(studentDto);
+        }
+        return result;
+    }
+
+    private SMStudentDetailDTO buildStudentDetailDTO(SMUserDTO student){
+        SMStudentDetailDTO result = new SMStudentDetailDTO();
+        double creditCount = 0.0;
+        Course course;
+        SMCourseDetailDTO courseDto;
+        User teacher;
+        result.enrolledCourses = new ArrayList<>();
+        result.student = student;
             List<CoursePeriodTeacher> cpts = cptRepo.getCoursesByStudent(student.userId);
             for(CoursePeriodTeacher cpt : cpts){
                 course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
                 creditCount+=course.getCredit();
                 teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
                 courseDto = SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod(), cpt.getCptId());
-                studentDto.enrolledCourses.add(courseDto);
+                result.enrolledCourses.add(courseDto);
             }
-            studentDto.creditCount = creditCount;
-            result.add(studentDto);
-        }
+            result.creditCount = creditCount;
         return result;
     }
 
@@ -191,15 +174,48 @@ public class StaffSvcImpl implements StaffSvc{
     }
 
     @Override
-    public List<SMUserDTO> getStudentsByGrade(String gradeLevel){
-        List<SMUserDTO> result = new ArrayList<>();
-        result = SvcUtil.convertListUsers(userRepo.getStudentsByGradeLevel(gradeLevel));
+    public List<SMFullCourseDetailDTO> getFullCourseDetails(){
+        List<SMFullCourseDetailDTO> result = new ArrayList<>();
+        List<CoursePeriodTeacher> cpts = (List<CoursePeriodTeacher>) cptRepo.findAll();
+        SMFullCourseDetailDTO fullDto;
+        List<CourseStudent> courseStudents;
+        Course course;
+        User teacher;
+        User student;
+        for(CoursePeriodTeacher cpt : cpts){
+            fullDto = new SMFullCourseDetailDTO();
+            course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()), cpt.getCourseId());
+            teacher = SvcUtil.unwrapUser(userRepo.findById(cpt.getTeacherId()), cpt.getTeacherId());
+            fullDto.course = (SvcUtil.buildSmCourseDetailDTO(course, teacher, cpt.getPeriod(), cpt.getCptId()));
+            courseStudents = csRepo.findStudentsByCPT(cpt.getCptId());
+                fullDto.students = new ArrayList<>();
+                for(CourseStudent cs : courseStudents){
+                    student = SvcUtil.unwrapUser(userRepo.findById(cs.getStudentId()), cs.getStudentId());
+                    fullDto.students.add(new SMUserDTO(student));
+                }
+            result.add(fullDto);
+        }
         return result;
     }
 
     @Override
-    public List<SMUserDTO> getStudentsNotAssignedToTeacher(){
-        return SvcUtil.convertListUsers((List<User>)userRepo.getStudentsNotAssignedToTeacher());
+    public List<SMStudentDetailDTO> getStudentsByGrade(String gradeLevel){
+        List<SMStudentDetailDTO> result = new ArrayList<>();
+        List<SMUserDTO> students = SvcUtil.convertListUsers(userRepo.getStudentsByGradeLevel(gradeLevel));
+        for(SMUserDTO student : students){
+            result.add(buildStudentDetailDTO(student));
+        }
+        return result;
+    }
+
+    @Override
+    public List<SMStudentDetailDTO> getStudentsNotAssignedToTeacher(){
+        List<SMStudentDetailDTO> result = new ArrayList<>();
+        List<SMUserDTO> students = SvcUtil.convertListUsers((List<User>)userRepo.getStudentsNotAssignedToTeacher());
+        for(SMUserDTO student : students){
+            result.add(buildStudentDetailDTO(student));
+        }
+        return result;
     }
 
     public User getStaffMember(Long id) {
