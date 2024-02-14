@@ -23,38 +23,28 @@ public class GradeEntry {
     @Column(name = "grade_id")
     private Long gradeId;
 
-    /*
-     * update this to use cptId instead of having courseId and teacherId
-     */
-
     @NonNull
-    @Column(name = "course_id")
-    private Long courseId; //this will be replaced with cptId
+    @Column(name = "cpt_id")
+    private Long cptId;
 
     @NonNull
     @Column(name = "student_id")
     private Long studentId;
 
     @NonNull
-    @Column(name = "teacher_id")
-    private Long teacherId; //this will be replaced with cptId
-
-    @NonNull
     @Column(name = "assignment_id")
     private Long assignmentId;
-
-    // @NonNull
     @Column(name = "grade")
-    private double grade;
+    private Double grade;
 
-    public GradeEntry(Long course, Long student, Long teacher, Long assignment){
-        this.courseId = course;
+    public GradeEntry(Long cptId, Long student, Long assignment){
+        this.cptId = cptId;
         this.studentId = student;
         this.assignmentId = assignment;
     }
 
-    public GradeEntry(Long course, Long student, Long teacher, Long assignment, double grade){
-        this.courseId = course;
+    public GradeEntry(Long cptId, Long student, Long assignment, double grade){
+        this.cptId = cptId;
         this.studentId = student;
         this.assignmentId = assignment;
         this.grade = grade;

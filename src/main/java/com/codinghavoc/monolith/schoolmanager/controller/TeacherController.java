@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMSingleGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
@@ -30,6 +32,11 @@ public class TeacherController {
         return new ResponseEntity<>(teacherSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
     }
 
+    @GetMapping("/getGradeEntries")
+    public ResponseEntity<List<GradeEntry>> getGradeEntries(){
+        return new ResponseEntity<>(teacherSvc.getGradeEntries(),HttpStatus.OK);
+    }
+
     //will need another getAssignments EP with teacher and student id
     //TODO something along the lines of get grades by student and teacher ids
     // @GetMapping("/getAssignments/teacher_id/{teacher_id}/student_id/{student_id}")
@@ -43,13 +50,17 @@ public class TeacherController {
     }
 
     @PostMapping("/saveGrade")
-    public ResponseEntity<GradeEntry> saveGrade(@RequestBody SMReqDTO dto){
+    public ResponseEntity<GradeEntry> saveGrade(@RequestBody SMGradeDTO dto){
         return new ResponseEntity<>(teacherSvc.saveGradeEntry(dto), HttpStatus.OK);
     }
 
     @PostMapping("/saveNewAssignment")//tested, works, Save New Assignment
     public ResponseEntity<List<Assignment>> saveNewAssignment(@RequestBody SMReqDTO dto){
-        System.out.println("TC-sna-1");
         return new ResponseEntity<>(teacherSvc.saveAssignment(dto), HttpStatus.OK);
+    }
+
+    @PostMapping("/updateGradeEntries")
+    public ResponseEntity<List<GradeEntry>> updateGradeEntries(@RequestBody List<SMSingleGradeDTO> dtos){
+        return new ResponseEntity<>(teacherSvc.updateGradeEntries(dtos), HttpStatus.OK);
     }
 }

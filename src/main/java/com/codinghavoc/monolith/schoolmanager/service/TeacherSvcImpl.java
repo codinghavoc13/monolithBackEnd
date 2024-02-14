@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMSingleGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
@@ -41,21 +43,18 @@ public class TeacherSvcImpl implements TeacherSvc {
     }
 
     @Override
+    public List<GradeEntry> getGradeEntries(){
+        ArrayList<GradeEntry> result = new ArrayList<>();
+        result = (ArrayList<GradeEntry>) geRepo.findAll();
+        return result;
+    }
+
+    @SuppressWarnings("null")
+    @Override
     public List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId){
         ArrayList<SMStudentListDTO> result = new ArrayList<>();
         SMStudentListDTO working;
-        /*
-        TODO Here and everywhere else that courseRepo is called to get course information
-        is going to have to be reworked to use or include the ctpRepo
-        */
-        /*
-         * Need to get a list of CoursePeriodTeacher objects based on the teacherId
-         */
         List<CoursePeriodTeacher> cpts = cptRepo.findByTeacher(teacherId);
-        /*
-         * Loop over the CPT objects, getting students from CourseStudent that have
-         * a matching cptId
-         */
         List<CourseStudent> courseStudents;
         User student;
         for(CoursePeriodTeacher cpt : cpts){
@@ -89,13 +88,14 @@ public class TeacherSvcImpl implements TeacherSvc {
         return result;
     }
 
+    /*This is used to create the bulk, blank grade fields that will allow the build of the grade book */
     @Override
-    public GradeEntry saveGradeEntry(SMReqDTO dto){
+    public GradeEntry saveGradeEntry(SMGradeDTO dto){
         GradeEntry check = geRepo.findByStudentAndAssignmentId(dto.studentId, dto.assignmentId);
         if(check!=null){
             return check;
         }
-        GradeEntry ge = new GradeEntry(dto.courseId,dto.studentId,dto.teacherId, dto.assignmentId, dto.grade);
+        GradeEntry ge = new GradeEntry(dto.cptId, dto.studentId, dto.assignmentId, dto.grade);
         return geRepo.save(ge);
     }
 
@@ -107,7 +107,19 @@ public class TeacherSvcImpl implements TeacherSvc {
     public StudentCompletedCourse saveStudentCompletedCourse(Long studentId){
         StudentCompletedCourse scc = new StudentCompletedCourse();
         scc.setStudentId(studentId);
-        //need to get 
         return scc;
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public List<GradeEntry> updateGradeEntries(List<SMSingleGradeDTO> dtos){
+        ArrayList<GradeEntry> result = new ArrayList<>();
+        GradeEntry ge;
+        for(SMSingleGradeDTO dto : dtos){
+            ge = SvcUtil.unwrapGradeEntry(geRepo.findById(dto.gradeId), dto.gradeId);
+            ge.setGrade(dto.grade);
+            result.add(geRepo.save(ge));
+        }
+        return result;
     }
 }

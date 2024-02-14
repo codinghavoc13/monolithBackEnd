@@ -8,9 +8,11 @@ import com.codinghavoc.monolith.schoolmanager.dto.SMCourseDetailDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
+import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.exception.AssignmentNotFoundException;
 import com.codinghavoc.monolith.schoolmanager.exception.CourseNotFoundException;
+import com.codinghavoc.monolith.schoolmanager.exception.GradeEntryNotFoundException;
 import com.codinghavoc.monolith.schoolmanager.exception.UserNotFoundException;
 
 public class SvcUtil {
@@ -57,6 +59,11 @@ public class SvcUtil {
     public static Course unwrapCourse(Optional<Course> entity, Long id){
         if(entity.isPresent()) return entity.get();
         else throw new CourseNotFoundException(id);
+    }
+
+    public static GradeEntry unwrapGradeEntry(Optional<GradeEntry> entity, Long id){
+        if(entity.isPresent()) return entity.get();
+        else throw new GradeEntryNotFoundException(id);        
     }
 
     public static User unwrapUser(Optional<User> entity, Long id) {
