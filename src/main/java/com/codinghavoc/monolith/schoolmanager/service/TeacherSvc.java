@@ -17,7 +17,7 @@ public interface TeacherSvc {
     List<GradeEntry> getGradeEntries();
     List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId);
     List<Assignment> saveAssignment(SMReqDTO dto);
-    GradeEntry saveGradeEntry(SMGradeDTO dto);
+    List<GradeEntry> saveGradeEntry(List<SMGradeDTO> dtos);
     StudentCompletedCourse saveStudentCompletedCourse(Long studentId);
     List<GradeEntry> updateGradeEntries(List<SMSingleGradeDTO> dtos);
 }

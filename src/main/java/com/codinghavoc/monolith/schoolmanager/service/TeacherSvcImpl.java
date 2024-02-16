@@ -59,6 +59,7 @@ public class TeacherSvcImpl implements TeacherSvc {
         User student;
         for(CoursePeriodTeacher cpt : cpts){
             working = new SMStudentListDTO();
+            working.cptId = cpt.getCptId();
             working.period = cpt.getPeriod();
             working.course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.getCourseId()),cpt.getCourseId());
             working.students = new ArrayList<>();
@@ -90,13 +91,19 @@ public class TeacherSvcImpl implements TeacherSvc {
 
     /*This is used to create the bulk, blank grade fields that will allow the build of the grade book */
     @Override
-    public GradeEntry saveGradeEntry(SMGradeDTO dto){
-        GradeEntry check = geRepo.findByStudentAndAssignmentId(dto.studentId, dto.assignmentId);
-        if(check!=null){
-            return check;
+    public List<GradeEntry> saveGradeEntry(List<SMGradeDTO> dtos){
+        ArrayList<GradeEntry> result = new ArrayList<>();
+        GradeEntry check;
+        for(SMGradeDTO dto : dtos){
+            check = geRepo.findByStudentAndAssignmentId(dto.studentId, dto.assignmentId);
+            if(check!=null){
+                result.add(check);
+            } else {
+                GradeEntry ge = new GradeEntry(dto.cptId, dto.studentId, dto.assignmentId, dto.grade);
+                result.add(geRepo.save(ge));
+            }
         }
-        GradeEntry ge = new GradeEntry(dto.cptId, dto.studentId, dto.assignmentId, dto.grade);
-        return geRepo.save(ge);
+        return result;
     }
 
     public User getStaffMember(Long id) {

@@ -50,7 +50,7 @@ public class TeacherController {
     }
 
     @PostMapping("/saveGrade")
-    public ResponseEntity<GradeEntry> saveGrade(@RequestBody SMGradeDTO dto){
+    public ResponseEntity<List<GradeEntry>> saveGrade(@RequestBody List<SMGradeDTO> dto){
         return new ResponseEntity<>(teacherSvc.saveGradeEntry(dto), HttpStatus.OK);
     }
 
