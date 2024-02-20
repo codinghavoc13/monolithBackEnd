@@ -2,15 +2,19 @@ package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMGradeBookDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.SMIndividualGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMSingleGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
@@ -36,6 +40,12 @@ public class TeacherSvcImpl implements TeacherSvc {
     CPTRepo cptRepo;
     GradeEntryRepo geRepo;
     UserRepo userRepo;
+
+    @Override
+    public List<SMGradeBookDTO> buildGradeBook(Long teacherId){
+        ArrayList<SMGradeBookDTO> result = new ArrayList<>();
+        return result;
+    }
 
     @Override
     public List<Assignment> getAssignmentsByTeacherId(Long teacher_Id){
@@ -96,9 +106,10 @@ public class TeacherSvcImpl implements TeacherSvc {
         GradeEntry check;
         for(SMGradeDTO dto : dtos){
             check = geRepo.findByStudentAndAssignmentId(dto.studentId, dto.assignmentId);
-            if(check!=null){
-                result.add(check);
-            } else {
+            // if(check!=null){
+            //     // result.add(check);
+            // } else {
+            if(check==null){
                 GradeEntry ge = new GradeEntry(dto.cptId, dto.studentId, dto.assignmentId, dto.grade);
                 result.add(geRepo.save(ge));
             }
@@ -127,6 +138,38 @@ public class TeacherSvcImpl implements TeacherSvc {
             ge.setGrade(dto.grade);
             result.add(geRepo.save(ge));
         }
+        return result;
+    }
+
+    @Override
+    public SMGradeBookDTO test(Long teacherId){
+        SMGradeBookDTO result = new SMGradeBookDTO();
+        Course course;
+        Optional<CoursePeriodTeacher> cpt;
+        User student;
+        Assignment assignment;
+        SMIndividualGradeDTO dto;
+        List<GradeEntry> gradeEntries = (List<GradeEntry>) geRepo.findAll();
+        for(GradeEntry ge : gradeEntries){
+            dto = new SMIndividualGradeDTO();
+            dto.grade = ge.getGrade();
+            assignment = SvcUtil.unwrapAssignment(assignmentRepo.findById(ge.getAssignmentId()), ge.getAssignmentId());
+            dto.assignmentDueDate = assignment.getAssignmentDueDate();
+            result.addWeeksListEntry(dto.assignmentDueDate);
+            dto.assignmentTitle = assignment.getAssignmentTitle();
+            dto.assignmentType = assignment.getAssignmentType().value;
+            result.addAssignmentType(dto.assignmentType);
+            student = SvcUtil.unwrapUser(userRepo.findById(ge.getStudentId()), ge.getStudentId());
+            dto.studentFirstName = student.getFirstName();
+            dto.studentLastName = student.getLastName();
+            cpt = cptRepo.findById(ge.getCptId());
+            dto.period = cpt.get().getPeriod();
+            result.addPeriod(dto.period);
+            course = SvcUtil.unwrapCourse(courseRepo.findById(cpt.get().getCourseId()), cpt.get().getCourseId());
+            dto.courseName = course.getCourseName();
+            result.addCourseName(dto.courseName);
+            result.gradeDtos.add(dto);
+        } 
         return result;
     }
 }

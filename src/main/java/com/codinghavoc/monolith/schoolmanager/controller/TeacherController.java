@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codinghavoc.monolith.schoolmanager.dto.SMGradeBookDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMSingleGradeDTO;
@@ -62,5 +63,10 @@ public class TeacherController {
     @PostMapping("/updateGradeEntries")
     public ResponseEntity<List<GradeEntry>> updateGradeEntries(@RequestBody List<SMSingleGradeDTO> dtos){
         return new ResponseEntity<>(teacherSvc.updateGradeEntries(dtos), HttpStatus.OK);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<SMGradeBookDTO> test(){
+        return new ResponseEntity<>(teacherSvc.test(1l),HttpStatus.OK);
     }
 }

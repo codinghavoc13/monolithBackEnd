@@ -24,9 +24,11 @@ public class SvcUtil {
         result.cptId = cptId;
         result.credit = course.getCredit();
         result.period = period;
-        result.teacherFirstName = teacher.getFirstName();
-        result.teacherLastName = teacher.getLastName();
-        result.teacherId = teacher.getUserId();
+        if(teacher!=null){
+            result.teacherFirstName = teacher.getFirstName();
+            result.teacherLastName = teacher.getLastName();
+            result.teacherId = teacher.getUserId();
+        }
         return result;
     }
 
