@@ -9,7 +9,7 @@ import java.time.DayOfWeek;
 public class SMGradeBookDTO {
     public List<String> assignmentTypes;
     public List<String> courseNames;
-    public ArrayList<HashMap<String,LocalDate>> weeks;
+    public ArrayList<SMWeekStartStopDTO> weeks;
     public List<SMIndividualGradeDTO> gradeDtos;
     public List<Integer> periods;
 

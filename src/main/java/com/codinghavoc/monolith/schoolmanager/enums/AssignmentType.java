@@ -1,10 +1,10 @@
 package com.codinghavoc.monolith.schoolmanager.enums;
 
 public enum AssignmentType {
-    HOMEWORK("homework"),
-    QUIZ("quiz"),
-    TEST("test"),
-    REPORT("report");
+    HOMEWORK("Homework"),
+    QUIZ("Quiz"),
+    TEST("Test"),
+    REPORT("Report");
 
     public String value;
 

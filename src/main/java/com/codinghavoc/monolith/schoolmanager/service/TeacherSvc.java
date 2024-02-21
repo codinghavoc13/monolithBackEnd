@@ -12,7 +12,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.StudentCompletedCourse;
 
 public interface TeacherSvc {
-    List<SMGradeBookDTO> buildGradeBook(Long teacherId);
+    SMGradeBookDTO buildGradeBook(Long teacherId);
     List<Assignment> getAssignmentsByTeacherId(Long id);
     // SMReqDTO getAssignmentsByTeacherId(Long id);
     // List<Assignment> getAssignmentsByTeacherIdAndStudentId(Long teacher_id, Long student_id);

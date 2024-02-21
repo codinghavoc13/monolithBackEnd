@@ -1,5 +1,7 @@
 package com.codinghavoc.monolith.schoolmanager.repo;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,4 +15,10 @@ public interface GradeEntryRepo extends CrudRepository<GradeEntry,Long>{
     @Query(value = qryFindByStudentAndAssignmentId, nativeQuery = true)
     public GradeEntry findByStudentAndAssignmentId(Long student_id, Long assignment_id);
     
+    static String qryFindByCPTIds = """
+        select * from school_manager.grade_entry as ge
+        where ge.cpt_id in ?1
+        """;
+    @Query(value = qryFindByCPTIds, nativeQuery = true)
+    List<GradeEntry> findByCptIdIn(List<Long> cptIds);
 }

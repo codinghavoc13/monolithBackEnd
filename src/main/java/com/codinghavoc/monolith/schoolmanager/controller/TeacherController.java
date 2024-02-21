@@ -33,6 +33,11 @@ public class TeacherController {
         return new ResponseEntity<>(teacherSvc.getAssignmentsByTeacherId(teacher_id), HttpStatus.OK);
     }
 
+    @GetMapping("/getGradeBook/{teacher_id}")
+    public ResponseEntity<SMGradeBookDTO> getGradeBook(@PathVariable Long teacher_id){
+        return new ResponseEntity<>(teacherSvc.buildGradeBook(teacher_id),HttpStatus.OK);
+    }
+
     @GetMapping("/getGradeEntries")
     public ResponseEntity<List<GradeEntry>> getGradeEntries(){
         return new ResponseEntity<>(teacherSvc.getGradeEntries(),HttpStatus.OK);
@@ -67,6 +72,6 @@ public class TeacherController {
 
     @GetMapping("/test")
     public ResponseEntity<SMGradeBookDTO> test(){
-        return new ResponseEntity<>(teacherSvc.test(1l),HttpStatus.OK);
+        return new ResponseEntity<>(teacherSvc.test(38l),HttpStatus.OK);
     }
 }

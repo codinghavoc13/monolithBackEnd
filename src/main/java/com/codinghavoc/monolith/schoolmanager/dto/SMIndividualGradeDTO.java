@@ -11,6 +11,8 @@ public class SMIndividualGradeDTO {
     public String studentFirstName;
     public String studentLastName;
     public Double grade;
+    public Long gradeId;
+
     @Override
     public String toString() {
         return "SMGradeBookDTO [courseName=" + courseName + ", assignmentTitle=" + assignmentTitle + ", assignmentType="
