@@ -34,16 +34,17 @@ public class SMGradeBookDTO {
     }
 
     public void addWeeksListEntry(LocalDate ld){
-        HashMap<String,LocalDate> temp;
+        // HashMap<String,LocalDate> temp;
+        SMWeekStartStopDTO temp = new SMWeekStartStopDTO();
         temp = buildStartEndPair(ld);
         if(!weeks.contains(temp))
             weeks.add(temp);
     }
 
-    private static HashMap<String, LocalDate> buildStartEndPair(LocalDate ld){
-        HashMap<String,LocalDate> result = new HashMap<>();
-        result.put("start", findStartOfWeek(ld));
-        result.put("end", findEndOfWeek(ld));
+    private static SMWeekStartStopDTO buildStartEndPair(LocalDate ld){
+        SMWeekStartStopDTO result = new SMWeekStartStopDTO();
+        result.start = findStartOfWeek(ld);
+        result.stop = findEndOfWeek(ld);
         return result;
     }
 

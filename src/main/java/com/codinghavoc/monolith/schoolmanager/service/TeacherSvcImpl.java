@@ -58,7 +58,6 @@ public class TeacherSvcImpl implements TeacherSvc {
             cptList.add(cpt.getCptId());
         }
         List<GradeEntry> gradeEntries = (List<GradeEntry>) geRepo.findByCptIdIn(cptList);
-        System.out.println(gradeEntries.size());
         for(GradeEntry ge : gradeEntries){
             dto = new SMIndividualGradeDTO();
             dto.grade = ge.getGrade();
