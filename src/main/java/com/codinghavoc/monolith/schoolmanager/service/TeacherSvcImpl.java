@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.codinghavoc.monolith.schoolmanager.dto.GradeBookSummaryDTO;
+import com.codinghavoc.monolith.schoolmanager.dto.IndividualGradeSummaryDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeBookDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMIndividualGradeDTO;
@@ -14,6 +16,7 @@ import com.codinghavoc.monolith.schoolmanager.dto.SMSingleGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
+import com.codinghavoc.monolith.schoolmanager.entity.ConfigEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.Course;
 import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
 import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
@@ -23,6 +26,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.enums.CourseBlock;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CPTRepo;
+import com.codinghavoc.monolith.schoolmanager.repo.ConfigRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CourseStudentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.GradeEntryRepo;
@@ -36,6 +40,7 @@ import lombok.AllArgsConstructor;
 @Service
 public class TeacherSvcImpl implements TeacherSvc {
     AssignmentRepo assignmentRepo;
+    ConfigRepo configRepo;
     CourseRepo courseRepo;
     CourseStudentRepo csRepo;
     CPTRepo cptRepo;
@@ -100,6 +105,61 @@ public class TeacherSvcImpl implements TeacherSvc {
         return result;
     }
 
+    @Override
+    public List<GradeBookSummaryDTO> getGradeBookSummaries(Long teacherId){
+        ArrayList<GradeBookSummaryDTO> result = new ArrayList<>();
+        ArrayList<Double> homeworkGrades = new ArrayList<>();
+        ArrayList<Double> quizGrades = new ArrayList<>();
+        ArrayList<Double> reportGrades = new ArrayList<>();
+        ArrayList<Double> testGrades = new ArrayList<>();
+        IndividualGradeSummaryDTO igsdto;
+        Course course;
+        GradeBookSummaryDTO gbsdto;
+        List<User> students;
+        List<GradeEntry> grades;
+        //get a list of cptids by teacherId from cptrepo
+        List<CoursePeriodTeacher> cpts = (List<CoursePeriodTeacher>)cptRepo.findByTeacher(teacherId);
+        for(CoursePeriodTeacher cpt : cpts){
+            //build out the gbsdto, reset grades lists to new
+            //declare four arraylists, one for each assignment type
+            gbsdto = new GradeBookSummaryDTO();
+            gbsdto.studentInfo = new ArrayList<>();
+            gbsdto.cptId = cpt.getCptId();
+            course = courseRepo.findById(cpt.getCourseId()).get();
+            gbsdto.courseName = course.getCourseName();
+            gbsdto.courseBlock = course.getCourseBlock().value;
+            gbsdto.period = cpt.getPeriod();
+            students = new ArrayList<>();
+            //for each cptid, get a list of studentids by cptid from csrepo
+            for(CourseStudent cs : csRepo.findStudentsByCPT(cpt.getCptId())){
+                students.add(userRepo.findById(cs.getStudentId()).get());
+            }
+            //for each studentid, get a list of gradeentries from gerepo
+            for(User student : students){
+                igsdto = new IndividualGradeSummaryDTO();
+                igsdto.studentFirstName = student.getFirstName();
+                igsdto.studentLastName = student.getLastName();
+                gbsdto.studentInfo.add(igsdto);
+                grades = geRepo.findByStudentId(student.getUserId());
+                //for each gradeentry, get the assignment type of each
+                for(GradeEntry ge : grades){
+                    
+                }
+            }
+            //loop over each grade entry and split into grades lists above
+            //send each list through calcGradeAvg and save in gbsdto
+            //need to come up with some reasonable way of calculating overall grade based on assignment specific grades
+            // double overallGrade = 0.0;
+            // overallGrade += calcGradeAvg(homeworkGrades) * getAssignmentTypePercentage("homework_percent");
+            // overallGrade += calcGradeAvg(quizGrades) * getAssignmentTypePercentage("quiz_percent");
+            // overallGrade += calcGradeAvg(reportGrades) * getAssignmentTypePercentage("report_percent");
+            // overallGrade += calcGradeAvg(testGrades) * getAssignmentTypePercentage("test_percent");
+            // System.out.println(overallGrade);
+            result.add(gbsdto);
+        }
+        return result;
+    }
+
     @SuppressWarnings("null")
     @Override
     public List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId){
@@ -147,9 +207,6 @@ public class TeacherSvcImpl implements TeacherSvc {
         GradeEntry check;
         for(SMGradeDTO dto : dtos){
             check = geRepo.findByStudentAndAssignmentId(dto.studentId, dto.assignmentId);
-            // if(check!=null){
-            //     // result.add(check);
-            // } else {
             if(check==null){
                 GradeEntry ge = new GradeEntry(dto.cptId, dto.studentId, dto.assignmentId, dto.grade);
                 result.add(geRepo.save(ge));
@@ -180,6 +237,24 @@ public class TeacherSvcImpl implements TeacherSvc {
             result.add(geRepo.save(ge));
         }
         return result;
+    }
+
+    private Double calcGradeAvg(ArrayList<Double> grades){
+        double result = 0.0;
+        for(double grade : grades){
+            result+=grade;
+        }
+        result /= grades.size();
+        return result;
+    }
+
+    private Double getAssignmentTypePercentage(String type){
+        ConfigEntry ce = configRepo.getGradeCalcPercentage(type);
+        if(ce != null){
+            return Double.valueOf(ce.value);
+        } else {
+            return 0.25;
+        }
     }
 
     @Override

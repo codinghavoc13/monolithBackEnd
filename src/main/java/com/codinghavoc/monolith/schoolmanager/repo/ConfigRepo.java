@@ -18,11 +18,9 @@ public interface ConfigRepo extends CrudRepository<ConfigEntry,Long>{
     @Query(value = qryGetSchoolIdCounter, nativeQuery=true)
     ConfigEntry getSchoolIdCounter();
 
-    // static String qryUpdateSchoolIdCounter = """
-    //     UPDATE school_manager.config
-	//     SET value=?1
-	//     WHERE key='school_id_counter'
-    //     """;
-    // @Query(value=qryUpdateSchoolIdCounter, nativeQuery = true)
-    // void updateSchoolIdCounter(String newValue);
+    static String qryGetGradeCalcPercentage = """
+        select * from school_manager.config as c where c.key=?1
+        """;
+    @Query(value = qryGetGradeCalcPercentage, nativeQuery = true)
+    ConfigEntry getGradeCalcPercentage(String field);
 }

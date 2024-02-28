@@ -2,6 +2,7 @@ package com.codinghavoc.monolith.schoolmanager.service;
 
 import java.util.List;
 
+import com.codinghavoc.monolith.schoolmanager.dto.GradeBookSummaryDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeBookDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
@@ -17,6 +18,7 @@ public interface TeacherSvc {
     // SMReqDTO getAssignmentsByTeacherId(Long id);
     // List<Assignment> getAssignmentsByTeacherIdAndStudentId(Long teacher_id, Long student_id);
     List<GradeEntry> getGradeEntries();
+    List<GradeBookSummaryDTO> getGradeBookSummaries(Long teacherId);
     List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId);
     List<Assignment> saveAssignment(SMReqDTO dto);
     List<GradeEntry> saveGradeEntry(List<SMGradeDTO> dtos);

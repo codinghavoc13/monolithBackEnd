@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.codinghavoc.monolith.schoolmanager.dto.GradeBookSummaryDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeBookDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMReqDTO;
@@ -36,6 +37,11 @@ public class TeacherController {
     @GetMapping("/getGradeBook/{teacher_id}")
     public ResponseEntity<SMGradeBookDTO> getGradeBook(@PathVariable Long teacher_id){
         return new ResponseEntity<>(teacherSvc.buildGradeBook(teacher_id),HttpStatus.OK);
+    }
+
+    @GetMapping("/getGradeSummaries/{teacher_id}")
+    public ResponseEntity<List<GradeBookSummaryDTO>> getGradeSummaries(@PathVariable Long teacher_id){
+        return new ResponseEntity<>(teacherSvc.getGradeBookSummaries(teacher_id),HttpStatus.OK);
     }
 
     @GetMapping("/getGradeEntries")
