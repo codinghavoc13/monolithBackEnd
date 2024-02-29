@@ -170,7 +170,13 @@ public class TeacherSvcImpl implements TeacherSvc {
                 igsdto.quizAvg = calcGradeAvg(quizGrades);
                 igsdto.reportAvg = calcGradeAvg(reportGrades);
                 igsdto.testAvg = calcGradeAvg(testGrades);
-                //need to come up with some reasonable way of calculating overall grade based on assignment specific grades
+                /*
+                 * Something to think about: when no grades have been submitted for some fields, the percent 
+                 * break for those types will still apply, massively skewing the overall avg. Example, as of
+                 * 20240229, I have no reports in the database and reports are set to be 25% of the overall
+                 * grade; because of this, a student will 100s on all other assignments but no reports submitted
+                 * will end up with a overall grade of 75.
+                 */
                 double overallGrade = 0.0;
                 if(igsdto.homeworkAvg>=0.0){
                     overallGrade += igsdto.homeworkAvg * getAssignmentTypePercentage("homework_percent");
