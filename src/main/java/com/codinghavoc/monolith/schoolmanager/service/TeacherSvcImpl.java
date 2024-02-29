@@ -23,6 +23,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.CourseStudent;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
 import com.codinghavoc.monolith.schoolmanager.entity.StudentCompletedCourse;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
+import com.codinghavoc.monolith.schoolmanager.enums.AssignmentType;
 import com.codinghavoc.monolith.schoolmanager.enums.CourseBlock;
 import com.codinghavoc.monolith.schoolmanager.repo.AssignmentRepo;
 import com.codinghavoc.monolith.schoolmanager.repo.CPTRepo;
@@ -112,6 +113,7 @@ public class TeacherSvcImpl implements TeacherSvc {
         ArrayList<Double> quizGrades = new ArrayList<>();
         ArrayList<Double> reportGrades = new ArrayList<>();
         ArrayList<Double> testGrades = new ArrayList<>();
+        AssignmentType assignmentType;
         IndividualGradeSummaryDTO igsdto;
         Course course;
         GradeBookSummaryDTO gbsdto;
@@ -136,6 +138,10 @@ public class TeacherSvcImpl implements TeacherSvc {
             }
             //for each studentid, get a list of gradeentries from gerepo
             for(User student : students){
+                homeworkGrades = new ArrayList<>();
+                quizGrades = new ArrayList<>();
+                reportGrades = new ArrayList<>();
+                testGrades = new ArrayList<>();
                 igsdto = new IndividualGradeSummaryDTO();
                 igsdto.studentFirstName = student.getFirstName();
                 igsdto.studentLastName = student.getLastName();
@@ -143,18 +149,43 @@ public class TeacherSvcImpl implements TeacherSvc {
                 grades = geRepo.findByStudentId(student.getUserId());
                 //for each gradeentry, get the assignment type of each
                 for(GradeEntry ge : grades){
-                    
+                    /*
+                     * Add a check to only process the ge if ge.grade is gte 0
+                     */
+                    if(ge.getGrade()>=0){
+                        assignmentType = assignmentRepo.findById(ge.getAssignmentId()).get().getAssignmentType();
+                        if (assignmentType.value.equals("Homework")) homeworkGrades.add(ge.getGrade());
+                        if (assignmentType.value.equals("Quiz")) quizGrades.add(ge.getGrade());
+                        if (assignmentType.value.equals("Report")) reportGrades.add(ge.getGrade());
+                        if (assignmentType.value.equals("Test")) testGrades.add(ge.getGrade());
+                    }
                 }
+                // System.out.println("Homework: " + homeworkGrades.size());
+                // System.out.println("Quiz: " + quizGrades.size());
+                // System.out.println("Report: " + reportGrades.size());
+                // System.out.println("Test: " + testGrades.size());
+                //loop over each grade entry and split into grades lists above
+                //send each list through calcGradeAvg and save in gbsdto
+                igsdto.homeworkAvg = calcGradeAvg(homeworkGrades);
+                igsdto.quizAvg = calcGradeAvg(quizGrades);
+                igsdto.reportAvg = calcGradeAvg(reportGrades);
+                igsdto.testAvg = calcGradeAvg(testGrades);
+                //need to come up with some reasonable way of calculating overall grade based on assignment specific grades
+                double overallGrade = 0.0;
+                if(igsdto.homeworkAvg>=0.0){
+                    overallGrade += igsdto.homeworkAvg * getAssignmentTypePercentage("homework_percent");
+                }
+                if(igsdto.quizAvg>=0.0){
+                    overallGrade += igsdto.quizAvg * getAssignmentTypePercentage("quiz_percent");
+                }
+                if(igsdto.reportAvg>=0.0){
+                    overallGrade += igsdto.reportAvg * getAssignmentTypePercentage("report_percent");
+                }
+                if(igsdto.testAvg>=0.0){
+                    overallGrade += igsdto.testAvg * getAssignmentTypePercentage("test_percent");
+                }
+                igsdto.overallAvg = overallGrade;
             }
-            //loop over each grade entry and split into grades lists above
-            //send each list through calcGradeAvg and save in gbsdto
-            //need to come up with some reasonable way of calculating overall grade based on assignment specific grades
-            // double overallGrade = 0.0;
-            // overallGrade += calcGradeAvg(homeworkGrades) * getAssignmentTypePercentage("homework_percent");
-            // overallGrade += calcGradeAvg(quizGrades) * getAssignmentTypePercentage("quiz_percent");
-            // overallGrade += calcGradeAvg(reportGrades) * getAssignmentTypePercentage("report_percent");
-            // overallGrade += calcGradeAvg(testGrades) * getAssignmentTypePercentage("test_percent");
-            // System.out.println(overallGrade);
             result.add(gbsdto);
         }
         return result;
@@ -240,13 +271,21 @@ public class TeacherSvcImpl implements TeacherSvc {
     }
 
     private Double calcGradeAvg(ArrayList<Double> grades){
+        if(grades.size() == 0){
+            return 0.0;
+        }
         double result = 0.0;
         for(double grade : grades){
             result+=grade;
         }
+        if(result == 0.0){
+            return result;
+        }
         result /= grades.size();
         return result;
     }
+
+    // private Double calcGrade
 
     private Double getAssignmentTypePercentage(String type){
         ConfigEntry ce = configRepo.getGradeCalcPercentage(type);

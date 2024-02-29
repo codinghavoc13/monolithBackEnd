@@ -5,5 +5,5 @@ public class SMGradeDTO {
     public Long studentId;
     public Long cptId;
     public Long assignmentId;
-    public double grade;
+    public double grade = -1;
 }
