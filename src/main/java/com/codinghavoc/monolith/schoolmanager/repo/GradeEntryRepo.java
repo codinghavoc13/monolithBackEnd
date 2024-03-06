@@ -27,4 +27,10 @@ public interface GradeEntryRepo extends CrudRepository<GradeEntry,Long>{
         """;
     @Query(value = qryFindByStudentId, nativeQuery = true)
     List<GradeEntry> findByStudentId(Long studentId);
+
+    static String qryFindByStudentIdCptId = """
+        select * from school_manager.grade_entry as ge where ge.student_id = ?1 and ge.cpt_id = ?2
+            """;
+    @Query(value = qryFindByStudentIdCptId, nativeQuery = true)
+    List<GradeEntry> findByStudentIdCptId(Long studentId, Long cptId);
 }

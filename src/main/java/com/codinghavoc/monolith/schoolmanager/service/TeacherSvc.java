@@ -22,7 +22,7 @@ public interface TeacherSvc {
     List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId);
     List<Assignment> saveAssignment(SMReqDTO dto);
     List<GradeEntry> saveGradeEntry(List<SMGradeDTO> dtos);
-    StudentCompletedCourse saveStudentCompletedCourse(Long studentId);
+    StudentCompletedCourse saveStudentCompletedCourse(Long studentId, Long cptId);
     List<GradeEntry> updateGradeEntries(List<SMSingleGradeDTO> dtos);
     SMGradeBookDTO test(Long teacherId);
 }

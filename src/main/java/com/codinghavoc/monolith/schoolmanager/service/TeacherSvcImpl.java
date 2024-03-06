@@ -1,9 +1,11 @@
 package com.codinghavoc.monolith.schoolmanager.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.codinghavoc.monolith.schoolmanager.dto.GradeBookSummaryDTO;
@@ -37,6 +39,7 @@ import com.codinghavoc.monolith.schoolmanager.util.SvcUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+@SuppressWarnings("null")
 @AllArgsConstructor
 @Service
 public class TeacherSvcImpl implements TeacherSvc {
@@ -47,6 +50,11 @@ public class TeacherSvcImpl implements TeacherSvc {
     CPTRepo cptRepo;
     GradeEntryRepo geRepo;
     UserRepo userRepo;
+
+    ArrayList<Double> homeworkGrades = new ArrayList<>();
+    ArrayList<Double> quizGrades = new ArrayList<>();
+    ArrayList<Double> reportGrades = new ArrayList<>();
+    ArrayList<Double> testGrades = new ArrayList<>();
 
     @Override
     public SMGradeBookDTO buildGradeBook(Long teacherId){
@@ -109,11 +117,6 @@ public class TeacherSvcImpl implements TeacherSvc {
     @Override
     public List<GradeBookSummaryDTO> getGradeBookSummaries(Long teacherId){
         ArrayList<GradeBookSummaryDTO> result = new ArrayList<>();
-        ArrayList<Double> homeworkGrades = new ArrayList<>();
-        ArrayList<Double> quizGrades = new ArrayList<>();
-        ArrayList<Double> reportGrades = new ArrayList<>();
-        ArrayList<Double> testGrades = new ArrayList<>();
-        AssignmentType assignmentType;
         IndividualGradeSummaryDTO igsdto;
         Course course;
         GradeBookSummaryDTO gbsdto;
@@ -148,22 +151,20 @@ public class TeacherSvcImpl implements TeacherSvc {
                 gbsdto.studentInfo.add(igsdto);
                 grades = geRepo.findByStudentId(student.getUserId());
                 //for each gradeentry, get the assignment type of each
-                for(GradeEntry ge : grades){
-                    /*
-                     * Add a check to only process the ge if ge.grade is gte 0
-                     */
-                    if(ge.getGrade()>=0){
-                        assignmentType = assignmentRepo.findById(ge.getAssignmentId()).get().getAssignmentType();
-                        if (assignmentType.value.equals("Homework")) homeworkGrades.add(ge.getGrade());
-                        if (assignmentType.value.equals("Quiz")) quizGrades.add(ge.getGrade());
-                        if (assignmentType.value.equals("Report")) reportGrades.add(ge.getGrade());
-                        if (assignmentType.value.equals("Test")) testGrades.add(ge.getGrade());
-                    }
-                }
-                // System.out.println("Homework: " + homeworkGrades.size());
-                // System.out.println("Quiz: " + quizGrades.size());
-                // System.out.println("Report: " + reportGrades.size());
-                // System.out.println("Test: " + testGrades.size());
+                //will look at moving this out of here and into a standalone method for use here and in saveStudentCompletedCourse
+                parseGradeEntries(grades);
+                // for(GradeEntry ge : grades){
+                //     /*
+                //      * Add a check to only process the ge if ge.grade is gte 0
+                //      */
+                //     if(ge.getGrade()>=0){
+                //         assignmentType = assignmentRepo.findById(ge.getAssignmentId()).get().getAssignmentType();
+                //         if (assignmentType.value.equals("Homework")) homeworkGrades.add(ge.getGrade());
+                //         if (assignmentType.value.equals("Quiz")) quizGrades.add(ge.getGrade());
+                //         if (assignmentType.value.equals("Report")) reportGrades.add(ge.getGrade());
+                //         if (assignmentType.value.equals("Test")) testGrades.add(ge.getGrade());
+                //     }
+                // }
                 //loop over each grade entry and split into grades lists above
                 //send each list through calcGradeAvg and save in gbsdto
                 igsdto.homeworkAvg = calcGradeAvg(homeworkGrades);
@@ -197,7 +198,6 @@ public class TeacherSvcImpl implements TeacherSvc {
         return result;
     }
 
-    @SuppressWarnings("null")
     @Override
     public List<SMStudentListDTO> getStudentsByTeacherId(Long teacherId){
         ArrayList<SMStudentListDTO> result = new ArrayList<>();
@@ -257,13 +257,20 @@ public class TeacherSvcImpl implements TeacherSvc {
     }
 
     @Override
-    public StudentCompletedCourse saveStudentCompletedCourse(Long studentId){
+    public StudentCompletedCourse saveStudentCompletedCourse(Long studentId, Long cptId){
         StudentCompletedCourse scc = new StudentCompletedCourse();
         scc.setStudentId(studentId);
+        scc.setCourseId(cptRepo.findById(cptId).get().getCourseId());
+        scc.setCompletedDate(LocalDate.now());
+        ArrayList<GradeEntry> grades = (ArrayList<GradeEntry>) geRepo.findByStudentIdCptId(studentId, cptId);
+        parseGradeEntries(grades);
+        System.out.println("Homework: " + homeworkGrades.size());
+        System.out.println("Quiz: " + quizGrades.size());
+        System.out.println("Report: " + reportGrades.size());
+        System.out.println("Test: " + testGrades.size());
         return scc;
     }
 
-    @SuppressWarnings("null")
     @Override
     public List<GradeEntry> updateGradeEntries(List<SMSingleGradeDTO> dtos){
         ArrayList<GradeEntry> result = new ArrayList<>();
@@ -291,8 +298,6 @@ public class TeacherSvcImpl implements TeacherSvc {
         return result;
     }
 
-    // private Double calcGrade
-
     private Double getAssignmentTypePercentage(String type){
         ConfigEntry ce = configRepo.getGradeCalcPercentage(type);
         if(ce != null){
@@ -302,50 +307,22 @@ public class TeacherSvcImpl implements TeacherSvc {
         }
     }
 
+    private void parseGradeEntries(List<GradeEntry> grades){
+        AssignmentType assignmentType;
+        for(GradeEntry ge : grades){
+            if(ge.getGrade()>=0){
+                assignmentType = assignmentRepo.findById(ge.getAssignmentId()).get().getAssignmentType();
+                if (assignmentType.value.equals("Homework")) homeworkGrades.add(ge.getGrade());
+                if (assignmentType.value.equals("Quiz")) quizGrades.add(ge.getGrade());
+                if (assignmentType.value.equals("Report")) reportGrades.add(ge.getGrade());
+                if (assignmentType.value.equals("Test")) testGrades.add(ge.getGrade());
+            }
+        }
+    }
+
     @Override
     public SMGradeBookDTO test(Long teacherId){
         SMGradeBookDTO result = new SMGradeBookDTO();
-        Course course;
-        Optional<CoursePeriodTeacher> cptOpt;
-        User student;
-        Assignment assignment;
-        SMIndividualGradeDTO dto;
-        String courseInfo;
-        //need to update this to get all cptids associated with the given teacher id
-        List<CoursePeriodTeacher> cpts = (List<CoursePeriodTeacher>)cptRepo.findByTeacher(teacherId);
-        List<Long> cptList = new ArrayList<>();
-        for(CoursePeriodTeacher cpt : cpts){
-            cptList.add(cpt.getCptId());
-        }
-        List<GradeEntry> gradeEntries = (List<GradeEntry>) geRepo.findByCptIdIn(cptList);
-        System.out.println(gradeEntries.size());
-        for(GradeEntry ge : gradeEntries){
-            dto = new SMIndividualGradeDTO();
-            dto.grade = ge.getGrade();
-            dto.gradeId = ge.getGradeId();
-            assignment = SvcUtil.unwrapAssignment(assignmentRepo.findById(ge.getAssignmentId()), ge.getAssignmentId());
-            dto.assignmentDueDate = assignment.getAssignmentDueDate();
-            result.addWeeksListEntry(dto.assignmentDueDate);
-            dto.assignmentTitle = assignment.getAssignmentTitle();
-            dto.assignmentType = assignment.getAssignmentType().value;
-            result.addAssignmentType(dto.assignmentType);
-            student = SvcUtil.unwrapUser(userRepo.findById(ge.getStudentId()), ge.getStudentId());
-            dto.studentFirstName = student.getFirstName();
-            dto.studentLastName = student.getLastName();
-            cptOpt = cptRepo.findById(ge.getCptId());
-            dto.period = cptOpt.get().getPeriod();
-            result.addPeriod(dto.period);
-            course = SvcUtil.unwrapCourse(courseRepo.findById(cptOpt.get().getCourseId()), cptOpt.get().getCourseId());
-            // dto.courseName = course.getCourseName();
-            courseInfo = course.getCourseName();
-            courseInfo += " - " + dto.period;
-            if(course.getCourseBlock()!= CourseBlock.FULL_YEAR){
-                courseInfo += " - " + course.getCourseBlock().value;
-            }
-            dto.courseName = courseInfo;
-            result.addCourseName(courseInfo);
-            result.gradeDtos.add(dto);
-        } 
         return result;
     }
 }

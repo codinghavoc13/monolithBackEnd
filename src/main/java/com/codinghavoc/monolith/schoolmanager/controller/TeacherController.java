@@ -19,6 +19,7 @@ import com.codinghavoc.monolith.schoolmanager.dto.SMSingleGradeDTO;
 import com.codinghavoc.monolith.schoolmanager.dto.SMStudentListDTO;
 import com.codinghavoc.monolith.schoolmanager.entity.Assignment;
 import com.codinghavoc.monolith.schoolmanager.entity.GradeEntry;
+import com.codinghavoc.monolith.schoolmanager.entity.StudentCompletedCourse;
 import com.codinghavoc.monolith.schoolmanager.service.TeacherSvc;
 
 import lombok.AllArgsConstructor;
@@ -69,6 +70,11 @@ public class TeacherController {
     @PostMapping("/saveNewAssignment")//tested, works, Save New Assignment
     public ResponseEntity<List<Assignment>> saveNewAssignment(@RequestBody SMReqDTO dto){
         return new ResponseEntity<>(teacherSvc.saveAssignment(dto), HttpStatus.OK);
+    }
+
+    @PostMapping("/saveStudentCompletedCourse/{studentId}/{cptId}")
+    public ResponseEntity<StudentCompletedCourse> saveStudentCompletedCourse(@PathVariable Long studentId, @PathVariable Long cptId){
+        return new ResponseEntity<>(teacherSvc.saveStudentCompletedCourse(studentId, cptId), HttpStatus.OK);
     }
 
     @PostMapping("/updateGradeEntries")
