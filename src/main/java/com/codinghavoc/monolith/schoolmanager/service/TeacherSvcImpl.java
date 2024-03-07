@@ -43,18 +43,18 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class TeacherSvcImpl implements TeacherSvc {
-    AssignmentRepo assignmentRepo;
-    ConfigRepo configRepo;
-    CourseRepo courseRepo;
-    CourseStudentRepo csRepo;
-    CPTRepo cptRepo;
-    GradeEntryRepo geRepo;
-    UserRepo userRepo;
+    private AssignmentRepo assignmentRepo;
+    private ConfigRepo configRepo;
+    private CourseRepo courseRepo;
+    private CourseStudentRepo csRepo;
+    private CPTRepo cptRepo;
+    private GradeEntryRepo geRepo;
+    private UserRepo userRepo;
 
-    ArrayList<Double> homeworkGrades = new ArrayList<>();
-    ArrayList<Double> quizGrades = new ArrayList<>();
-    ArrayList<Double> reportGrades = new ArrayList<>();
-    ArrayList<Double> testGrades = new ArrayList<>();
+    private ArrayList<Double> homeworkGrades = new ArrayList<>();
+    private ArrayList<Double> quizGrades = new ArrayList<>();
+    private ArrayList<Double> reportGrades = new ArrayList<>();
+    private ArrayList<Double> testGrades = new ArrayList<>();
 
     @Override
     public SMGradeBookDTO buildGradeBook(Long teacherId){
@@ -89,7 +89,6 @@ public class TeacherSvcImpl implements TeacherSvc {
             dto.period = cptOpt.get().getPeriod();
             result.addPeriod(dto.period);
             course = SvcUtil.unwrapCourse(courseRepo.findById(cptOpt.get().getCourseId()), cptOpt.get().getCourseId());
-            // dto.courseName = course.getCourseName();
             courseInfo = course.getCourseName();
             courseInfo += " - " + dto.period;
             if(course.getCourseBlock()!= CourseBlock.FULL_YEAR){
@@ -122,11 +121,8 @@ public class TeacherSvcImpl implements TeacherSvc {
         GradeBookSummaryDTO gbsdto;
         List<User> students;
         List<GradeEntry> grades;
-        //get a list of cptids by teacherId from cptrepo
         List<CoursePeriodTeacher> cpts = (List<CoursePeriodTeacher>)cptRepo.findByTeacher(teacherId);
         for(CoursePeriodTeacher cpt : cpts){
-            //build out the gbsdto, reset grades lists to new
-            //declare four arraylists, one for each assignment type
             gbsdto = new GradeBookSummaryDTO();
             gbsdto.studentInfo = new ArrayList<>();
             gbsdto.cptId = cpt.getCptId();
@@ -135,63 +131,20 @@ public class TeacherSvcImpl implements TeacherSvc {
             gbsdto.courseBlock = course.getCourseBlock().value;
             gbsdto.period = cpt.getPeriod();
             students = new ArrayList<>();
-            //for each cptid, get a list of studentids by cptid from csrepo
             for(CourseStudent cs : csRepo.findStudentsByCPT(cpt.getCptId())){
                 students.add(userRepo.findById(cs.getStudentId()).get());
             }
-            //for each studentid, get a list of gradeentries from gerepo
             for(User student : students){
                 homeworkGrades = new ArrayList<>();
                 quizGrades = new ArrayList<>();
                 reportGrades = new ArrayList<>();
                 testGrades = new ArrayList<>();
-                igsdto = new IndividualGradeSummaryDTO();
+                grades = geRepo.findByStudentId(student.getUserId());
+                parseGradeEntries(grades);
+                igsdto = buildPartialIGSDTO();
                 igsdto.studentFirstName = student.getFirstName();
                 igsdto.studentLastName = student.getLastName();
                 gbsdto.studentInfo.add(igsdto);
-                grades = geRepo.findByStudentId(student.getUserId());
-                //for each gradeentry, get the assignment type of each
-                //will look at moving this out of here and into a standalone method for use here and in saveStudentCompletedCourse
-                parseGradeEntries(grades);
-                // for(GradeEntry ge : grades){
-                //     /*
-                //      * Add a check to only process the ge if ge.grade is gte 0
-                //      */
-                //     if(ge.getGrade()>=0){
-                //         assignmentType = assignmentRepo.findById(ge.getAssignmentId()).get().getAssignmentType();
-                //         if (assignmentType.value.equals("Homework")) homeworkGrades.add(ge.getGrade());
-                //         if (assignmentType.value.equals("Quiz")) quizGrades.add(ge.getGrade());
-                //         if (assignmentType.value.equals("Report")) reportGrades.add(ge.getGrade());
-                //         if (assignmentType.value.equals("Test")) testGrades.add(ge.getGrade());
-                //     }
-                // }
-                //loop over each grade entry and split into grades lists above
-                //send each list through calcGradeAvg and save in gbsdto
-                igsdto.homeworkAvg = calcGradeAvg(homeworkGrades);
-                igsdto.quizAvg = calcGradeAvg(quizGrades);
-                igsdto.reportAvg = calcGradeAvg(reportGrades);
-                igsdto.testAvg = calcGradeAvg(testGrades);
-                /*
-                 * Something to think about: when no grades have been submitted for some fields, the percent 
-                 * break for those types will still apply, massively skewing the overall avg. Example, as of
-                 * 20240229, I have no reports in the database and reports are set to be 25% of the overall
-                 * grade; because of this, a student will 100s on all other assignments but no reports submitted
-                 * will end up with a overall grade of 75.
-                 */
-                double overallGrade = 0.0;
-                if(igsdto.homeworkAvg>=0.0){
-                    overallGrade += igsdto.homeworkAvg * getAssignmentTypePercentage("homework_percent");
-                }
-                if(igsdto.quizAvg>=0.0){
-                    overallGrade += igsdto.quizAvg * getAssignmentTypePercentage("quiz_percent");
-                }
-                if(igsdto.reportAvg>=0.0){
-                    overallGrade += igsdto.reportAvg * getAssignmentTypePercentage("report_percent");
-                }
-                if(igsdto.testAvg>=0.0){
-                    overallGrade += igsdto.testAvg * getAssignmentTypePercentage("test_percent");
-                }
-                igsdto.overallAvg = overallGrade;
             }
             result.add(gbsdto);
         }
@@ -262,12 +215,8 @@ public class TeacherSvcImpl implements TeacherSvc {
         scc.setStudentId(studentId);
         scc.setCourseId(cptRepo.findById(cptId).get().getCourseId());
         scc.setCompletedDate(LocalDate.now());
-        ArrayList<GradeEntry> grades = (ArrayList<GradeEntry>) geRepo.findByStudentIdCptId(studentId, cptId);
-        parseGradeEntries(grades);
-        System.out.println("Homework: " + homeworkGrades.size());
-        System.out.println("Quiz: " + quizGrades.size());
-        System.out.println("Report: " + reportGrades.size());
-        System.out.println("Test: " + testGrades.size());
+        parseGradeEntries((ArrayList<GradeEntry>) geRepo.findByStudentIdCptId(studentId, cptId));
+        scc.setFinalGrade(buildPartialIGSDTO().overallAvg);
         return scc;
     }
 
@@ -283,9 +232,39 @@ public class TeacherSvcImpl implements TeacherSvc {
         return result;
     }
 
+    private IndividualGradeSummaryDTO buildPartialIGSDTO(){
+        IndividualGradeSummaryDTO result = new IndividualGradeSummaryDTO();
+        result.homeworkAvg = calcGradeAvg(homeworkGrades);
+        result.quizAvg = calcGradeAvg(quizGrades);
+        result.reportAvg = calcGradeAvg(reportGrades);
+        result.testAvg = calcGradeAvg(testGrades);
+        /*
+            * Something to think about: when no grades have been submitted for some fields, the percent 
+            * break for those types will still apply, massively skewing the overall avg. Example, as of
+            * 20240229, I have no reports in the database and reports are set to be 25% of the overall
+            * grade; because of this, a student will 100s on all other assignments but no reports submitted
+            * will end up with a overall grade of 75.
+            */
+        double overallGrade = 0.0;
+        if(result.homeworkAvg>=0.0){
+            overallGrade += result.homeworkAvg * getAssignmentTypePercentage("homework_percent");
+        }
+        if(result.quizAvg>=0.0){
+            overallGrade += result.quizAvg * getAssignmentTypePercentage("quiz_percent");
+        }
+        if(result.reportAvg>=0.0){
+            overallGrade += result.reportAvg * getAssignmentTypePercentage("report_percent");
+        }
+        if(result.testAvg>=0.0){
+            overallGrade += result.testAvg * getAssignmentTypePercentage("test_percent");
+        }
+        result.overallAvg = overallGrade;
+        return result;
+    }
+
     private Double calcGradeAvg(ArrayList<Double> grades){
         if(grades.size() == 0){
-            return 0.0;
+            return 100.0;
         }
         double result = 0.0;
         for(double grade : grades){
