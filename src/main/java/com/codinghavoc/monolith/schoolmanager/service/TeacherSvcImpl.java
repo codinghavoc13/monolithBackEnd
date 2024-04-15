@@ -184,6 +184,7 @@ public class TeacherSvcImpl implements TeacherSvc {
         List<Assignment> assignmentDtos = dto.assignments;
         User staff = getStaffMember(dto.teacherId);
         for(Assignment a : assignmentDtos){
+            System.out.println(a.toString());
             a.setTeacherId(staff.getUserId());
             result.add(assignmentRepo.save(a));
         }
