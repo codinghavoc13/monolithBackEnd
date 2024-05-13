@@ -177,6 +177,7 @@ public class UserSvcImpl implements UserSvc{
 
     @Override
     public SMUserDTO saveUser(SMRegisterDTO dto){
+        //TODO this method will need to be massively reworked
         return new SMUserDTO(userRepo.save(new User(dto)));
     }
 
