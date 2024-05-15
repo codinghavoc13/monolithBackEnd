@@ -17,12 +17,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Entity
-@Table(name = "list_items")
+@Table(name = "list_items", schema = "list_manager")
 public class ListItems {
     @Id
     @Column(name = "list_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long listItemId;
+
+    @NonNull
+    @Column(name = "list_id")
+    private Long listId;
 
     @NonNull
     @Column(name = "item_name")

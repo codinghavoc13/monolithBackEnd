@@ -15,11 +15,12 @@ import jakarta.persistence.Table;
 @Setter
 @RequiredArgsConstructor
 @Entity
-@Table(name="users")
+@Table(name="users", schema = "list_manager")
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long user_id;
+    @Column(name = "user_id")
+    private Long userId;
 
     @NonNull
     @Column(name = "first_name")

@@ -24,7 +24,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="actors")
+@Table(name="actors") //look into applying a new schema level, grouping the mmdb tables in a new schema
 public class Actor {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
