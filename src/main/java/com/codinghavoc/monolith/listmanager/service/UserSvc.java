@@ -8,4 +8,6 @@ import com.codinghavoc.monolith.listmanager.entity.User;
 public interface UserSvc {
     List<User> getAllUsers();
     User saveUser(UserDto dto);
+    //need
+    //login
 }

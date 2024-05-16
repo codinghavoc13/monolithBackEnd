@@ -18,7 +18,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "list_items", schema = "list_manager")
-public class ListItems {
+public class ListItem {
     @Id
     @Column(name = "list_item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
