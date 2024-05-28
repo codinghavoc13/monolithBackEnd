@@ -1,5 +1,7 @@
 package com.codinghavoc.monolith.listmanager.entity;
 
+import com.codinghavoc.monolith.listmanager.dto.ListItemDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,4 +45,12 @@ public class ListItem {
     @NonNull
     @Column(name = "item_notes")
     private String itemNotes;
+
+    public ListItem(ListItemDto dto){
+        this.listId = dto.listId;
+        this.itemName = dto.itemName;
+        this.quantity = dto.quantity;
+        this.orderPosition = dto.orderPosition;
+        this.itemNotes = dto.itemNotes;
+    }
 }

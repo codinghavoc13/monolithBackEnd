@@ -1,5 +1,7 @@
 package com.codinghavoc.monolith.listmanager.entity;
 
+import com.codinghavoc.monolith.listmanager.dto.ListDetailsDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +34,13 @@ public class ListDetails {
     @Column(name = "list_name")
     private String listName;
 
+    @NonNull
     @Column(name = "list_details")
     private String listDetails;
+
+    public ListDetails(ListDetailsDto dto){
+        this.userId = dto.userId;
+        this.listName = dto.listName;
+        this.listDetails = dto.listDetails;
+    }
 }

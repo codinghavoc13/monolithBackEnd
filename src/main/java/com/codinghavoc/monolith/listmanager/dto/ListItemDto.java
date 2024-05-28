@@ -10,6 +10,8 @@ public class ListItemDto {
     public Long orderPosition;
     public String itemNotes;
 
+    public ListItemDto(){}
+
     public ListItemDto(ListItem li){
         listItemId = li.getListItemId();
         listId = li.getListId();

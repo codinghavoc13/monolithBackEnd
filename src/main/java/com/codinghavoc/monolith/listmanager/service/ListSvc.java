@@ -6,6 +6,7 @@ import com.codinghavoc.monolith.listmanager.dto.ListDetailsDto;
 
 public interface ListSvc {
     List<ListDetailsDto> getListsByUser(Long userId);
+    ListDetailsDto getListById(Long listId);
     /*
      * Need an update method that takes in a new list
      * - Updating list would include: updating any fields in list details;
@@ -15,5 +16,5 @@ public interface ListSvc {
      * - Front end will need to send new list details and items back with an Id
      *      of 0
      */
-    List<ListDetailsDto> updateLists(List<ListDetailsDto> dtos);
+    ListDetailsDto updateList(ListDetailsDto dto);
 }
