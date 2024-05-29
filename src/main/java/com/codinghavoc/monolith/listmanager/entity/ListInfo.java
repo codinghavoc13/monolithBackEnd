@@ -1,6 +1,6 @@
 package com.codinghavoc.monolith.listmanager.entity;
 
-import com.codinghavoc.monolith.listmanager.dto.ListDetailsDto;
+import com.codinghavoc.monolith.listmanager.dto.ListInfoDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,8 +19,8 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="list_details", schema = "list_manager")
-public class ListDetails {
+@Table(name="list_info", schema = "list_manager")
+public class ListInfo {
     @Id
     @Column(name = "list_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,12 +35,17 @@ public class ListDetails {
     private String listName;
 
     @NonNull
-    @Column(name = "list_details")
-    private String listDetails;
+    @Column(name = "list_notes")
+    private String listNotes;
 
-    public ListDetails(ListDetailsDto dto){
+    @NonNull
+    @Column(name = "ordered")
+    private Boolean ordered;
+
+    public ListInfo(ListInfoDto dto){
         this.userId = dto.userId;
         this.listName = dto.listName;
-        this.listDetails = dto.listDetails;
+        this.listNotes = dto.listNotes;
+        this.ordered = dto.ordered;
     }
 }

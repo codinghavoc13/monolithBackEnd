@@ -15,4 +15,11 @@ public interface ListItemRepo extends CrudRepository<ListItem, Long>{
         """;
     @Query(value=qryFindItemsByListId, nativeQuery = true)
     List<ListItem> findItemsByListId(Long id);
+
+    static String qryCountListItems = """
+        select count(*) from list_manager.list_items as li
+        where li.list_id=?1
+        """;
+    @Query(value = qryCountListItems, nativeQuery = true)
+    Long countListItems(Long listId);
 }

@@ -3,14 +3,13 @@ package com.codinghavoc.monolith.listmanager.service;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.hibernate.annotations.DialectOverride.OverridesAnnotation;
 import org.springframework.stereotype.Service;
 
-import com.codinghavoc.monolith.listmanager.dto.ListDetailsDto;
+import com.codinghavoc.monolith.listmanager.dto.ListInfoDto;
 import com.codinghavoc.monolith.listmanager.dto.ListItemDto;
-import com.codinghavoc.monolith.listmanager.entity.ListDetails;
+import com.codinghavoc.monolith.listmanager.entity.ListInfo;
 import com.codinghavoc.monolith.listmanager.entity.ListItem;
-import com.codinghavoc.monolith.listmanager.repo.ListDetailRepo;
+import com.codinghavoc.monolith.listmanager.repo.ListInfoRepo;
 import com.codinghavoc.monolith.listmanager.repo.ListItemRepo;
 
 import lombok.AllArgsConstructor;
@@ -18,45 +17,47 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class ListSvcImpl implements ListSvc {
-    private ListDetailRepo listDetailRepo;
+    private ListInfoRepo listInfoRepo;
     private ListItemRepo listItemRepo;
 
     @Override
-    public List<ListDetailsDto> getListsByUser(Long userId){
-        ArrayList<ListDetailsDto> result = new ArrayList<>();
-        List<ListDetails> working = listDetailRepo.findByListDetailsByUserId(userId);
-        ListDetailsDto dto;
+    public List<ListInfoDto> getListsByUser(Long userId){
+        ArrayList<ListInfoDto> result = new ArrayList<>();
+        List<ListInfo> working = listInfoRepo.findByListDetailsByUserId(userId);
+        ListInfoDto dto;
         List<ListItem> items;
-        for(ListDetails ld : working){
-            dto = new ListDetailsDto(ld);
-            items = listItemRepo.findItemsByListId(ld.getListId());
-            for(ListItem li : items){
-                dto.listItems.add(new ListItemDto(li));
-            }
+        for(ListInfo ld : working){
+            dto = new ListInfoDto(ld);
+            // items = listItemRepo.findItemsByListId(ld.getListId());
+            // for(ListItem li : items){
+            //     dto.listItems.add(new ListItemDto(li));
+            // }
+            dto.numberOfItems = listItemRepo.countListItems(ld.getListId());
             result.add(dto);
         }
         return result;
     }
 
     @Override
-    public ListDetailsDto getListById(Long listId){
-        if(listDetailRepo.checkForExistingListDetail(listId)==1){
-            ListDetailsDto result = new ListDetailsDto(listDetailRepo.findListDetailsById(listId));
+    public ListInfoDto getListById(Long listId){
+        if(listInfoRepo.checkForExistingListDetail(listId)==1){
+            ListInfoDto result = new ListInfoDto(listInfoRepo.findListDetailsById(listId));
             List<ListItem> items = listItemRepo.findItemsByListId(listId);
+            result.listItems = new ArrayList<>();
             for(ListItem item : items){
                 result.listItems.add(new ListItemDto(item));
             }
             return result;
         } else {
-            return new ListDetailsDto();
+            return new ListInfoDto();
         }
     }
 
     @Override
-    public ListDetailsDto updateList(ListDetailsDto dto){
-        ListDetails temp;
+    public ListInfoDto updateList(ListInfoDto dto){
+        ListInfo temp;
         ListItem tempItem;
-        ListDetailsDto result;
+        ListInfoDto result;
         if(dto.listId==0){ //adding a new list
             /*
             * if dto.list_id is 0:
@@ -67,9 +68,10 @@ public class ListSvcImpl implements ListSvc {
             * - save items to db
             * - create new LDD with updated info and add to result
             */
-            result = new ListDetailsDto();
-            temp = listDetailRepo.save(new ListDetails(dto));
-            result = new ListDetailsDto(temp);
+            result = new ListInfoDto();
+            temp = listInfoRepo.save(new ListInfo(dto));
+            result = new ListInfoDto(temp);
+            result.listItems = new ArrayList<>();
             for(ListItemDto itemDto : dto.listItems){
                 tempItem = new ListItem(itemDto);
                 tempItem.setListId(result.listId);
@@ -86,7 +88,7 @@ public class ListSvcImpl implements ListSvc {
             *      retrieve/compare/save, add to result.list_items; if item id is 0, 
             *      save new LI to db and add to result.list_items
             */
-            result = new ListDetailsDto();
+            result = new ListInfoDto();
             return result;
         }
     }

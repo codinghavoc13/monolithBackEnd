@@ -2,11 +2,11 @@ package com.codinghavoc.monolith.listmanager.service;
 
 import java.util.List;
 
-import com.codinghavoc.monolith.listmanager.dto.ListDetailsDto;
+import com.codinghavoc.monolith.listmanager.dto.ListInfoDto;
 
 public interface ListSvc {
-    List<ListDetailsDto> getListsByUser(Long userId);
-    ListDetailsDto getListById(Long listId);
+    List<ListInfoDto> getListsByUser(Long userId);
+    ListInfoDto getListById(Long listId);
     /*
      * Need an update method that takes in a new list
      * - Updating list would include: updating any fields in list details;
@@ -16,5 +16,5 @@ public interface ListSvc {
      * - Front end will need to send new list details and items back with an Id
      *      of 0
      */
-    ListDetailsDto updateList(ListDetailsDto dto);
+    ListInfoDto updateList(ListInfoDto dto);
 }
