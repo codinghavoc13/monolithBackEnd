@@ -8,6 +8,8 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import org.springframework.data.repository.CrudRepository;
+
 public class PasswordHashUtil {
     public static String[] hashPWWPBKDF(String pwclear){
         String[] result = new String[2];
@@ -83,4 +85,8 @@ public class PasswordHashUtil {
         random.nextBytes(salt);
         return salt;
     }
+
+    // public static void test(CrudRepository<Object,Long> incoming){
+
+    // }
 }

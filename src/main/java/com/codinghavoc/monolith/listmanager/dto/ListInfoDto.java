@@ -22,6 +22,6 @@ public class ListInfoDto {
         this.listNotes = ld.getListNotes();
         this.listName = ld.getListName();
         this.ordered = ld.getOrdered();
-        // this.listItems = new ArrayList<>();
+        this.listItems = new ArrayList<>();
     }
 }
