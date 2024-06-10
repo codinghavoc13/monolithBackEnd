@@ -28,8 +28,8 @@ public class UserController {
         return this.svc.getAllUsers();
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<UserDto> login(@RequestBody LoginDto dto){
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody UserDto dto){
         return svc.login(dto);
     }
 

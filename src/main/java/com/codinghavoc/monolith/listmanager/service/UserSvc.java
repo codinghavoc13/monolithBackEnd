@@ -10,7 +10,7 @@ import com.codinghavoc.monolith.listmanager.entity.User;
 
 public interface UserSvc {
     List<User> getAllUsers();
-    ResponseEntity<UserDto> login(LoginDto dto);
+    ResponseEntity<UserDto> login(UserDto dto);
     User saveUser(UserDto dto);
     //need
     //login

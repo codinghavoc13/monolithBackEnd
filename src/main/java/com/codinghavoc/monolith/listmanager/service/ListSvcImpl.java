@@ -25,7 +25,7 @@ public class ListSvcImpl implements ListSvc {
         ArrayList<ListInfoDto> result = new ArrayList<>();
         List<ListInfo> working = listInfoRepo.findByListDetailsByUserId(userId);
         ListInfoDto dto;
-        List<ListItem> items;
+        // List<ListItem> items;
         for(ListInfo ld : working){
             dto = new ListInfoDto(ld);
             // items = listItemRepo.findItemsByListId(ld.getListId());

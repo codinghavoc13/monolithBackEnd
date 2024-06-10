@@ -7,6 +7,7 @@ public class UserDto {
     public String lastName;
     public String email;
     public String pwClear;
+    public Long userId;
 
     public UserDto(){};
 
@@ -14,6 +15,7 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.email = user.getEmailAddress();
+        this.userId = user.getUserId();
         this.pwClear = "";
     }
 }

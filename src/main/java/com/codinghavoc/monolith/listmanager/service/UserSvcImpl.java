@@ -25,10 +25,10 @@ public class UserSvcImpl implements UserSvc{
     }
 
     @Override
-    public ResponseEntity<UserDto> login(LoginDto dto){
-        User check = userRepo.findUserByEmailAddress(dto.emailAddress);
+    public ResponseEntity<UserDto> login(UserDto dto){
+        User check = userRepo.findUserByEmailAddress(dto.email);
         if(check!=null){
-            if(PasswordHashUtil.validateWithPBKDF(dto.clearPW, check.getPasswordSalt(), check.getPasswordHash())){
+            if(PasswordHashUtil.validateWithPBKDF(dto.pwClear, check.getPasswordSalt(), check.getPasswordHash())){
                 return new ResponseEntity<>(new UserDto(check),HttpStatus.OK);
             } else {
                 //Email address is correct but password is incorrect
