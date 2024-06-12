@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.codinghavoc.monolith.listmanager.dto.LoginDto;
 import com.codinghavoc.monolith.listmanager.dto.UserDto;
 import com.codinghavoc.monolith.listmanager.entity.User;
 import com.codinghavoc.monolith.listmanager.repo.UserRepo;

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import com.codinghavoc.monolith.listmanager.dto.LoginDto;
 import com.codinghavoc.monolith.listmanager.dto.UserDto;
 import com.codinghavoc.monolith.listmanager.entity.User;
 

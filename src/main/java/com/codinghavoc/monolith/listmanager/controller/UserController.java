@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.codinghavoc.monolith.listmanager.dto.LoginDto;
 import com.codinghavoc.monolith.listmanager.dto.UserDto;
 import com.codinghavoc.monolith.listmanager.entity.User;
 import com.codinghavoc.monolith.listmanager.service.UserSvc;
