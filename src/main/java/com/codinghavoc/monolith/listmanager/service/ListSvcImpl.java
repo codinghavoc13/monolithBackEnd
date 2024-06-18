@@ -58,7 +58,7 @@ public class ListSvcImpl implements ListSvc {
         ListInfo temp;
         ListItem tempItem;
         ListInfoDto result;
-        if(dto.listId==0){ //adding a new list
+        if(dto.listId==-1){ //adding a new list
             /*
             * if dto.list_id is 0:
             * - create a new ListDetail
@@ -68,15 +68,21 @@ public class ListSvcImpl implements ListSvc {
             * - save items to db
             * - create new LDD with updated info and add to result
             */
+            /*
+             * Notes from 18 June: the front end forms are set up, or being
+             * setup, so that the user would enter basic list info (name, notes,
+             * ordered) first, then would use a separate form to build out the 
+             * items
+             */
             result = new ListInfoDto();
             temp = listInfoRepo.save(new ListInfo(dto));
             result = new ListInfoDto(temp);
-            result.listItems = new ArrayList<>();
-            for(ListItemDto itemDto : dto.listItems){
-                tempItem = new ListItem(itemDto);
-                tempItem.setListId(result.listId);
-                result.listItems.add(new ListItemDto(listItemRepo.save(tempItem)));
-            }
+            // result.listItems = new ArrayList<>();
+            // for(ListItemDto itemDto : dto.listItems){
+            //     tempItem = new ListItem(itemDto);
+            //     tempItem.setListId(result.listId);
+            //     result.listItems.add(new ListItemDto(listItemRepo.save(tempItem)));
+            // }
             return result;
         } else { //updating an existing list
             /*

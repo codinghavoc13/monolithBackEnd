@@ -22,6 +22,10 @@ import lombok.AllArgsConstructor;
 public class ListController {
     private ListSvc svc;
 
+    /*
+     * Need a delete list method
+     */
+
     /**
      * Get a list of lists by userId
      * @param userId The user's ID
