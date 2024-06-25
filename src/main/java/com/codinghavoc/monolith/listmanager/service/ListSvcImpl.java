@@ -23,7 +23,7 @@ public class ListSvcImpl implements ListSvc {
     @Override
     public List<ListInfoDto> getListsByUser(Long userId){
         ArrayList<ListInfoDto> result = new ArrayList<>();
-        List<ListInfo> working = listInfoRepo.findByListDetailsByUserId(userId);
+        List<ListInfo> working = listInfoRepo.findByListInfoByUserId(userId);
         ListInfoDto dto;
         // List<ListItem> items;
         for(ListInfo ld : working){
@@ -40,8 +40,8 @@ public class ListSvcImpl implements ListSvc {
 
     @Override
     public ListInfoDto getListById(Long listId){
-        if(listInfoRepo.checkForExistingListDetail(listId)==1){
-            ListInfoDto result = new ListInfoDto(listInfoRepo.findListDetailsById(listId));
+        if(listInfoRepo.checkForExistingListInfo(listId)==1){
+            ListInfoDto result = new ListInfoDto(listInfoRepo.findListInfoById(listId));
             List<ListItem> items = listItemRepo.findItemsByListId(listId);
             result.listItems = new ArrayList<>();
             for(ListItem item : items){
@@ -68,21 +68,9 @@ public class ListSvcImpl implements ListSvc {
             * - save items to db
             * - create new LDD with updated info and add to result
             */
-            /*
-             * Notes from 18 June: the front end forms are set up, or being
-             * setup, so that the user would enter basic list info (name, notes,
-             * ordered) first, then would use a separate form to build out the 
-             * items
-             */
             result = new ListInfoDto();
             temp = listInfoRepo.save(new ListInfo(dto));
             result = new ListInfoDto(temp);
-            // result.listItems = new ArrayList<>();
-            // for(ListItemDto itemDto : dto.listItems){
-            //     tempItem = new ListItem(itemDto);
-            //     tempItem.setListId(result.listId);
-            //     result.listItems.add(new ListItemDto(listItemRepo.save(tempItem)));
-            // }
             return result;
         } else { //updating an existing list
             /*
@@ -94,7 +82,53 @@ public class ListSvcImpl implements ListSvc {
             *      retrieve/compare/save, add to result.list_items; if item id is 0, 
             *      save new LI to db and add to result.list_items
             */
-            result = new ListInfoDto();
+            ListInfo orig = listInfoRepo.findListInfoById(dto.listId);
+            ListInfo newInfo = new ListInfo(dto);
+            //if the new info is not the same as the original, update
+            if(!orig.equals(newInfo)){
+                System.out.println("a-1");
+                //the two are not the same, update
+                //yes, the equals is not comparing id
+                // listInfoRepo.save(newInfo);
+                orig.setListName(newInfo.getListName());
+                orig.setListNotes(newInfo.getListNotes());
+                orig.setOrdered(newInfo.getOrdered());
+                listInfoRepo.save(orig);
+                result = new ListInfoDto(newInfo);
+            } else {
+                System.out.println("b-1");
+                result = new ListInfoDto(orig);
+            }
+            //if there are items in the incoming list
+            if(dto.listItems.size()>0){
+                ListItem origItem;
+                ListItem newItem;
+                for(ListItemDto item : dto.listItems){
+                    System.out.println(item.listItemId);
+                    //if the item has a listitemid of -1, it is a new item, go directly to save it
+                    if(item.listItemId == 0){
+                        System.out.println("a-2");
+                        listItemRepo.save(new ListItem(item));
+                        result.listItems.add(item);
+                    } else {
+                        System.out.println("b-2");
+                        //if the item has an id is not -1, it is an existing item
+                        //get the original item
+                        origItem = listItemRepo.findListItemById(item.listItemId);
+                        //build out the new item
+                        newItem = new ListItem(item);
+                        //compare; if the new is not the same as the original, update
+                        if(!origItem.equals(newItem)){
+                            System.out.println("a-3");
+                            listItemRepo.save(newItem);
+                            result.listItems.add(new ListItemDto(newItem));
+                        } else {
+                            result.listItems.add(new ListItemDto(origItem));
+                        }
+                    }
+                }
+            }
+            // result = new ListInfoDto();
             return result;
         }
     }

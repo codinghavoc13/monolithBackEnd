@@ -12,5 +12,4 @@ public interface UserSvc {
     ResponseEntity<UserDto> login(UserDto dto);
     User saveUser(UserDto dto);
     //need
-    //login
 }

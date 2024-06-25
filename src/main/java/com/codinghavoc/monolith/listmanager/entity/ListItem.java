@@ -34,9 +34,9 @@ public class ListItem {
     @Column(name = "item_name")
     private String itemName;
 
-    @NonNull
-    @Column(name = "quantity")
-    private Long quantity;
+    // @NonNull
+    // @Column(name = "quantity")
+    // private Long quantity;
 
     @NonNull
     @Column(name = "order_position")
@@ -49,8 +49,45 @@ public class ListItem {
     public ListItem(ListItemDto dto){
         this.listId = dto.listId;
         this.itemName = dto.itemName;
-        this.quantity = dto.quantity;
+        // this.quantity = dto.quantity;
         this.orderPosition = dto.orderPosition;
         this.itemNotes = dto.itemNotes;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((itemName == null) ? 0 : itemName.hashCode());
+        result = prime * result + ((orderPosition == null) ? 0 : orderPosition.hashCode());
+        result = prime * result + ((itemNotes == null) ? 0 : itemNotes.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ListItem other = (ListItem) obj;
+        if (itemName == null) {
+            if (other.itemName != null)
+                return false;
+        } else if (!itemName.equals(other.itemName))
+            return false;
+        if (orderPosition == null) {
+            if (other.orderPosition != null)
+                return false;
+        } else if (!orderPosition.equals(other.orderPosition))
+            return false;
+        if (itemNotes == null) {
+            if (other.itemNotes != null)
+                return false;
+        } else if (!itemNotes.equals(other.itemNotes))
+            return false;
+        return true;
     }
 }

@@ -8,19 +8,19 @@ import java.util.List;
 
 
 public interface ListInfoRepo extends CrudRepository<ListInfo,Long>{
-    static String qryCheckForListDetails = """
+    static String qryCheckForListInfo = """
         select count(*) from list_manager.list_info as ld
         where ld.list_id=?1
         """;
-    @Query(value = qryCheckForListDetails, nativeQuery = true)
-    Long checkForExistingListDetail(Long listId);
+    @Query(value = qryCheckForListInfo, nativeQuery = true)
+    Long checkForExistingListInfo(Long listId);
 
-    static String qrySelectListDetailsByUserId = """
+    static String qrySelectListInfoByUserId = """
         select * from list_manager.list_info as ld
         where ld.user_id=?1
         """;
-    @Query(value = qrySelectListDetailsByUserId, nativeQuery = true)
-    List<ListInfo> findByListDetailsByUserId(Long userId);
+    @Query(value = qrySelectListInfoByUserId, nativeQuery = true)
+    List<ListInfo> findByListInfoByUserId(Long userId);
 
     static String qrySelectListByListId = """
         select * from list_manager.list_info as ld
@@ -32,5 +32,5 @@ public interface ListInfoRepo extends CrudRepository<ListInfo,Long>{
      * @return
      */
     @Query(value = qrySelectListByListId, nativeQuery = true)
-    ListInfo findListDetailsById(Long listId);
+    ListInfo findListInfoById(Long listId);
 }
