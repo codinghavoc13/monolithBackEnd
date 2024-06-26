@@ -21,6 +21,20 @@ public class ListSvcImpl implements ListSvc {
     private ListItemRepo listItemRepo;
 
     @Override
+    public void deleteList(Long listId){
+        if(listInfoRepo.findListInfoById(listId) != null){
+            listInfoRepo.deleteById(listId);
+        }
+    }
+
+    @Override
+    public void deleteListItem(Long listItemId){
+        if(listItemRepo.findListItemById(listItemId)!=null){
+            listItemRepo.deleteById(listItemId);
+        }
+    }
+
+    @Override
     public List<ListInfoDto> getListsByUser(Long userId){
         ArrayList<ListInfoDto> result = new ArrayList<>();
         List<ListInfo> working = listInfoRepo.findByListInfoByUserId(userId);
@@ -56,7 +70,6 @@ public class ListSvcImpl implements ListSvc {
     @Override
     public ListInfoDto updateList(ListInfoDto dto){
         ListInfo temp;
-        ListItem tempItem;
         ListInfoDto result;
         if(dto.listId==-1){ //adding a new list
             /*
@@ -86,17 +99,12 @@ public class ListSvcImpl implements ListSvc {
             ListInfo newInfo = new ListInfo(dto);
             //if the new info is not the same as the original, update
             if(!orig.equals(newInfo)){
-                System.out.println("a-1");
                 //the two are not the same, update
                 //yes, the equals is not comparing id
-                // listInfoRepo.save(newInfo);
-                orig.setListName(newInfo.getListName());
-                orig.setListNotes(newInfo.getListNotes());
-                orig.setOrdered(newInfo.getOrdered());
+                orig.updateOrigList(newInfo);
                 listInfoRepo.save(orig);
                 result = new ListInfoDto(newInfo);
             } else {
-                System.out.println("b-1");
                 result = new ListInfoDto(orig);
             }
             //if there are items in the incoming list
@@ -107,11 +115,9 @@ public class ListSvcImpl implements ListSvc {
                     System.out.println(item.listItemId);
                     //if the item has a listitemid of -1, it is a new item, go directly to save it
                     if(item.listItemId == 0){
-                        System.out.println("a-2");
                         listItemRepo.save(new ListItem(item));
                         result.listItems.add(item);
                     } else {
-                        System.out.println("b-2");
                         //if the item has an id is not -1, it is an existing item
                         //get the original item
                         origItem = listItemRepo.findListItemById(item.listItemId);
@@ -119,9 +125,9 @@ public class ListSvcImpl implements ListSvc {
                         newItem = new ListItem(item);
                         //compare; if the new is not the same as the original, update
                         if(!origItem.equals(newItem)){
-                            System.out.println("a-3");
-                            listItemRepo.save(newItem);
-                            result.listItems.add(new ListItemDto(newItem));
+                            origItem.updateOrig(newItem);
+                            listItemRepo.save(origItem);
+                            result.listItems.add(new ListItemDto(origItem));
                         } else {
                             result.listItems.add(new ListItemDto(origItem));
                         }

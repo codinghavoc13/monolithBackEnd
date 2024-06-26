@@ -54,6 +54,12 @@ public class ListItem {
         this.itemNotes = dto.itemNotes;
     }
 
+    public void updateOrig(ListItem newItem){
+        this.itemName = newItem.itemName;
+        this.itemNotes = newItem.itemNotes;
+        this.orderPosition = newItem.orderPosition;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

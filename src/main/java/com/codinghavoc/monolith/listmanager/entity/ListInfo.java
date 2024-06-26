@@ -48,6 +48,12 @@ public class ListInfo {
     @Column(name = "ordered")
     private Boolean ordered;
 
+    public void updateOrigList(ListInfo newInfo){
+        this.listName = newInfo.listName;
+        this.listNotes = newInfo.listNotes;
+        this.ordered = newInfo.ordered;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
