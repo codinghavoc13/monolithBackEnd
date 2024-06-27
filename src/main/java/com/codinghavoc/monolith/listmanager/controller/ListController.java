@@ -26,6 +26,11 @@ public class ListController {
      * Need a delete list method
      */
 
+     @PostMapping("/deleteItem/{itemId}")
+     public ResponseEntity<Boolean> deleteItem(@PathVariable Long itemId){
+        return new ResponseEntity<Boolean>(svc.deleteListItem(itemId),HttpStatus.OK);
+     }
+
     /**
      * Get a list of lists by userId
      * @param userId The user's ID

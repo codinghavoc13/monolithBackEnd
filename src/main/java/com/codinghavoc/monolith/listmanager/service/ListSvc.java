@@ -5,8 +5,8 @@ import java.util.List;
 import com.codinghavoc.monolith.listmanager.dto.ListInfoDto;
 
 public interface ListSvc {
-    void deleteList(Long listId);
-    void deleteListItem(Long listItemId);
+    boolean deleteList(Long listId);
+    boolean deleteListItem(Long listItemId);
     List<ListInfoDto> getListsByUser(Long userId);
     ListInfoDto getListById(Long listId);
     /*

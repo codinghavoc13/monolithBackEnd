@@ -21,17 +21,21 @@ public class ListSvcImpl implements ListSvc {
     private ListItemRepo listItemRepo;
 
     @Override
-    public void deleteList(Long listId){
+    public boolean deleteList(Long listId){
         if(listInfoRepo.findListInfoById(listId) != null){
             listInfoRepo.deleteById(listId);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void deleteListItem(Long listItemId){
+    public boolean deleteListItem(Long listItemId){
         if(listItemRepo.findListItemById(listItemId)!=null){
             listItemRepo.deleteById(listItemId);
+            return true;
         }
+        return false;
     }
 
     @Override
