@@ -12,6 +12,10 @@ public class ListItemDto {
 
     public ListItemDto(){}
 
+    public ListItemDto(Long blankId){
+        this.listItemId = blankId;
+    }
+
     public ListItemDto(ListItem li){
         listItemId = li.getListItemId();
         listId = li.getListId();

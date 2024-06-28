@@ -39,6 +39,16 @@ public class ListSvcImpl implements ListSvc {
     }
 
     @Override
+    public ListItemDto getListItem(Long itemId){
+        ListItem item = listItemRepo.findListItemById(itemId);
+        if(item == null){
+            return new ListItemDto(-1L);
+        } else {
+            return new ListItemDto(item);
+        }
+    }
+
+    @Override
     public List<ListInfoDto> getListsByUser(Long userId){
         ArrayList<ListInfoDto> result = new ArrayList<>();
         List<ListInfo> working = listInfoRepo.findByListInfoByUserId(userId);
@@ -71,6 +81,18 @@ public class ListSvcImpl implements ListSvc {
         }
     }
 
+    @Override
+    public ListItemDto updateItem(ListItemDto dto){
+        ListItem orig = listItemRepo.findListItemById(dto.listItemId);
+        orig.updateOrig(new ListItem(dto));
+        listItemRepo.save(orig);
+        return new ListItemDto(orig);
+    }
+
+    /*
+     * Need to relook this section, most of the code to bulk update all of the list
+     * items is now null
+     */
     @Override
     public ListInfoDto updateList(ListInfoDto dto){
         ListInfo temp;
@@ -111,33 +133,34 @@ public class ListSvcImpl implements ListSvc {
             } else {
                 result = new ListInfoDto(orig);
             }
+            //With new edit item popup, this whole section become moot
             //if there are items in the incoming list
-            if(dto.listItems.size()>0){
-                ListItem origItem;
-                ListItem newItem;
-                for(ListItemDto item : dto.listItems){
-                    System.out.println(item.listItemId);
-                    //if the item has a listitemid of -1, it is a new item, go directly to save it
-                    if(item.listItemId == 0){
-                        listItemRepo.save(new ListItem(item));
-                        result.listItems.add(item);
-                    } else {
-                        //if the item has an id is not -1, it is an existing item
-                        //get the original item
-                        origItem = listItemRepo.findListItemById(item.listItemId);
-                        //build out the new item
-                        newItem = new ListItem(item);
-                        //compare; if the new is not the same as the original, update
-                        if(!origItem.equals(newItem)){
-                            origItem.updateOrig(newItem);
-                            listItemRepo.save(origItem);
-                            result.listItems.add(new ListItemDto(origItem));
-                        } else {
-                            result.listItems.add(new ListItemDto(origItem));
-                        }
-                    }
-                }
-            }
+            // if(dto.listItems.size()>0){
+            //     ListItem origItem;
+            //     ListItem newItem;
+            //     for(ListItemDto item : dto.listItems){
+            //         System.out.println(item.listItemId);
+            //         //if the item has a listitemid of -1, it is a new item, go directly to save it
+            //         if(item.listItemId == 0){
+            //             listItemRepo.save(new ListItem(item));
+            //             result.listItems.add(item);
+            //         } else {
+            //             //if the item has an id is not -1, it is an existing item
+            //             //get the original item
+            //             origItem = listItemRepo.findListItemById(item.listItemId);
+            //             //build out the new item
+            //             newItem = new ListItem(item);
+            //             //compare; if the new is not the same as the original, update
+            //             if(!origItem.equals(newItem)){
+            //                 origItem.updateOrig(newItem);
+            //                 listItemRepo.save(origItem);
+            //                 result.listItems.add(new ListItemDto(origItem));
+            //             } else {
+            //                 result.listItems.add(new ListItemDto(origItem));
+            //             }
+            //         }
+            //     }
+            // }
             // result = new ListInfoDto();
             return result;
         }

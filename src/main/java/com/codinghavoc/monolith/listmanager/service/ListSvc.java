@@ -3,12 +3,15 @@ package com.codinghavoc.monolith.listmanager.service;
 import java.util.List;
 
 import com.codinghavoc.monolith.listmanager.dto.ListInfoDto;
+import com.codinghavoc.monolith.listmanager.dto.ListItemDto;
 
 public interface ListSvc {
     boolean deleteList(Long listId);
     boolean deleteListItem(Long listItemId);
+    ListItemDto getListItem(Long itemId);
     List<ListInfoDto> getListsByUser(Long userId);
     ListInfoDto getListById(Long listId);
+    ListItemDto updateItem(ListItemDto dto);
     /*
      * Need an update method that takes in a new list
      * - Updating list would include: updating any fields in list details;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codinghavoc.monolith.listmanager.dto.ListInfoDto;
+import com.codinghavoc.monolith.listmanager.dto.ListItemDto;
 import com.codinghavoc.monolith.listmanager.service.ListSvc;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +29,12 @@ public class ListController {
 
      @PostMapping("/deleteItem/{itemId}")
      public ResponseEntity<Boolean> deleteItem(@PathVariable Long itemId){
-        return new ResponseEntity<Boolean>(svc.deleteListItem(itemId),HttpStatus.OK);
+        return new ResponseEntity<>(svc.deleteListItem(itemId),HttpStatus.OK);
+     }
+
+     @GetMapping("/item/{itemId}")
+     public ResponseEntity<ListItemDto> getItemByID(@PathVariable Long itemId){
+        return new ResponseEntity<>(svc.getListItem(itemId),HttpStatus.OK);
      }
 
     /**
@@ -49,6 +55,11 @@ public class ListController {
     @GetMapping("/list/{listId}")
     public ResponseEntity<ListInfoDto> getListByListId(@PathVariable Long listId){
         return new ResponseEntity<>(svc.getListById(listId),HttpStatus.OK);
+    }
+
+    @PostMapping("/updateItem")
+    public ResponseEntity<ListItemDto> updateItem(@RequestBody ListItemDto dto){
+        return new ResponseEntity<>(svc.updateItem(dto), HttpStatus.OK);
     }
 
     /**
