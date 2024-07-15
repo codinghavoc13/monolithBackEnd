@@ -41,7 +41,7 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
     @Override
     public CipherBody decryptOneKnownKey(CipherBody cb){
         //Decrypt the message with the single key
-        String decryptedMsg = encrypt(26l - cb.getKeyOne(), cb.getMessage());
+        String decryptedMsg = encrypt(Constants.LIST_LENGTH - cb.getKeyOne(), cb.getMessage());
 
         //Store the decrypted message
         cb.setMessage(decryptedMsg);
@@ -90,12 +90,19 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
         return shifted;
 	}
 	
+    /**
+     * Use this for both encrypting and decrypting. When encrypting, just send the key.
+     * When decrypting, send total alphabet length from constants minus the key
+     * @param key
+     * @param input
+     * @return
+     */
 	private String encrypt(Long key, String input){
 		String encr = "";
-		String lowerMsg = input.toLowerCase();
+		// String lowerMsg = input.toLowerCase();
         String shiftedAlphabet = shiftedAlpha(key);
-        for(int ctr = 0; ctr < lowerMsg.length();ctr++){
-            char currChar = lowerMsg.charAt(ctr);
+        for(int ctr = 0; ctr < input.length();ctr++){
+            char currChar = input.charAt(ctr);
             int idx = Constants.TOTAL_ALPHABET.indexOf(currChar);
             if(idx==-1){
             	encr+=currChar;
@@ -111,12 +118,13 @@ public class CaesarCipherSvcImpl implements CaesarCipherSvc{
 	private String encrypt2key(Long key1, Long key2, String input){
 		String encr = "";
 		String lowerMsg = input.toLowerCase();
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        // String alphabet = "abcdefghijklmnopqrstuvwxyz";
         String shiftedAlphabet1 = shiftedAlpha(key1);
         String shiftedAlphabet2 = shiftedAlpha(key2);
         for(int ctr = 0; ctr < lowerMsg.length();ctr++){
         	char currChar = lowerMsg.charAt(ctr);
-            int idx = alphabet.indexOf(currChar);
+            // int idx = alphabet.indexOf(currChar);
+            int idx = Constants.TOTAL_ALPHABET.indexOf(currChar);
             if(idx==-1){
             	encr+=currChar;
             }
