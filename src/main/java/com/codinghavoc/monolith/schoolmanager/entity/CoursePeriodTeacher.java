@@ -1,7 +1,11 @@
 package com.codinghavoc.monolith.schoolmanager.entity;
 
+import com.codinghavoc.monolith.schoolmanager.enums.CourseBlock;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,9 +38,13 @@ public class CoursePeriodTeacher {
 
     @Column(name = "period")
     private int period;
-    
-    /*
-     * Going to move the period value from course to this class, need to update the 
-     * unique constraint
+
+    /**
+     * Default to FULL_YEAR. Code will set to FALL_SEMESTER or SPRING_SEMESTER
+     * based on user input
      */
+    @NonNull
+    @Column(name = "course_block")
+    @Enumerated(EnumType.STRING)
+    private CourseBlock courseBlock = CourseBlock.FULL_YEAR;
 }

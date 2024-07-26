@@ -52,7 +52,7 @@ public class Course {
      * - Course:
      *      courseId
      *      courseName
-     *      courseBlock
+     *      courseBlock - removing from here and moving to new table
      *      credit
      * - CourseSchedule *this may replace CourseTeacher
      *      **Update the CourseTeacher class to include period
@@ -62,7 +62,7 @@ public class Course {
      *      period
      *      *unique constraint: courseId+teacherId+period (one teacher cannot teach the
      *          same course at the same time more than once)
-     * - CoursePrerequisites
+     * - CoursePrerequisites - done
      *      crId
      *      courseId
      *      prereqId
