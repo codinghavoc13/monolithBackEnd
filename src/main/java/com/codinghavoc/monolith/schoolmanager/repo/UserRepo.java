@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 
+//Moved to UserService
 public interface UserRepo extends CrudRepository<User, Long>{
     static String qryGetParentsByStudentId = """
         select u.*
@@ -28,26 +29,28 @@ public interface UserRepo extends CrudRepository<User, Long>{
     @Query(value = qryGetRelativessByStudentId, nativeQuery = true)
     List<User> getRelativesByStudentId(Long student_id);
 
-    static String getStudentsByTeacherIdQry = """
-        select s.* from school_manager.users as s 
-        join school_manager.student_teacher as st 
-        on s.student_id=st.student_id 
-        where st.staff_id=?1
-        """;
-    @Query(value=getStudentsByTeacherIdQry, nativeQuery=true)
-    List<User> getStudentsByTeacherId(Long teacher_id);
+    //student_teacher doesn't exist anymove, not used
+    // static String getStudentsByTeacherIdQry = """
+    //     select s.* from school_manager.users as s 
+    //     join school_manager.student_teacher as st 
+    //     on s.student_id=st.student_id 
+    //     where st.staff_id=?1
+    //     """;
+    // @Query(value=getStudentsByTeacherIdQry, nativeQuery=true)
+    // List<User> getStudentsByTeacherId(Long teacher_id);
 
     static String qryUsernames = "select username from school_manager.users";
     @Query(value = qryUsernames, nativeQuery = true)
     List<String> getUserNames();
 
-    static String qryGetStaffByUsername = """
-        select * 
-        from school_manager.users as s
-        where s.username=?1
-        """;
-    @Query(value = qryGetStaffByUsername, nativeQuery = true)
-    User getStaffByUsername(String username);
+    //Moved to UserService
+    // static String qryGetStaffByUsername = """
+    //     select * 
+    //     from school_manager.users as s
+    //     where s.username=?1
+    //     """;
+    // @Query(value = qryGetStaffByUsername, nativeQuery = true)
+    // User getStaffByUsername(String username);
 
     static String qryGetTeacherByCourseId = """
         select u.*

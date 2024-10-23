@@ -26,7 +26,8 @@ public interface UserSvc {
     SMUserDTO getUserSimple(Long id);
     List<SMUserDTO> getUsersByRole(String role);
     List<String> getUserNames();
-    SMUserDTO login(SMLoginDTO dto);
+    //Moved to UserService
+    // SMUserDTO login(SMLoginDTO dto);
     SMUserDTO saveUser(SMRegisterDTO user);
 
     //TODO will need to implement the following at some point

@@ -27,15 +27,16 @@ public class UserController {
     private UserSvc userSvc;
 
     //Login will need to be pulled out into it's own controller
-    @PostMapping("/login")//tested, works, Staff Login Pass and Staff Login Pass
-    public ResponseEntity<SMUserDTO> login(@RequestBody SMLoginDTO dto){
-        SMUserDTO result = userSvc.login(dto);
-        if(result != null){
-            return new ResponseEntity<>(result, HttpStatus.OK);    
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
+    //Moved to UserService
+    // @PostMapping("/login")//tested, works, Staff Login Pass and Staff Login Pass
+    // public ResponseEntity<SMUserDTO> login(@RequestBody SMLoginDTO dto){
+    //     SMUserDTO result = userSvc.login(dto);
+    //     if(result != null){
+    //         return new ResponseEntity<>(result, HttpStatus.OK);    
+    //     } else {
+    //         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    //     }
+    // }
 
     @PostMapping("/checkUsername")
     public ResponseEntity<Boolean> checkUsername(@RequestBody SMRegisterDTO dto){

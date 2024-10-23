@@ -2,6 +2,7 @@ package com.codinghavoc.monolith.schoolmanager.dto;
 
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
 
+//Moved to UserService
 public class SMRegisterDTO {
     public String firstName;
     public String lastName;

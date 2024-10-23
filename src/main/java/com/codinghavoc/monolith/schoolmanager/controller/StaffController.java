@@ -28,11 +28,13 @@ import lombok.AllArgsConstructor;
 public class StaffController {
     private StaffSvc staffSvc;
 
+    //Move to CourseService - 1
     @PostMapping("/assignTeacherToCourse")
     public ResponseEntity<CoursePeriodTeacher> assignTeacherToCourse(@RequestBody SMCourseDTO dto){
         return staffSvc.assignTeacherToCourse(dto);
     }
 
+    //Move to CourseService - 
     @PostMapping("/assignStudentsToCourse")
     public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
         return staffSvc.assignStudentsToCourse(dto);

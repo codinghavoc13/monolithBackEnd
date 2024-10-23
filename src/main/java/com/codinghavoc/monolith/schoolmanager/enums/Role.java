@@ -1,5 +1,6 @@
 package com.codinghavoc.monolith.schoolmanager.enums;
 
+//Moved to UserService
 public enum Role {
     PRIMARY("primary"),
     STUDENT("student"),

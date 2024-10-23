@@ -3,7 +3,7 @@ package com.codinghavoc.monolith.schoolmanager.dto;
 import com.codinghavoc.monolith.schoolmanager.entity.User;
 import com.codinghavoc.monolith.schoolmanager.enums.Role;
 
-
+//Moved to UserService
 public class SMUserDTO {
     public Long userId;
     public String firstName;

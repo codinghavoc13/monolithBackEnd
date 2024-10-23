@@ -9,6 +9,7 @@ import com.codinghavoc.monolith.schoolmanager.entity.CoursePeriodTeacher;
 
 public interface CPTRepo extends CrudRepository<CoursePeriodTeacher, Long>{
     //TODO this may now be broken
+    //Move to CourseService - 1
     static String qryFindByCourseTeacher = """
         select * 
         from school_manager.course_period_teacher as ct

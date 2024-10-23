@@ -161,19 +161,20 @@ public class UserSvcImpl implements UserSvc{
     /*
      * Possibly rework this to return a response entity
      */
-    @Override
-    public SMUserDTO login(SMLoginDTO dto){
-        User check = userRepo.getStaffByUsername(dto.username);
-        // System.out.println(check);
-        if(check != null){
-            boolean valid = PasswordHashUtil.validateWithPBKDF(dto.password, check.getPasswordSalt(), check.getPasswordHash());
-            if(valid) {
-                return new SMUserDTO(check);
-            } else {
-                return null;
-            }
-        } else return null;
-    }
+    //Moved to UserService
+    // @Override
+    // public SMUserDTO login(SMLoginDTO dto){
+    //     User check = userRepo.getStaffByUsername(dto.username);
+    //     // System.out.println(check);
+    //     if(check != null){
+    //         boolean valid = PasswordHashUtil.validateWithPBKDF(dto.password, check.getPasswordSalt(), check.getPasswordHash());
+    //         if(valid) {
+    //             return new SMUserDTO(check);
+    //         } else {
+    //             return null;
+    //         }
+    //     } else return null;
+    // }
 
     @Override
     public SMUserDTO saveUser(SMRegisterDTO dto){

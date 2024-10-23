@@ -8,6 +8,7 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+//Moved to UserService
 public class PasswordHashUtil {
     public static String[] hashPWWPBKDF(String pwclear){
         String[] result = new String[2];
