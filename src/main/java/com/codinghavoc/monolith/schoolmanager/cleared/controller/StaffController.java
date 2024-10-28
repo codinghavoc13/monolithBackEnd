@@ -1,0 +1,93 @@
+package com.codinghavoc.monolith.schoolmanager.cleared.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.codinghavoc.monolith.schoolmanager.cleared.service.StaffSvc;
+import com.codinghavoc.monolith.schoolmanager.cleared.dto.SMCourseDTO;
+import com.codinghavoc.monolith.schoolmanager.cleared.dto.SMCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.cleared.dto.SMFullCourseDetailDTO;
+import com.codinghavoc.monolith.schoolmanager.cleared.dto.SMStudentDetailDTO;
+// import com.codinghavoc.monolith.schoolmanager.dto.SMUserDTO;
+import com.codinghavoc.monolith.schoolmanager.cleared.entity.CourseStudent;
+import com.codinghavoc.monolith.schoolmanager.cleared.entity.CoursePeriodTeacher;
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+@RestController
+@RequestMapping("/staff")
+public class StaffController {
+    private StaffSvc staffSvc;
+
+    //Move to CourseService - 1
+    // @PostMapping("/assignTeacherToCourse")
+    // public ResponseEntity<CoursePeriodTeacher> assignTeacherToCourse(@RequestBody SMCourseDTO dto){
+    //     return staffSvc.assignTeacherToCourse(dto);
+    // }
+
+    //Move to CourseService - 
+    // @PostMapping("/assignStudentsToCourse")
+    // public ResponseEntity<List<CourseStudent>> assignStudentsToCourse(@RequestBody SMCourseDTO dto){
+    //     return staffSvc.assignStudentsToCourse(dto);
+    // }
+
+    // @GetMapping("/getAllMiddleHighStudents")
+    // public ResponseEntity<List<SMStudentDetailDTO>> getAllMiddleHighStudents(){
+    //     return new ResponseEntity<>(staffSvc.getAllMiddleHighStudents(), HttpStatus.OK);
+    // }
+
+    // @GetMapping("/getCourseDetails/{term}")
+    // public ResponseEntity<List<SMCourseDetailDTO>> getCourseDetails(@PathVariable String term){
+    //     return new ResponseEntity<>(staffSvc.getCourseDetails(term),HttpStatus.OK);
+    // }
+
+    // @GetMapping("/getCoursesByStudent/{studentId}")
+    // public ResponseEntity<List<SMCourseDetailDTO>> getCoursesByStudent(@PathVariable Long studentId){
+    //     return new ResponseEntity<>(staffSvc.getCoursesByStudent(studentId), HttpStatus.OK);
+    // }
+
+    // @GetMapping("getFullCourseDetails")
+    // public ResponseEntity<List<SMFullCourseDetailDTO>> getFullCourseDetails(){
+    //     return new ResponseEntity<>(staffSvc.getFullCourseDetails(),HttpStatus.OK);
+    // }
+
+    // @GetMapping("/getStudentsByGradeLevel/{gradeLevel}")
+    // public ResponseEntity<List<SMStudentDetailDTO>> getStudentsByGradeLevel(@PathVariable String gradeLevel){
+    //     return new ResponseEntity<>(staffSvc.getStudentsByGrade(gradeLevel), HttpStatus.OK);
+    // }
+
+    // @GetMapping("/getStudentsNotAssignedToTeacher")
+    // public ResponseEntity<List<SMStudentDetailDTO>> getStudentsNotAssignedToTeacher(){
+    //     return new ResponseEntity<List<SMStudentDetailDTO>>(staffSvc.getStudentsNotAssignedToTeacher(),HttpStatus.OK);
+    // }
+
+    // @GetMapping("/getUnverifiedUsers")
+    // public ResponseEntity<List<SMUserDTO>> getUnverifiedUsers(){
+    //     return new ResponseEntity<List<SMUserDTO>>(staffSvc.getUnverifiedUsers(), HttpStatus.OK);
+    // }
+
+    // @PutMapping("/verifyUser/{user_id}")
+    // public ResponseEntity<SMUserDTO> verifyUser(@PathVariable Long user_id){
+    //     return new ResponseEntity<SMUserDTO>(staffSvc.updateUserVerification(user_id),HttpStatus.OK);
+    // }
+
+    // @GetMapping("testAssign")
+    // public ResponseEntity<List<CourseStudent>> test(){
+    //     return staffSvc.testAssign();
+    // }
+
+
+    // ResponseEntity<List<CourseStudent>> assignCoursesToStudent(SMCourseDTO dto);
+    // ResponseEntity<CourseStudent> assignStudentToCourse(SMCourseDTO dto);
+    // ResponseEntity<List<CourseStudent>> assignStudentsToCourse(SMCourseDTO dto);
+}

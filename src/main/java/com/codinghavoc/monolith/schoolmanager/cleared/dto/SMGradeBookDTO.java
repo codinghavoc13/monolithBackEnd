@@ -1,0 +1,69 @@
+package com.codinghavoc.monolith.schoolmanager.cleared.dto;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+
+public class SMGradeBookDTO {
+    public List<String> assignmentTypes;
+    public List<String> courseNames;
+    public ArrayList<SMWeekStartStopDTO> weeks;
+    public List<SMIndividualGradeDTO> gradeDtos;
+    public List<Integer> periods;
+
+    public SMGradeBookDTO(){
+        assignmentTypes = new ArrayList<>();
+        courseNames = new ArrayList<>();
+        gradeDtos = new ArrayList<>();
+        periods = new ArrayList<>();
+        weeks = new ArrayList<>();
+    }
+
+    public void addAssignmentType(String a){
+        if(!assignmentTypes.contains(a)) assignmentTypes.add(a);
+    }
+
+    public void addCourseName(String c){
+        if(!courseNames.contains(c)) courseNames.add(c);
+    }
+
+    public void addPeriod(Integer p){
+        if(!periods.contains(p)) periods.add(p);
+    }
+
+    public void addWeeksListEntry(LocalDate ld){
+        // HashMap<String,LocalDate> temp;
+        SMWeekStartStopDTO temp = new SMWeekStartStopDTO();
+        temp = buildStartEndPair(ld);
+        if(!weeks.contains(temp))
+            weeks.add(temp);
+    }
+
+    private static SMWeekStartStopDTO buildStartEndPair(LocalDate ld){
+        SMWeekStartStopDTO result = new SMWeekStartStopDTO();
+        result.start = findStartOfWeek(ld);
+        result.stop = findEndOfWeek(ld);
+        return result;
+    }
+
+    private static LocalDate findStartOfWeek(LocalDate ld){
+        LocalDate working = ld;
+        DayOfWeek day = ld.getDayOfWeek();
+        while(day != DayOfWeek.MONDAY){
+            working = working.minusDays(1);
+            day = working.getDayOfWeek();
+        }
+        return working;
+    }
+
+    private static LocalDate findEndOfWeek(LocalDate ld){
+        LocalDate working = ld;
+        DayOfWeek day = ld.getDayOfWeek();
+        while(day != DayOfWeek.FRIDAY){
+            working = working.plusDays(1);
+            day = working.getDayOfWeek();
+        }
+        return working;
+    }
+}
